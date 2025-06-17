@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redactor Escolar: Conectando el Aula con la Actualidad</title>
+    <!-- Chosen Palette: "Warm Neutrals & Subtle Blues" -->
+    <!-- Application Structure Plan: The SPA is designed as a user-centric dashboard. It starts with a strong value proposition in the hero section. Key information is segmented into interactive components: a tab system contrasts 'The Challenge' with 'Our Solution'; a visual 3-step process shows 'How It Works'; another tabbed dashboard details benefits for Teachers, Students, and Schools, making information relevant to specific user roles. An interactive toggle simplifies the pricing comparison. A bar chart visually demonstrates strategic alignment with educational policies, which is more impactful than text. This structure guides users from problem to solution to value, using interactivity to manage information density and enhance engagement, which is superior to a linear report format for usability. -->
+    <!-- Visualization & Content Choices: [Problem/Solution -> Goal: Compare -> Viz: HTML Tabs -> Interaction: Click to toggle content -> Justification: Direct comparison enhances clarity -> Method: Vanilla JS], [Benefits -> Goal: Organize/Inform -> Viz: Tabbed Dashboard -> Interaction: Click to show role-specific benefit cards -> Justification: Persona-based segmentation increases relevance -> Method: Vanilla JS], [Pricing -> Goal: Compare -> Viz: HTML Toggle -> Interaction: Click to switch views -> Justification: Simplifies choice presentation -> Method: Vanilla JS], [Strategic Alignment -> Goal: Persuade -> Viz: Bar Chart -> Interaction: Hover for tooltips -> Justification: Visual data is more convincing than a text list -> Library: Chart.js], [Process Flow -> Goal: Explain -> Viz: HTML/CSS Diagram -> Interaction: None -> Justification: A simple visual is easier to grasp -> Method: HTML/Tailwind]. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #fdfbf7;
+        color: #333;
+      }
+      .nav-link {
+        transition: color 0.3s, border-bottom-color 0.3s;
+        border-bottom: 2px solid transparent;
+      }
+      .nav-link:hover,
+      .nav-link.active {
+        color: #2563eb;
+        border-bottom-color: #2563eb;
+      }
+      .tab-button.active {
+        background-color: #2563eb;
+        color: #ffffff;
+      }
+      .benefit-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+          0 4px 6px -4px rgb(0 0 0 / 0.1);
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 400px;
+        max-height: 50vh;
+      }
+      @media (min-width: 768px) {
+        .chart-container {
+          height: 450px;
+        }
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+      <nav
+        class="container mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <div class="text-2xl font-bold text-blue-600">🧠 Redactor Escolar</div>
+        <div class="hidden md:flex space-x-8">
+          <a href="#solucion" class="nav-link pb-1">La Solución</a>
+          <a href="#beneficios" class="nav-link pb-1">Beneficios</a>
+          <a href="#precios" class="nav-link pb-1">Planes</a>
+          <a href="#estrategia" class="nav-link pb-1">Estrategia</a>
+        </div>
+        <a
+          href="#piloto"
+          class="hidden md:block bg-blue-600 text-white font-bold py-2 px-4 rounded-full hover:bg-blue-700 transition-colors"
+          >Solicitar Piloto</a
+        >
+        <button id="mobile-menu-button" class="md:hidden text-3xl">☰</button>
+      </nav>
+      <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+        <a href="#solucion" class="block py-2 text-center nav-link"
+          >La Solución</a
+        >
+        <a href="#beneficios" class="block py-2 text-center nav-link"
+          >Beneficios</a
+        >
+        <a href="#precios" class="block py-2 text-center nav-link">Planes</a>
+        <a href="#estrategia" class="block py-2 text-center nav-link"
+          >Estrategia</a
+        >
+        <a
+          href="#piloto"
+          class="block mt-4 bg-blue-600 text-white font-bold py-2 px-4 rounded-full text-center hover:bg-blue-700 transition-colors"
+          >Solicitar Piloto</a
+        >
+      </div>
+    </header>
+
+    <main>
+      <section id="hero" class="py-20 md:py-32 bg-white">
+        <div class="container mx-auto px-6 text-center">
+          <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-4">
+            Conectando el Aula con el Mundo Real.
+          </h1>
+          <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            La plataforma de IA que transforma noticias en material pedagógico
+            listo para usar, impulsando el pensamiento crítico en tus
+            estudiantes y ahorrándote horas de planificación.
+          </p>
+          <a
+            href="#solucion"
+            class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-700 transition-colors"
+            >Descubre Cómo</a
+          >
+        </div>
+      </section>
+
+      <section id="solucion" class="py-16 md:py-24">
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold">
+              Una Solución Integral
+            </h2>
+            <p class="text-lg text-gray-600 mt-2">
+              Abordamos los desafíos clave del sistema educativo chileno con una
+              herramienta simple y poderosa.
+            </p>
+          </div>
+          <div class="max-w-4xl mx-auto">
+            <div class="bg-white p-2 rounded-xl shadow-md flex space-x-2 mb-8">
+              <button
+                data-tab="desafio"
+                class="tab-button w-1/2 py-3 px-4 rounded-lg font-semibold transition-colors active"
+              >
+                El Desafío Docente
+              </button>
+              <button
+                data-tab="plataforma"
+                class="tab-button w-1/2 py-3 px-4 rounded-lg font-semibold transition-colors"
+              >
+                Nuestra Solución
+              </button>
+            </div>
+            <div id="tab-content"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="como-funciona" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold">
+              Simple, Rápido y Eficaz
+            </h2>
+            <p class="text-lg text-gray-600 mt-2">
+              Nuestro proceso automatizado te entrega contenido de calidad en
+              tres simples pasos.
+            </p>
+          </div>
+          <div class="grid md:grid-cols-3 gap-8 text-center max-w-5xl mx-auto">
+            <div class="p-6">
+              <div class="text-5xl mb-4 text-blue-600">①</div>
+              <h3 class="text-xl font-bold mb-2">IA Selecciona y Adapta</h3>
+              <p class="text-gray-600">
+                Nuestra IA monitorea medios confiables, selecciona noticias
+                relevantes y las reescribe con lenguaje adaptado al currículo y
+                nivel escolar.
+              </p>
+            </div>
+            <div class="p-6">
+              <div class="text-5xl mb-4 text-blue-600">②</div>
+              <h3 class="text-xl font-bold mb-2">Contenido Diferenciado</h3>
+              <p class="text-gray-600">
+                Generamos múltiples versiones: para niños, adolescentes y con
+                actividades pedagógicas listas para aplicar en el aula.
+              </p>
+            </div>
+            <div class="p-6">
+              <div class="text-5xl mb-4 text-blue-600">③</div>
+              <h3 class="text-xl font-bold mb-2">Entrega Multicanal</h3>
+              <p class="text-gray-600">
+                Recibe el material directamente en tu correo, WhatsApp o Drive.
+                O explora nuestro portal web para una búsqueda avanzada.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="beneficios" class="py-16 md:py-24">
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold">
+              Un Impacto 360° en la Comunidad Educativa
+            </h2>
+            <p class="text-lg text-gray-600 mt-2">
+              Redactor Escolar está diseñado para potenciar a cada actor del
+              proceso educativo. Selecciona un perfil para descubrir sus
+              beneficios.
+            </p>
+          </div>
+          <div class="flex justify-center mb-8 space-x-2 md:space-x-4">
+            <button
+              data-benefit="docentes"
+              class="benefit-tab-button bg-blue-100 text-blue-800 font-semibold py-2 px-4 rounded-full transition-all active"
+            >
+              👩‍🏫 Para Docentes
+            </button>
+            <button
+              data-benefit="estudiantes"
+              class="benefit-tab-button bg-gray-100 text-gray-800 font-semibold py-2 px-4 rounded-full transition-all"
+            >
+              👧 Para Estudiantes
+            </button>
+            <button
+              data-benefit="colegios"
+              class="benefit-tab-button bg-gray-100 text-gray-800 font-semibold py-2 px-4 rounded-full transition-all"
+            >
+              🏫 Para Colegios
+            </button>
+          </div>
+          <div
+            id="benefit-content"
+            class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+          ></div>
+        </div>
+      </section>
+
+      <section id="precios" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold">
+              Planes Flexibles para Cada Necesidad
+            </h2>
+            <p class="text-lg text-gray-600 mt-2">
+              Accede a la innovación pedagógica con un modelo de bajo costo y
+              alto impacto.
+            </p>
+          </div>
+          <div class="flex justify-center items-center space-x-4 mb-10">
+            <span class="font-semibold text-gray-700">Individual</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                id="pricing-toggle"
+                class="sr-only peer"
+                checked
+              />
+              <div
+                class="w-14 h-8 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-600"
+              ></div>
+            </label>
+            <span class="font-semibold text-blue-600">Institucional</span>
+          </div>
+          <div
+            id="pricing-content"
+            class="flex flex-col md:flex-row justify-center items-center gap-8"
+          ></div>
+        </div>
+      </section>
+
+      <section id="estrategia" class="py-16 md:py-24">
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold">
+              Valor Estratégico para el Sistema Chileno
+            </h2>
+            <p class="text-lg text-gray-600 mt-2">
+              Redactor Escolar no es solo una herramienta, es un aliado para
+              cumplir con las prioridades del Ministerio de Educación.
+            </p>
+          </div>
+          <div class="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-lg">
+            <h3 class="text-xl font-bold text-center mb-6">
+              Alineación con Políticas y Fondos Públicos
+            </h3>
+            <div class="chart-container">
+              <canvas id="strategyChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="piloto" class="bg-blue-600 text-white">
+        <div class="container mx-auto px-6 py-20 text-center">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">
+            Prueba el Futuro de la Educación, Hoy.
+          </h2>
+          <p class="text-lg md:text-xl text-blue-100 max-w-3xl mx-auto mb-8">
+            Solicita un piloto gratuito de 1 semana y descubre el impacto de
+            Redactor Escolar en tus propias aulas. Sin compromisos, sin
+            fricciones.
+          </p>
+          <a
+            href="mailto:piloto@Redactor Escolar.cl"
+            class="bg-white text-blue-600 font-bold py-3 px-8 rounded-full text-lg hover:bg-gray-100 transition-colors"
+            >Solicitar Piloto Gratuito</a
+          >
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+      <div class="container mx-auto px-6 text-center">
+        <p>&copy; 2025 Redactor Escolar. Todos los derechos reservados.</p>
+        <p class="text-gray-400 mt-2">
+          Una solución para potenciar la educación en Chile.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const tabsData = {
+          desafio: `
+                    <div class="bg-white p-8 rounded-xl shadow-inner border border-gray-100 animate-fade-in">
+                        <div class="grid md:grid-cols-3 gap-6 text-center">
+                            <div>
+                                <h4 class="font-bold text-lg mb-2">⌛ Sobrecarga de Planificación</h4>
+                                <p class="text-gray-600">Docentes invierten horas buscando y adaptando noticias, restando tiempo a la enseñanza personalizada.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-2">📚 Falta de Recursos Actuales</h4>
+                                <p class="text-gray-600">Es difícil vincular un currículo estático con la vertiginosa actualidad nacional e internacional de forma segura.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-2">🤔 Necesidad de Pensamiento Crítico</h4>
+                                <p class="text-gray-600">Formar ciudadanos reflexivos es crucial, pero requiere material pertinente y guías de discusión que no siempre existen.</p>
+                            </div>
+                        </div>
+                    </div>`,
+          plataforma: `
+                    <div class="bg-white p-8 rounded-xl shadow-inner border border-gray-100 animate-fade-in">
+                         <div class="grid md:grid-cols-3 gap-6 text-center">
+                             <div>
+                                <h4 class="font-bold text-lg text-blue-600 mb-2">🤖 Automatización con IA</h4>
+                                <p class="text-gray-600">Nuestra IA hace el trabajo pesado: busca, filtra, adapta y genera actividades, entregando material listo para usar.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg text-blue-600 mb-2">📰 Contenido Curricular y Relevante</h4>
+                                <p class="text-gray-600">Cada noticia se alinea con las bases curriculares de Lenguaje, Historia y Formación Ciudadana, garantizando pertinencia.</p>
+                            </div>
+                             <div>
+                                <h4 class="font-bold text-lg text-blue-600 mb-2">💬 Foco en Habilidades Clave</h4>
+                                <p class="text-gray-600">El material está diseñado para diferenciar hechos de opiniones, debatir y argumentar, desarrollando competencias del siglo XXI.</p>
+                            </div>
+                        </div>
+                    </div>`,
+        };
+
+        const benefitsData = {
+          docentes: [
+            {
+              icon: "⏱️",
+              title: "Ahorro de Tiempo",
+              description:
+                "Automatiza la planificación y entrega material listo para usar, liberando horas valiosas.",
+            },
+            {
+              icon: "📄",
+              title: "Material Flexible",
+              description:
+                "Contenidos en PDF y Word listos para imprimir, proyectar o subir a Google Classroom.",
+            },
+            {
+              icon: "🧠",
+              title: "Redacciones Diferenciadas",
+              description:
+                "Vocabulario y estructura adaptados por nivel lector, asegurando la comprensión.",
+            },
+            {
+              icon: "📚",
+              title: "Contenido Transversal",
+              description:
+                "Útil para múltiples asignaturas como Lenguaje, Historia, Ciudadanía y Orientación.",
+            },
+            {
+              icon: "💬",
+              title: "Actividades Sugeridas",
+              description:
+                "Incluye preguntas guía y propuestas de debate para una implementación inmediata.",
+            },
+            {
+              icon: "🗞️",
+              title: "Temas Relevantes",
+              description:
+                "Facilita la promoción del análisis crítico de situaciones reales y fomenta el debate.",
+            },
+          ],
+          estudiantes: [
+            {
+              icon: "🧩",
+              title: "Pensamiento Crítico",
+              description:
+                "Aprenden a cuestionar fuentes, diferenciar hechos de opiniones y argumentar sus ideas.",
+            },
+            {
+              icon: "📖",
+              title: "Comprensión Lectora",
+              description:
+                "Mejoran su fluidez y vocabulario con textos auténticos y adaptados a su nivel.",
+            },
+            {
+              icon: "🌍",
+              title: "Motivación y Conexión",
+              description:
+                "Aumenta su interés al trabajar con noticias reales que conectan el aprendizaje con su entorno.",
+            },
+            {
+              icon: "🎙️",
+              title: "Participación Activa",
+              description:
+                "Fortalece habilidades de comunicación, escucha activa y expresión de opiniones.",
+            },
+          ],
+          colegios: [
+            {
+              icon: "🧭",
+              title: "Vinculación Curricular",
+              description:
+                "Conecta la propuesta educativa con la realidad, demostrando una enseñanza pertinente.",
+            },
+            {
+              icon: "📊",
+              title: "Recurso Transversal",
+              description:
+                "Potencia el trabajo interdisciplinario y la coherencia en la planificación institucional.",
+            },
+            {
+              icon: "📑",
+              title: "Evidencia de Innovación",
+              description:
+                "Acción concreta para el PME y evaluaciones docentes, demostrando uso de nuevas tecnologías.",
+            },
+            {
+              icon: "🤝",
+              title: "Cultura de Diálogo",
+              description:
+                "Fomenta un clima escolar participativo que valora la opinión fundamentada y el respeto.",
+            },
+            {
+              icon: "💼",
+              title: "Implementación Simple",
+              description:
+                "Compatible con la tecnología existente (correo, Drive, WhatsApp), sin fricciones.",
+            },
+            {
+              icon: "💰",
+              title: "Modelo Accesible",
+              description:
+                "Solución robusta y de bajo costo, adaptable a presupuestos de distinto tamaño.",
+            },
+          ],
+        };
+
+        const pricingData = {
+          individual: `
+                    <div class="bg-white rounded-xl shadow-lg p-8 w-full max-w-sm border-2 border-transparent text-center animate-fade-in">
+                        <h3 class="text-2xl font-bold mb-2">Licencia Docente</h3>
+                        <p class="text-gray-500 mb-6">Ideal para profesores innovadores.</p>
+                        <p class="text-5xl font-bold mb-4">$6.500 <span class="text-lg font-normal text-gray-500">CLP/mes</span></p>
+                        <ul class="text-left space-y-3 mb-8">
+                            <li class="flex items-center"><span class="text-green-500 mr-3">✔</span> 8 noticias adaptadas al mes</li>
+                            <li class="flex items-center"><span class="text-green-500 mr-3">✔</span> Formatos PDF y Word</li>
+                            <li class="flex items-center"><span class="text-green-500 mr-3">✔</span> Entrega por correo electrónico</li>
+                        </ul>
+                        <a href="#" class="w-full block bg-gray-200 text-gray-800 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition-colors">Comenzar</a>
+                    </div>`,
+          institucional: `
+                    <div class="bg-white rounded-xl shadow-lg p-8 w-full max-w-sm border-2 border-blue-600 text-center animate-fade-in relative">
+                        <span class="absolute top-0 -translate-y-1/2 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">MÁS POPULAR</span>
+                        <h3 class="text-2xl font-bold mb-2">Licencia Institucional</h3>
+                        <p class="text-gray-500 mb-6">La solución completa para tu colegio.</p>
+                        <p class="text-5xl font-bold mb-4">$49.000 <span class="text-lg font-normal text-gray-500">CLP/mes</span></p>
+                        <p class="text-sm text-gray-500 mb-6">(hasta 500 estudiantes)</p>
+                        <ul class="text-left space-y-3 mb-8">
+                            <li class="flex items-center"><span class="text-blue-600 mr-3">✔</span> Todo el contenido semanal</li>
+                            <li class="flex items-center"><span class="text-blue-600 mr-3">✔</span> Acceso completo al Portal Web</li>
+                            <li class="flex items-center"><span class="text-blue-600 mr-3">✔</span> Entrega multicanal (Email, Drive, WA)</li>
+                            <li class="flex items-center"><span class="text-blue-600 mr-3">✔</span> Cuentas para todos los docentes</li>
+                            <li class="flex items-center"><span class="text-blue-600 mr-3">✔</span> Piloto gratuito de 1 semana</li>
+                        </ul>
+                        <a href="#piloto" class="w-full block bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors">Solicitar Piloto</a>
+                    </div>`,
+        };
+
+        const tabContent = document.getElementById("tab-content");
+        const tabButtons = document.querySelectorAll(".tab-button");
+        const benefitContent = document.getElementById("benefit-content");
+        const benefitButtons = document.querySelectorAll(".benefit-tab-button");
+        const pricingContent = document.getElementById("pricing-content");
+        const pricingToggle = document.getElementById("pricing-toggle");
+        const mobileMenuButton = document.getElementById("mobile-menu-button");
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        function updateTabContent(tab) {
+          tabContent.innerHTML = tabsData[tab];
+          tabButtons.forEach((button) => {
+            button.classList.toggle("active", button.dataset.tab === tab);
+          });
+        }
+
+        function updateBenefitContent(benefit) {
+          const data = benefitsData[benefit];
+          benefitContent.innerHTML = data
+            .map(
+              (item) => `
+                    <div class="benefit-card bg-white p-6 rounded-lg shadow-md transition-all duration-300 animate-fade-in">
+                        <div class="text-3xl mb-4">${item.icon}</div>
+                        <h4 class="text-lg font-bold mb-2">${item.title}</h4>
+                        <p class="text-gray-600 text-sm">${item.description}</p>
+                    </div>
+                `
+            )
+            .join("");
+
+          benefitButtons.forEach((button) => {
+            if (button.dataset.benefit === benefit) {
+              button.classList.add("active", "bg-blue-600", "text-white");
+              button.classList.remove("bg-gray-100", "text-gray-800");
+            } else {
+              button.classList.remove("active", "bg-blue-600", "text-white");
+              button.classList.add("bg-gray-100", "text-gray-800");
+            }
+          });
+        }
+
+        function updatePricingContent() {
+          if (pricingToggle.checked) {
+            pricingContent.innerHTML = pricingData.institucional;
+          } else {
+            pricingContent.innerHTML = pricingData.individual;
+          }
+        }
+
+        mobileMenuButton.addEventListener("click", () => {
+          mobileMenu.classList.toggle("hidden");
+        });
+
+        tabButtons.forEach((button) => {
+          button.addEventListener("click", () =>
+            updateTabContent(button.dataset.tab)
+          );
+        });
+
+        benefitButtons.forEach((button) => {
+          button.addEventListener("click", () =>
+            updateBenefitContent(button.dataset.benefit)
+          );
+        });
+
+        pricingToggle.addEventListener("change", updatePricingContent);
+
+        const smoothScroll = (target) => {
+          document.querySelector(target).scrollIntoView({
+            behavior: "smooth",
+          });
+          if (!mobileMenu.classList.contains("hidden")) {
+            mobileMenu.classList.add("hidden");
+          }
+        };
+
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+          anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            smoothScroll(this.getAttribute("href"));
+          });
+        });
+
+        updateTabContent("desafio");
+        updateBenefitContent("docentes");
+        updatePricingContent();
+
+        const ctx = document.getElementById("strategyChart").getContext("2d");
+        const strategyChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: [
+              "Reactivación de Aprendizajes",
+              "Ley SEP y Fondos FAEP",
+              "Plan de Formación Ciudadana",
+              "Fortalecimiento Docente",
+              "Mejora Convivencia Escolar",
+              "PME e Innovación",
+            ],
+            datasets: [
+              {
+                label: "Nivel de Alineación Estratégica",
+                data: [100, 100, 100, 100, 100, 100],
+                backgroundColor: "rgba(37, 99, 235, 0.7)",
+                borderColor: "rgba(37, 99, 235, 1)",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            indexAxis: "y",
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                beginAtZero: true,
+                max: 100,
+                ticks: {
+                  callback: function (value) {
+                    return value + "%";
+                  },
+                },
+              },
+              y: {
+                ticks: {
+                  autoSkip: false,
+                  callback: function (value, index, values) {
+                    const label = this.getLabelForValue(value);
+                    if (label.length > 25) {
+                      return label.match(/.{1,25}/g);
+                    }
+                    return label;
+                  },
+                },
+              },
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    return " 100% Alineado y Financiable";
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        const style = document.createElement("style");
+        style.innerHTML = `
+                @keyframes fade-in {
+                    from { opacity: 0; transform: translateY(10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .animate-fade-in {
+                    animation: fade-in 0.5s ease-out forwards;
+                }
+            `;
+        document.head.appendChild(style);
+      });
+    </script>
+  </body>
+</html>

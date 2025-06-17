@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redactor Escolar</title>
+    <!-- Chosen Palette: Classic Blues & Greys (Background: #F8F8F8, Primary Text/Dark Accent: #333333, Secondary Text: #666666, Primary Accent: #0056B3, Borders/Dividers: #E0E0E0) -->
+    <!-- Application Structure Plan: This SPA adopts a newspaper-like layout with distinct sections for different content types, mimicking a digital media outlet. The public home features a prominent "noticia principal" (main news) section and a grid of "otras noticias" (other news), similar to a front page. The news detail view is dynamic, allowing level-based content switching. A dedicated "acceso docente" (teacher access) section provides a filtered news list. Navigation is handled by JS functions to show/hide sections, ensuring a smooth single-page experience. This structure prioritizes content hierarchy and a familiar news consumption pattern for users. -->
+    <!-- Visualization & Content Choices: [Main News Card -> Goal: Inform/Highlight -> Viz: Large Styled Card with Text -> Justification: Mimics lead article in a newspaper for prominence -> Method: HTML/Tailwind], [Other News Cards -> Goal: Inform/Browse -> Viz: Grid of smaller cards -> Justification: Allows quick scanning of multiple articles, common in digital media -> Method: HTML/Tailwind & Vanilla JS for dynamic loading], [News Detail Level Switch -> Goal: Inform/Adapt -> Viz: Button Group for content toggle -> Justification: Enables users to select content difficulty/format, core to Redactor Escolar's value -> Method: HTML/Tailwind & Vanilla JS], [Teacher News List with Filters -> Goal: Browse/Filter -> Viz: Dynamic grid of cards with search/select inputs -> Justification: Provides a practical tool for teachers to find specific content, replicating a media archive search -> Method: HTML/Tailwind & Vanilla JS for filtering]. No complex charts or SVG graphics are used, focusing on textual content presentation with a strong emphasis on layout and typography to convey professionalism. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8f8f8; /* Very Light Grey */
+        color: #333333; /* Dark Charcoal Grey */
+      }
+      h1,
+      h2,
+      h3,
+      .news-title {
+        font-family: "Playfair Display", serif;
+      }
+      .section {
+        display: none;
+      }
+      .current-page {
+        display: block;
+      }
+      .nav-link.active {
+        border-bottom: 2px solid #0056b3; /* Professional Blue */
+        color: #0056b3;
+      }
+      .level-button.active {
+        background-color: #0056b3; /* Professional Blue */
+        color: white;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <header class="bg-[#333333] text-white py-3">
+      <div class="container mx-auto px-6 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+          <span class="text-sm">Fecha: <span id="current-date"></span></span>
+        </div>
+        <div class="flex items-center space-x-4">
+          <a
+            href="#"
+            class="text-sm hover:text-gray-300"
+            onclick="alert('Funcionalidad de Suscripción no implementada en este demo.')"
+            >Suscríbete</a
+          >
+          <span class="text-xs text-gray-400">|</span>
+          <span class="text-sm">Región: CHILE</span>
+        </div>
+      </div>
+    </header>
+
+    <div
+      class="bg-white shadow-md py-4 sticky top-0 z-10 border-b border-[#E0E0E0]"
+    >
+      <div
+        class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center"
+      >
+        <h1 class="text-4xl font-extrabold text-[#333333] mb-4 md:mb-0">
+          Redactor Escolar
+        </h1>
+        <nav class="flex space-x-6">
+          <button
+            id="nav-public"
+            class="nav-link text-lg font-semibold text-[#333333] hover:text-[#0056B3] active"
+          >
+            Inicio
+          </button>
+          <button
+            id="nav-teacher-login"
+            class="nav-link text-lg font-semibold text-[#333333] hover:text-[#0056B3]"
+          >
+            Acceso Docente
+          </button>
+          <button
+            id="nav-teacher-logout"
+            class="nav-link text-lg font-semibold text-red-500 hover:text-red-600 hidden"
+          >
+            Cerrar Sesión
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <main class="flex-grow">
+      <!-- Home Público (similar a la portada de un diario) -->
+      <section id="public-home" class="section current-page py-12 md:py-16">
+        <div class="container mx-auto px-6">
+          <div class="grid md:grid-cols-3 gap-8">
+            <!-- Noticia Principal (simulando un artículo destacado) -->
+            <div
+              id="main-news-card"
+              class="md:col-span-2 bg-white rounded-xl shadow-lg border border-[#E0E0E0] overflow-hidden cursor-pointer hover:shadow-xl transition-shadow"
+            >
+              <!-- Content will be dynamically loaded -->
+            </div>
+
+            <!-- Otras Noticias (columnas laterales) -->
+            <div class="md:col-span-1">
+              <h3
+                class="text-2xl font-bold text-[#333333] mb-6 border-b-2 border-[#E0E0E0] pb-2"
+              >
+                Últimas Noticias
+              </h3>
+              <div id="side-news-container" class="space-y-6">
+                <!-- Otras noticias se cargarán aquí -->
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-16 text-center">
+            <h3
+              class="text-2xl font-bold text-[#333333] mb-6 border-b-2 border-[#E0E0E0] pb-2"
+            >
+              Noticias Destacadas
+            </h3>
+            <div
+              class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+              id="featured-news-container"
+            >
+              <!-- Noticias Destacadas (fila inferior) -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Detalle de la Noticia -->
+      <section id="news-detail" class="section py-12 md:py-16">
+        <div
+          class="container mx-auto px-6 max-w-4xl bg-white p-8 rounded-xl shadow-lg border border-[#E0E0E0]"
+        >
+          <button
+            id="back-to-home"
+            class="bg-gray-200 text-[#666666] px-4 py-2 rounded-full mb-6 hover:bg-gray-300 transition-colors text-sm"
+          >
+            ← Volver
+          </button>
+          <h2
+            id="detail-title"
+            class="text-4xl md:text-5xl font-extrabold text-[#333333] mb-4"
+          ></h2>
+          <p
+            id="detail-meta"
+            class="text-[#666666] text-sm mb-6 border-b pb-4"
+          ></p>
+
+          <div class="flex flex-wrap gap-3 mb-8">
+            <button
+              data-level="news-for-kids"
+              class="level-button px-4 py-2 rounded-full bg-[#E0E0E0] text-[#333333] font-semibold text-sm"
+            >
+              Para Niños (8-12)
+            </button>
+            <button
+              data-level="news-for-teens"
+              class="level-button px-4 py-2 rounded-full bg-[#E0E0E0] text-[#333333] font-semibold text-sm"
+            >
+              Para Adolescentes (13-17)
+            </button>
+            <button
+              data-level="news-for-schools"
+              class="level-button px-4 py-2 rounded-full bg-[#E0E0E0] text-[#333333] font-semibold text-sm"
+            >
+              Versión Formal
+            </button>
+            <button
+              data-level="news-for-schools-edu"
+              class="level-button px-4 py-2 rounded-full bg-[#E0E0E0] text-[#333333] font-semibold text-sm"
+            >
+              Con Actividades
+            </button>
+          </div>
+
+          <div
+            id="detail-content"
+            class="text-lg leading-relaxed text-[#333333]"
+          >
+            <!-- Contenido adaptado se cargará aquí -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Home para Docentes/Instituciones -->
+      <section id="teacher-home" class="section py-12 md:py-16">
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-10">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-[#333333] mb-4">
+              Panel Docente: Archivo de Noticias
+            </h2>
+            <p class="text-lg text-[#333333] max-w-3xl mx-auto">
+              Explora nuestro archivo de noticias adaptadas. Utiliza los filtros
+              para encontrar rápidamente el material perfecto para tu clase.
+            </p>
+          </div>
+
+          <div
+            class="bg-white p-6 rounded-xl shadow-lg border border-[#E0E0E0] mb-8"
+          >
+            <div class="flex flex-col md:flex-row gap-4 mb-6">
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Buscar por título o palabra clave..."
+                class="flex-grow p-3 border border-[#E0E0E0] rounded-lg focus:ring-2 focus:ring-[#0056B3] focus:border-[#0056B3]"
+              />
+              <select
+                id="filter-level"
+                class="p-3 border border-[#E0E0E0] rounded-lg focus:ring-2 focus:ring-[#0056B3] focus:border-[#0056B3]"
+              >
+                <option value="">Nivel</option>
+                <option value="news-for-kids">Para Niños</option>
+                <option value="news-for-teens">Para Adolescentes</option>
+                <option value="news-for-schools">Formal</option>
+                <option value="news-for-schools-edu">Con Actividades</option>
+              </select>
+              <select
+                id="filter-subject"
+                class="p-3 border border-[#E0E0E0] rounded-lg focus:ring-2 focus:ring-[#0056B3] focus:border-[#0056B3]"
+              >
+                <option value="">Asignatura</option>
+                <option value="Lenguaje">Lenguaje</option>
+                <option value="Historia">Historia</option>
+                <option value="Formación Ciudadana">Formación Ciudadana</option>
+                <option value="Orientación">Orientación</option>
+                <option value="Ciencias">Ciencias</option>
+                <option value="Cultura">Cultura</option>
+                <option value="Medioambiente">Medioambiente</option>
+                <option value="Economía">Economía</option>
+              </select>
+            </div>
+            <div
+              id="teacher-news-list"
+              class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              <!-- Noticias para docentes se cargarán aquí -->
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-[#333333] text-white py-6 mt-auto">
+      <div class="container mx-auto px-6 text-center text-sm">
+        <p>&copy; 2025 Redactor Escolar. Todos los derechos reservados.</p>
+        <p class="mt-2">
+          Una solución de Redactor24h para la educación chilena.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      const dummyNews = [
+        {
+          id: "1",
+          title: "Descubren Nueva Especie de Pingüino en la Antártica",
+          source: "National Geographic",
+          date: "15 de Junio, 2025",
+          subjects: ["Ciencias", "Medioambiente"],
+          keywords: ["pingüino", "antártica", "descubrimiento", "ciencia"],
+          summary:
+            "Científicos chilenos han identificado una especie de pingüino previamente desconocida en la Península Antártica, un hallazgo que subraya la riqueza de los ecosistemas polares.",
+          imageUrl:
+            "https://placehold.co/600x400/E0E0E0/333333?text=Pingüino+Antártico",
+          levels: {
+            "news-for-kids": `
+                        <p>¡Imagínate! Científicos encontraron un tipo de pingüino que nadie conocía. Fue en un lugar muy frío llamado Antártica, donde hay mucho hielo. Este pingüino es especial porque es un poco diferente a los que ya conocíamos. Ahora, los científicos lo están estudiando para aprender más sobre él y cómo vive en ese lugar helado. ¡Es como descubrir un nuevo amigo en la naturaleza!</p>
+                        <p>Los pingüinos son aves marinas que no vuelan, pero nadan súper bien. Usan sus alas como si fueran aletas. Comen peces pequeños y calamares. Viven en lugares fríos como la Antártica y algunas islas del sur. Este nuevo pingüino nos enseña que aún hay muchas cosas por descubrir en nuestro planeta.</p>
+                    `,
+            "news-for-teens": `
+                        <p>Un equipo de investigadores polares ha anunciado el hallazgo de una nueva especie de pingüino en la remota región de la Antártica Occidental. Este descubrimiento subraya la biodiversidad aún inexplorada de los ecosistemas polares y la importancia de la conservación marina frente al cambio climático.</p>
+                        <p>La nueva especie, aún en estudio para su clasificación formal, presenta características morfológicas distintivas que la diferencian de las especies de pingüinos ya conocidas en el continente antártico. Los científicos planean realizar un seguimiento exhaustivo para comprender mejor su ecología, comportamiento reproductivo y rol dentro de la cadena alimenticia polar.</p>
+                        <p>Este hallazgo es un recordatorio de que la ciencia continúa revelando secretos de nuestro planeta y la necesidad de proteger los hábitats naturales para futuras generaciones.</p>
+                    `,
+            "news-for-schools": `
+                        <p>Científicos de la Universidad de Magallanes, en colaboración con el Instituto Antártico Chileno (INACH), han confirmado el descubrimiento de una nueva especie de pingüino en la Península Antártica, específicamente en la región de la Bahía Adelaida. Este hallazgo representa un hito significativo en la ornitología polar y en el estudio de la biodiversidad marina antártica.</p>
+                        <p>La identificación de esta nueva especie se basó en análisis genéticos, estudios de morfología comparada y patrones de comportamiento observados en colonias aisladas. Se estima que esta especie ha evolucionado de forma divergente debido a factores geográficos y climáticos específicos de su hábitat.</p>
+                        <p>Este descubrimiento no solo enriquece nuestro conocimiento sobre la fauna antártica, sino que también resalta la urgencia de intensificar los esfuerzos de investigación y conservación en una de las regiones más vulnerables al cambio climático global. La protección de estos ecosistemas es crucial para mantener el equilibrio biológico del planeta.</p>
+                    `,
+            "news-for-schools-edu": `
+                        <p><strong>Científicos chilenos descubren nueva especie de pingüino en la Antártica: Un hito para la ciencia polar</strong></p>
+                        <p>Un equipo de investigadores del Instituto Antártico Chileno (INACH) y la Universidad de Magallanes ha anunciado un descubrimiento trascendental: la identificación de una nueva especie de pingüino en la Península Antártica. Este hallazgo, publicado en la revista "Polar Biology", destaca la riqueza biológica de la región y la importancia de la investigación científica en zonas extremas.</p>
+                        <p><strong>Clasificación y Características:</strong> La nueva especie se diferencia de las conocidas por su patrón de plumaje, vocalización y análisis genéticos. Su adaptación al frío extremo y su dieta especializada son objeto de estudio para comprender mejor la evolución de las aves antárticas.</p>
+                        <p><strong>Relevancia Científica y Ambiental:</strong> Este descubrimiento no solo aporta al conocimiento taxonómico, sino que también subraya la vulnerabilidad de la Antártica al cambio climático. La alteración de los patrones de hielo y las temperaturas oceánicas afectan directamente a las poblaciones de pingüinos, haciendo de su monitoreo una prioridad.</p>
+                        
+                        <h4 class="font-bold text-xl mt-6 mb-2 text-[#333333]">Actividades Sugeridas:</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Comprensión Lectora:</strong> ¿Dónde se descubrió la nueva especie? ¿Quiénes fueron los científicos involucrados? ¿Por qué es importante este descubrimiento?</li>
+                            <li><strong>Investigación:</strong> Busca información sobre otras especies de pingüinos chilenos y crea un cuadro comparativo de sus hábitats y características.</li>
+                            <li><strong>Debate:</strong> Organiza un debate en clase sobre el impacto del cambio climático en los ecosistemas polares y qué acciones se pueden tomar a nivel local y global para protegerlos.</li>
+                            <li><strong>Creatividad:</strong> Dibuja o describe cómo te imaginas la nueva especie de pingüino, basándote en la información leída.</li>
+                            <li><strong>Conexión Curricular:</strong> ¿Cómo se relaciona esta noticia con los Objetivos de Aprendizaje de Ciencias Naturales o Formación Ciudadana?</li>
+                        </ul>
+                    `,
+          },
+        },
+        {
+          id: "2",
+          title:
+            "Avance en Energía Renovable: Nueva Planta Solar Flotante en Atacama",
+          source: "Diario Financiero",
+          date: "12 de Junio, 2025",
+          subjects: ["Ciencias", "Economía", "Medioambiente"],
+          keywords: ["energía renovable", "solar", "Atacama", "innovación"],
+          summary:
+            "Chile inaugura una innovadora planta solar flotante en Atacama, un paso clave para la matriz energética limpia y la eficiencia hídrica.",
+          imageUrl:
+            "https://placehold.co/600x400/E0E0E0/333333?text=Planta+Solar+Flotante",
+          levels: {
+            "news-for-kids": `
+                        <p>¡Imagínate una gran granja de paneles solares que flota en el agua! Esto es lo que están construyendo en el desierto de Atacama, en Chile. Estos paneles especiales usan la luz del sol para hacer energía limpia, que no contamina. Ayuda a cuidar nuestro planeta y a tener electricidad para todos.</p>
+                        <p>Es una idea muy inteligente porque en Atacama hace mucho sol. Al poner los paneles en el agua, también ayudan a que el agua no se evapore tan rápido. ¡Así que es bueno para el ambiente y para la energía de nuestro país!</p>
+                    `,
+            "news-for-teens": `
+                        <p>Chile da un nuevo paso hacia la sostenibilidad con la inauguración de una innovadora planta solar flotante en el desierto de Atacama. Este proyecto no solo incrementa la capacidad de generación de energía renovable del país, sino que también representa una solución eficiente para el uso del territorio y la minimización de la evaporación en embalses.</p>
+                        <p>La planta, que utiliza tecnología fotovoltaica de última generación, es un ejemplo de cómo la ingeniería y la innovación pueden combinarse para abordar los desafíos energéticos y ambientales. Se espera que esta iniciativa sirva de modelo para futuras implementaciones en otras regiones con recursos hídricos limitados y alta radiación solar.</p>
+                    `,
+            "news-for-schools": `
+                        <p>El desierto de Atacama, en Chile, continúa posicionándose como un centro global de innovación energética con la puesta en marcha de la primera planta solar flotante a gran escala del país. Este proyecto, desarrollado por la empresa Engie en colaboración con entidades locales, busca optimizar el uso del recurso solar y hídrico, generando energía limpia y reduciendo la huella de carbono.</p>
+                        <p>La tecnología de paneles flotantes ofrece ventajas significativas, como la reducción de la evaporación del agua en embalses (un recurso escaso en la región) y la menor ocupación de terreno. Además, la refrigeración natural del agua contribuye a una mayor eficiencia de los paneles solares. Este avance se alinea con la meta de Chile de alcanzar la carbono neutralidad para 2050.</p>
+                    `,
+            "news-for-schools-edu": `
+                        <p><strong>Innovación energética: Chile inaugura planta solar flotante en Atacama</strong></p>
+                        <p>Chile avanza en su compromiso con las energías renovables con la puesta en marcha de una pionera planta solar flotante en un embalse del desierto de Atacama. Este proyecto, impulsado por empresas líderes en energía, busca maximizar la generación fotovoltaica en una de las zonas con mayor radiación solar del mundo, a la vez que contribuye a la gestión eficiente del agua.</p>
+                        <p><strong>Ventajas de la Tecnología Flotante:</strong></p>
+                        <ul class="list-disc list-inside">
+                            <li><strong>Eficiencia:</strong> La temperatura del agua ayuda a mantener los paneles más fríos, aumentando su rendimiento.</li>
+                            <li><strong>Uso de Suelo:</strong> Libera terrenos valiosos al utilizar superficies de agua existentes.</li>
+                            <li><strong>Evaporación:</strong> Reduce la pérdida de agua por evaporación, un beneficio crucial en zonas áridas.</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-xl mt-6 mb-2 text-[#333333]">Actividades Sugeridas:</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Análisis Comparativo:</b> Compara la energía solar flotante con otras fuentes de energía renovable (eólica, geotérmica). ¿Cuáles son sus ventajas y desventajas?</li>
+                            <li><strong>Impacto Ambiental:</strong> Investiga cómo la generación de energía influye en el medioambiente y qué significa la "huella de carbono".</li>
+                            <li><strong>Formación Ciudadana:</strong> ¿Cómo contribuye este tipo de proyectos al desarrollo sostenible de Chile? ¿Qué papel juegan los ciudadanos en la transición energética?</li>
+                            <li><strong>Debate:</strong> Discute en grupo si Chile debería invertir más en energías renovables. ¿Cuáles son los desafíos para el país?</li>
+                        </ul>
+                    `,
+          },
+        },
+        {
+          id: "3",
+          title:
+            "Nuevas Becas para Estudiantes Rurales Acceden a la Educación Superior",
+          source: "MINEDUC",
+          date: "08 de Junio, 2025",
+          subjects: ["Orientación", "Formación Ciudadana", "Economía"],
+          keywords: [
+            "becas",
+            "educación superior",
+            "rural",
+            "equidad",
+            "oportunidades",
+          ],
+          summary:
+            "El Ministerio de Educación lanza un programa de becas universitarias focalizadas en estudiantes de zonas rurales para fomentar la equidad en el acceso.",
+          imageUrl:
+            "https://placehold.co/600x400/E0E0E0/333333?text=Estudiantes+Rurales",
+          levels: {
+            "news-for-kids": `
+                        <p>¡Buenas noticias para los niños y niñas que viven lejos de las ciudades! El gobierno ha creado una ayuda especial para que puedan ir a la universidad cuando sean grandes. Es como un regalo de dinero para que no tengan que preocuparse por pagarla. Así, todos tendrán la oportunidad de estudiar lo que quieran, sin importar dónde vivan.</p>
+                        <p>Esto es muy importante porque a veces los colegios de zonas rurales tienen menos recursos. Con esta beca, más jóvenes podrán cumplir sus sueños y ser profesionales, ayudando también a sus familias y a sus pueblos.</p>
+                    `,
+            "news-for-teens": `
+                        <p>El Ministerio de Educación ha lanzado un programa de nuevas becas universitarias destinadas específicamente a estudiantes provenientes de zonas rurales. La iniciativa busca reducir las brechas de acceso a la educación superior y fomentar la equidad, permitiendo que jóvenes de todo el país puedan perseguir sus aspiraciones académicas.</p>
+                        <p>Estas becas cubrirán aspectos clave como la matrícula, el arancel y, en algunos casos, gastos de manutención, facilitando la permanencia de los estudiantes en las instituciones. Este es un paso importante para fortalecer la movilidad social y el desarrollo de talentos en comunidades que históricamente han tenido menos oportunidades.</p>
+                    `,
+            "news-for-schools": `
+                        <p>Con el objetivo de promover la equidad y la inclusión en el sistema educativo chileno, el Ministerio de Educación (MINEDUC) ha anunciado la implementación de un nuevo paquete de becas de acceso a la educación superior, focalizadas en estudiantes egresados de establecimientos educacionales rurales. Esta medida busca mitigar las barreras geográficas y socioeconómicas que a menudo limitan las oportunidades de los jóvenes en zonas apartadas.</p>
+                        <p>El programa contemplará apoyo financiero integral, incluyendo costos de matrícula, arancel anual y un estipendio mensual para gastos de vida, lo que permitirá a los beneficiarios concentrarse plenamente en sus estudios. Esta política pública se alinea con los Objetivos de Desarrollo Sostenible (ODS) de Naciones Unidas, particularmente en lo referente a la educación de calidad y la reducción de las desigualdades.</p>
+                    `,
+            "news-for-schools-edu": `
+                        <p><strong>MINEDUC lanza becas para estudiantes rurales: Impulso a la equidad educativa</strong></p>
+                        <p>El Ministerio de Educación de Chile ha presentado un innovador programa de becas universitarias diseñado para facilitar el acceso a la educación superior a jóvenes de entornos rurales. Esta iniciativa es parte de un esfuerzo más amplio por reducir las desigualdades y asegurar que el talento y el esfuerzo sean los únicos criterios para el ingreso a la universidad.</p>
+                        <p><strong>Aspectos Clave de las Becas:</strong></p>
+                        <ul class="list-disc list-inside">
+                            <li><strong>Cobertura:</strong> Cubre arancel, matrícula y, en algunos casos, manutención.</li>
+                            <li><strong>Requisitos:</strong> Enfocado en egresados de colegios rurales con buen rendimiento académico.</li>
+                            <li><strong>Impacto:</strong> Se espera aumentar significativamente la representación de estudiantes rurales en universidades e institutos profesionales.</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-xl mt-6 mb-2 text-[#333333]">Actividades Sugeridas:</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Análisis de Datos:</strong> Investiga estadísticas sobre el acceso a la educación superior en Chile por región o tipo de establecimiento. ¿Cómo cambian las cifras con estas becas?</li>
+                            <li><strong>Formación Ciudadana:</strong> ¿Qué papel juega la educación en la movilidad social? ¿Por qué es importante la equidad en el acceso a la educación superior?</li>
+                            <li><strong>Rol del Estado:</strong> Debate sobre la responsabilidad del Estado en garantizar oportunidades educativas para todos los ciudadanos.</li>
+                            <li><strong>Testimonios:</strong> Si es posible, busca testimonios de estudiantes rurales que hayan accedido a la educación superior. ¿Qué desafíos enfrentaron?</li>
+                        </ul>
+                    `,
+          },
+        },
+        {
+          id: "4",
+          title: "Proyecto de Ley Busca Proteger Glaciares Chilenos",
+          source: "La Tercera",
+          date: "01 de Junio, 2025",
+          subjects: ["Medioambiente", "Formación Ciudadana", "Historia"],
+          keywords: [
+            "glaciares",
+            "ley",
+            "protección",
+            "medioambiente",
+            "Chile",
+          ],
+          summary:
+            "Un proyecto de ley en el Congreso chileno busca otorgar un estatus de protección legal específico a los glaciares, esenciales para el abastecimiento hídrico del país.",
+          imageUrl:
+            "https://placehold.co/600x400/E0E0E0/333333?text=Glaciares+Andinos",
+          levels: {
+            "news-for-kids": `
+                        <p>Nuestros glaciares, que son montañas gigantes de hielo, son muy importantes para el agua que bebemos. Pero el hielo se está derritiendo. Por eso, algunas personas quieren crear una ley para cuidarlos mejor y que no se pierdan. Así, tendremos agua limpia por mucho tiempo.</p>
+                        <p>Los glaciares están en las montañas y son como grandes reservas de agua. Si se derriten, el nivel del mar sube y menos agua queda para nosotros. Es importante protegerlos para el futuro de Chile.</p>
+                    `,
+            "news-for-teens": `
+                        <p>Un nuevo proyecto de ley ha ingresado al Congreso chileno con el objetivo de establecer un marco legal robusto para la protección de los glaciares del país. La iniciativa busca reconocerlos como bienes nacionales de uso público y prohibir actividades que puedan dañarlos, como la minería o ciertos proyectos de infraestructura.</p>
+                        <p>Los glaciares son reservas estratégicas de agua dulce y cumplen un rol crucial en el equilibrio hídrico de Chile, especialmente en un contexto de cambio climático y sequía. La aprobación de esta ley sería un avance significativo en la conservación ambiental y la gestión de recursos naturales vitales.</p>
+                    `,
+            "news-for-schools": `
+                        <p>El debate sobre la protección de los glaciares chilenos ha tomado un nuevo impulso con la presentación de un proyecto de ley que busca otorgarles un estatus de protección legal específico. La propuesta, que cuenta con amplio apoyo transversal, declara los glaciares como "bienes nacionales de uso público" y establece un régimen de prohibiciones y salvaguardas para preservar su integridad ecológica y su función como reservas estratégicas de agua dulce.</p>
+                        <p>Chile posee una de las mayores extensiones de glaciares fuera de las regiones polares, los cuales son fundamentales para el abastecimiento hídrico de ciudades, agricultura y ecosistemas. Sin embargo, se encuentran bajo amenaza por el cambio climático y ciertas actividades económicas. La legislación propuesta es vista como una herramienta esencial para asegurar la resiliencia hídrica del país y proteger su patrimonio natural.</p>
+                    `,
+            "news-for-schools-edu": `
+                        <p><strong>Hacia la protección de los glaciares: Nuevo proyecto de ley en Chile</strong></p>
+                        <p>Un proyecto de ley que busca proteger los glaciares chilenos ha sido presentado en el Congreso, generando un importante debate sobre la soberanía hídrica y la conservación ambiental. La iniciativa propone declarar los glaciares como "bienes nacionales inalienables e imprescriptibles", prohibiendo cualquier actividad que ponga en riesgo su existencia o su función ecosistémica.</p>
+                        <p><strong>Importancia de los Glaciares:</strong></p>
+                        <ul class="list-disc list-inside">
+                            <li><strong>Reservas de Agua Dulce:</strong> Son fuentes vitales de agua para consumo humano, agricultura y generación de energía.</li>
+                            <li><strong>Biodiversidad:</strong> Soportan ecosistemas únicos y sensibles.</li>
+                            <li><strong>Reguladores Climáticos:</strong> Juegan un rol en la regulación de temperaturas locales y globales.</li>
+                        </ul>
+                        
+                        <h4 class="font-bold text-xl mt-6 mb-2 text-[#333333]">Actividades Sugeridas:</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Mapa Interactivo:</strong> Ubica en un mapa de Chile los principales glaciares o zonas glaciares. Investiga qué ciudades o ríos dependen de ellos.</li>
+                            <li><strong>Debate Ciudadano:</strong> Organiza un panel de discusión sobre el conflicto entre el desarrollo económico (ej. minería) y la protección ambiental (glaciares). ¿Cómo se puede lograr un equilibrio?</li>
+                            <li><strong>Investigación Climática:</strong> Investiga el fenómeno del retroceso de glaciares a nivel global y sus implicaciones para el futuro.</li>
+                            <li><strong>Redacción de Opinión:</strong> Escribe una columna de opinión argumentando a favor o en contra de la ley de protección de glaciares, utilizando datos y razones fundamentadas.</li>
+                        </ul>
+                    `,
+          },
+        },
+      ];
+
+      let currentPage = "public-home";
+      let currentNewsId = null;
+      let currentNewsLevel = "news-for-kids"; // Default level
+
+      const sections = document.querySelectorAll(".section");
+      const navLinks = document.querySelectorAll(".nav-link");
+      const levelButtons = document.querySelectorAll(".level-button");
+
+      const mainNewsCard = document.getElementById("main-news-card");
+      const sideNewsContainer = document.getElementById("side-news-container");
+      const featuredNewsContainer = document.getElementById(
+        "featured-news-container"
+      );
+
+      const detailTitle = document.getElementById("detail-title");
+      const detailMeta = document.getElementById("detail-meta");
+      const detailContent = document.getElementById("detail-content");
+
+      const searchInput = document.getElementById("search-input");
+      const filterLevel = document.getElementById("filter-level");
+      const filterSubject = document.getElementById("filter-subject");
+      const teacherNewsList = document.getElementById("teacher-news-list");
+
+      function updateDate() {
+        const dateElement = document.getElementById("current-date");
+        const today = new Date();
+        const options = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        };
+        dateElement.textContent = today.toLocaleDateString("es-ES", options);
+      }
+
+      function showPage(pageId) {
+        sections.forEach((section) => {
+          section.classList.remove("current-page");
+        });
+        document.getElementById(pageId).classList.add("current-page");
+        currentPage = pageId;
+
+        navLinks.forEach((link) => link.classList.remove("active"));
+        if (pageId === "teacher-home") {
+          document.getElementById("nav-teacher-login").classList.add("hidden");
+          document
+            .getElementById("nav-teacher-logout")
+            .classList.remove("hidden");
+          // document.getElementById('nav-teacher-login').classList.add('active'); // No active for login button if hidden
+        } else {
+          document
+            .getElementById("nav-teacher-login")
+            .classList.remove("hidden");
+          document.getElementById("nav-teacher-logout").classList.add("hidden");
+          if (pageId === "public-home") {
+            document.getElementById("nav-public").classList.add("active");
+          }
+        }
+      }
+
+      function renderNewsCard(news, isMain = false) {
+        return `
+                <div class="relative bg-white rounded-xl overflow-hidden shadow-md border border-[#E0E0E0] cursor-pointer group" data-id="${
+                  news.id
+                }">
+                    <img src="${news.imageUrl}" alt="${
+          news.title
+        }" class="w-full ${isMain ? "h-64 md:h-80" : "h-48"} object-cover">
+                    <div class="${isMain ? "p-8" : "p-6"}">
+                        <h3 class="news-title ${
+                          isMain ? "text-3xl md:text-4xl" : "text-xl"
+                        } font-extrabold text-[#333333] mb-2 group-hover:text-[#0056B3] transition-colors">${
+          news.title
+        }</h3>
+                        <p class="text-[#666666] ${
+                          isMain ? "text-base" : "text-sm"
+                        } mb-3">${news.source} | ${news.date}</p>
+                        <p class="text-[#333333] ${
+                          isMain ? "text-lg" : "text-base"
+                        } mb-4">${news.summary}</p>
+                        <div class="flex flex-wrap gap-2">
+                            ${news.subjects
+                              .map(
+                                (subject) =>
+                                  `<span class="bg-[#F0F0F0] text-[#333333] text-xs font-semibold px-2.5 py-0.5 rounded-full">${subject}</span>`
+                              )
+                              .join("")}
+                        </div>
+                    </div>
+                </div>
+            `;
+      }
+
+      function renderSideNewsCard(news) {
+        return `
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-[#E0E0E0] cursor-pointer group" data-id="${
+                  news.id
+                }">
+                    <h4 class="news-title text-lg font-bold text-[#333333] mb-1 group-hover:text-[#0056B3] transition-colors">${
+                      news.title
+                    }</h4>
+                    <p class="text-[#666666] text-xs mb-2">${news.source} | ${
+          news.date
+        }</p>
+                    <p class="text-[#333333] text-sm">${news.summary.substring(
+                      0,
+                      80
+                    )}...</p>
+                </div>
+            `;
+      }
+
+      function populatePublicHome() {
+        // Noticia Principal (la primera noticia)
+        const mainNews = dummyNews[0];
+        mainNewsCard.innerHTML = renderNewsCard(mainNews, true);
+        mainNewsCard.addEventListener("click", () =>
+          showNewsDetail(mainNews.id)
+        );
+
+        // Otras Noticias (las siguientes 2 para la columna lateral)
+        const sideNews = dummyNews.slice(1, 3);
+        sideNewsContainer.innerHTML = sideNews.map(renderSideNewsCard).join("");
+        sideNewsContainer.querySelectorAll("div[data-id]").forEach((card) => {
+          card.addEventListener("click", (e) =>
+            showNewsDetail(e.currentTarget.dataset.id)
+          );
+        });
+
+        // Noticias Destacadas (las últimas 3, incluyendo una que ya salió si es necesario)
+        const featuredNews = dummyNews.slice(1); // Excluir la principal para no repetir exactamente
+        featuredNewsContainer.innerHTML = featuredNews
+          .map((news) => renderNewsCard(news))
+          .join("");
+        featuredNewsContainer
+          .querySelectorAll("div[data-id]")
+          .forEach((card) => {
+            card.addEventListener("click", (e) =>
+              showNewsDetail(e.currentTarget.dataset.id)
+            );
+          });
+      }
+
+      function showNewsDetail(id) {
+        const news = dummyNews.find((n) => n.id === id);
+        if (news) {
+          currentNewsId = id;
+          detailTitle.textContent = news.title;
+          detailMeta.textContent = `${news.source} | ${
+            news.date
+          } | Asignaturas: ${news.subjects.join(", ")}`;
+
+          // Set default level and activate button
+          currentNewsLevel = "news-for-kids"; // Always start with 'Para Niños'
+          levelButtons.forEach((button) => {
+            button.classList.remove("active");
+          });
+          document
+            .querySelector(`.level-button[data-level="${currentNewsLevel}"]`)
+            .classList.add("active");
+          detailContent.innerHTML = news.levels[currentNewsLevel];
+          showPage("news-detail");
+        }
+      }
+
+      function updateNewsDetailContent(level) {
+        if (currentNewsId) {
+          const news = dummyNews.find((n) => n.id === currentNewsId);
+          if (news && news.levels[level]) {
+            detailContent.innerHTML = news.levels[level];
+            currentNewsLevel = level;
+            levelButtons.forEach((button) => {
+              button.classList.toggle("active", button.dataset.level === level);
+            });
+          }
+        }
+      }
+
+      function filterAndRenderTeacherNews() {
+        const searchText = searchInput.value.toLowerCase();
+        const selectedLevel = filterLevel.value;
+        const selectedSubject = filterSubject.value;
+
+        const filteredNews = dummyNews.filter((news) => {
+          const matchesSearch =
+            news.title.toLowerCase().includes(searchText) ||
+            news.keywords.some((k) => k.toLowerCase().includes(searchText)) ||
+            news.summary.toLowerCase().includes(searchText);
+          const matchesLevel = !selectedLevel || news.levels[selectedLevel];
+          const matchesSubject =
+            !selectedSubject || news.subjects.includes(selectedSubject);
+          return matchesSearch && matchesLevel && matchesSubject;
+        });
+        teacherNewsList.innerHTML = filteredNews
+          .map((news) => renderNewsCard(news))
+          .join("");
+        teacherNewsList.querySelectorAll("div[data-id]").forEach((card) => {
+          card.addEventListener("click", (e) =>
+            showNewsDetail(e.currentTarget.dataset.id)
+          );
+        });
+      }
+
+      // Event Listeners
+      document
+        .getElementById("nav-public")
+        .addEventListener("click", () => showPage("public-home"));
+      document
+        .getElementById("nav-teacher-login")
+        .addEventListener("click", () => showPage("teacher-home"));
+      document
+        .getElementById("nav-teacher-logout")
+        .addEventListener("click", () => showPage("public-home"));
+
+      document.getElementById("back-to-home").addEventListener("click", () => {
+        if (
+          !document
+            .getElementById("nav-teacher-logout")
+            .classList.contains("hidden")
+        ) {
+          // If logged in as teacher
+          showPage("teacher-home");
+        } else {
+          showPage("public-home");
+        }
+      });
+
+      levelButtons.forEach((button) => {
+        button.addEventListener("click", (e) =>
+          updateNewsDetailContent(e.target.dataset.level)
+        );
+      });
+
+      searchInput.addEventListener("input", filterAndRenderTeacherNews);
+      filterLevel.addEventListener("change", filterAndRenderTeacherNews);
+      filterSubject.addEventListener("change", filterAndRenderTeacherNews);
+
+      // Initial setup on page load
+      updateDate();
+      populatePublicHome();
+      filterAndRenderTeacherNews(); // Render teacher list initially (it's hidden by default)
+    </script>
+  </body>
+</html>

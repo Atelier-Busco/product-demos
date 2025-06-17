@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redactor24h: Noticias Globales 24 horas</title>
+    <!-- Chosen Palette: Modern News Fusion (Background: #F5F5F5, Primary Text/Dark Accent: #1A1A1A, Secondary Text: #666666, Primary Accent: #CC0000, Secondary Accent/Link Hover: #0066CC, Borders/Dividers: #E0E0E0) -->
+    <!-- Application Structure Plan: The SPA mimics a dynamic news portal. It features a top bar for meta info, a main header for branding and navigation, and a central content area divided into sections managed by JavaScript. The 'Public Home' includes a prominent main story, a 'Live Updates' sidebar, and a grid of 'Trending' and 'More News' articles. The 'News Detail' view dynamically loads content. A dedicated 'About AI News' section explains the concept. This structure is designed for intuitive browsing, offering a familiar news consumption experience with interactive elements for navigation. -->
+    <!-- Visualization & Content Choices: [Main News Card -> Goal: Inform/Highlight -> Viz: Large Card with prominent title/image -> Justification: Mimics a lead article, drawing immediate attention -> Method: HTML/Tailwind], [Live Updates -> Goal: Inform/Real-time -> Viz: Scrolling list -> Justification: Conveys immediacy, common in news portals -> Method: HTML/Tailwind & JS for dynamic display (simplified here)], [Other News/Trending -> Goal: Browse/Categorize -> Viz: Grid of smaller cards/list items -> Justification: Efficiently presents multiple articles for quick scanning -> Method: HTML/Tailwind], [News Detail -> Goal: Inform/Deep Dive -> Viz: Full article text -> Justification: Provides comprehensive content once an article is selected -> Method: HTML/Tailwind & JS for dynamic content loading]. No charts or complex visualizations are used, focusing on a clean, text- and image-driven layout to match the news portal aesthetic. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&family=Noto+Serif:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: #f5f5f5; /* Off-white */
+        color: #1a1a1a; /* Deep charcoal */
+      }
+      h1,
+      h2,
+      h3,
+      .news-title {
+        font-family: "Noto Serif", serif;
+      }
+      .section {
+        display: none;
+      }
+      .current-page {
+        display: block;
+      }
+      .nav-link.active {
+        border-bottom: 3px solid #cc0000; /* Vibrant Red */
+        color: #cc0000;
+      }
+      .nav-link {
+        transition: color 0.2s, border-bottom 0.2s;
+        border-bottom: 3px solid transparent;
+      }
+      .read-more-button {
+        transition: background-color 0.2s;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <header class="bg-[#1A1A1A] text-white py-2">
+      <div class="container mx-auto px-6 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+          <span class="text-xs md:text-sm">Noticias generadas por AI</span>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-xs md:text-sm" id="current-date"></span>
+          <span class="text-xs text-gray-400 hidden md:inline">|</span>
+          <a
+            href="#"
+            class="text-xs md:text-sm hover:text-[#0066CC] hidden md:inline"
+            onclick="alert('Funcionalidad de Iniciar Sesión no implementada en este demo.')"
+            >Iniciar Sesión</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <div
+      class="bg-white shadow-lg py-4 sticky top-0 z-10 border-b border-[#E0E0E0]"
+    >
+      <div
+        class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center"
+      >
+        <h1
+          class="text-4xl md:text-5xl font-extrabold text-[#1A1A1A] mb-4 md:mb-0"
+        >
+          REDACT<span class="text-[#CC0000]">OR</span>24h
+        </h1>
+        <nav class="flex space-x-4 md:space-x-8">
+          <button
+            id="nav-home"
+            class="nav-link text-lg font-semibold text-[#1A1A1A] hover:text-[#CC0000] active"
+          >
+            Inicio
+          </button>
+          <button
+            id="nav-ai-news"
+            class="nav-link text-lg font-semibold text-[#1A1A1A] hover:text-[#CC0000]"
+          >
+            Acerca de AI News
+          </button>
+          <button
+            id="nav-contact"
+            class="nav-link text-lg font-semibold text-[#1A1A1A] hover:text-[#CC0000]"
+            onclick="alert('Funcionalidad de Contacto no implementada en este demo.')"
+          >
+            Contacto
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <main class="flex-grow">
+      <!-- Home Público -->
+      <section id="public-home" class="section current-page py-8 md:py-12">
+        <div class="container mx-auto px-6">
+          <div class="grid md:grid-cols-3 gap-8">
+            <!-- Columna Izquierda: Live Updates / Destacados -->
+            <div class="md:col-span-1 flex flex-col space-y-8">
+              <div>
+                <h2
+                  class="text-xl md:text-2xl font-bold text-[#1A1A1A] mb-4 border-b-2 border-[#E0E0E0] pb-2"
+                >
+                  🚨 Última Hora
+                </h2>
+                <ul class="space-y-4 text-sm md:text-base text-[#666666]">
+                  <li class="flex items-start">
+                    <span class="text-[#CC0000] mr-2">●</span>
+                    <span
+                      >Hace 25 min: Análisis AI sobre fluctuaciones del mercado
+                      global tras eventos geopolíticos.</span
+                    >
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-[#CC0000] mr-2">●</span>
+                    <span
+                      >Hace 16 min: Expertos en AI modelan el impacto de la
+                      sequía en la producción agrícola sudamericana.</span
+                    >
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-[#CC0000] mr-2">●</span>
+                    <span
+                      >Hace 5 min: Reporte AI predice tendencias futuras en
+                      tecnología de vehículos autónomos.</span
+                    >
+                  </li>
+                </ul>
+                <a
+                  href="#"
+                  class="text-[#0066CC] hover:underline text-sm md:text-base mt-4 block"
+                  >Ver todas las actualizaciones ></a
+                >
+              </div>
+
+              <div>
+                <h2
+                  class="text-xl md:text-2xl font-bold text-[#1A1A1A] mb-4 border-b-2 border-[#E0E0E0] pb-2"
+                >
+                  Destacado
+                </h2>
+                <div id="side-featured-news-container" class="space-y-6">
+                  <!-- Se cargará una noticia destacada aquí -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Columna Central: Noticia Principal -->
+            <div
+              id="main-news-card"
+              class="md:col-span-2 bg-white rounded-lg shadow-lg border border-[#E0E0E0] overflow-hidden cursor-pointer hover:shadow-xl transition-shadow"
+            >
+              <!-- La noticia principal se cargará aquí -->
+            </div>
+          </div>
+
+          <div class="mt-12 md:mt-16">
+            <h2
+              class="text-xl md:text-2xl font-bold text-[#1A1A1A] mb-6 border-b-2 border-[#E0E0E0] pb-2"
+            >
+              Más Noticias
+            </h2>
+            <div
+              id="more-news-container"
+              class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            >
+              <!-- Más noticias se cargarán aquí -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Detalle de la Noticia -->
+      <section id="news-detail" class="section py-8 md:py-12">
+        <div
+          class="container mx-auto px-6 max-w-4xl bg-white p-6 md:p-8 rounded-lg shadow-lg border border-[#E0E0E0]"
+        >
+          <button
+            id="back-to-home"
+            class="bg-gray-200 text-[#666666] px-4 py-2 rounded-full mb-6 hover:bg-gray-300 transition-colors text-sm"
+          >
+            ← Volver al Inicio
+          </button>
+          <h2
+            id="detail-title"
+            class="text-3xl md:text-4xl font-extrabold text-[#1A1A1A] mb-4"
+          ></h2>
+          <p
+            id="detail-meta"
+            class="text-[#666666] text-sm mb-6 border-b pb-4"
+          ></p>
+          <img
+            id="detail-image"
+            src=""
+            alt=""
+            class="w-full h-64 md:h-96 object-cover mb-6 rounded-md"
+          />
+          <div
+            id="detail-content"
+            class="text-base md:text-lg leading-relaxed text-[#1A1A1A]"
+          >
+            <!-- Contenido de la noticia se cargará aquí -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección "Acerca de AI News" -->
+      <section id="about-ai-news" class="section py-8 md:py-12">
+        <div
+          class="container mx-auto px-6 max-w-4xl bg-white p-6 md:p-8 rounded-lg shadow-lg border border-[#E0E0E0]"
+        >
+          <h2
+            class="text-3xl md:text-4xl font-extrabold text-[#1A1A1A] mb-6 text-center"
+          >
+            ¿Qué es Redactor24h y AI News?
+          </h2>
+          <div class="prose max-w-none text-[#1A1A1A] leading-relaxed">
+            <p>
+              En **Redactor24h**, utilizamos la inteligencia artificial más
+              avanzada para procesar, analizar y redactar noticias en tiempo
+              real. Nuestro objetivo es ofrecer al público información global
+              relevante, precisa y de alta calidad, generada con la eficiencia y
+              objetividad que solo la IA puede proporcionar.
+            </p>
+            <p>
+              Nuestro sistema de **AI News** monitorea miles de fuentes
+              confiables en múltiples idiomas, identifica patrones, verifica
+              datos cruzados y sintetiza la información para crear artículos
+              coherentes y comprensibles. Esto nos permite cubrir una amplia
+              gama de temas, desde política global y economía hasta ciencia,
+              tecnología y cultura, con una velocidad sin precedentes.
+            </p>
+            <h3 class="text-2xl font-bold text-[#1A1A1A] mt-8 mb-4">
+              Nuestro Compromiso:
+            </h3>
+            <ul class="list-disc list-inside space-y-2">
+              <li>
+                <strong>Precisión:</strong> La IA se entrena con vastos
+                conjuntos de datos para asegurar la exactitud de los hechos.
+              </li>
+              <li>
+                <strong>Objetividad:</strong> Reducción de sesgos humanos en la
+                redacción de noticias.
+              </li>
+              <li>
+                <strong>Velocidad:</strong> Información relevante disponible
+                casi al instante de su ocurrencia.
+              </li>
+              <li>
+                <strong>Relevancia:</strong> Identificación de las noticias más
+                significativas y su impacto global.
+              </li>
+            </ul>
+            <p class="mt-6">
+              Redactor24h representa el futuro del periodismo, combinando la
+              potencia de la inteligencia artificial con los más altos
+              estándares de calidad informativa.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-[#1A1A1A] text-white py-6 mt-auto">
+      <div class="container mx-auto px-6 text-center text-sm">
+        <p>&copy; 2025 Redactor24h. Todos los derechos reservados.</p>
+        <p class="mt-2">
+          Noticias globales generadas por inteligencia artificial.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      const dummyGlobalNews = [
+        {
+          id: "g1",
+          title:
+            "IA Revoluciona la Investigación Científica con Nuevos Descubrimientos",
+          source: "AI Research Insights",
+          date: "17 de Junio, 2025",
+          category: "Tecnología",
+          summary:
+            "Sistemas de IA avanzados están acelerando el descubrimiento de materiales, el diseño de fármacos y la comprensión de fenómenos complejos, marcando una nueva era en la ciencia.",
+          imageUrl:
+            "https://placehold.co/800x500/E0E0E0/1A1A1A?text=AI+Investigación",
+          fullContent: `
+                    <p>La inteligencia artificial está transformando radicalmente el panorama de la investigación científica. Nuevos algoritmos de aprendizaje automático y redes neuronales profundas están siendo desplegados para analizar volúmenes masivos de datos experimentales, identificar patrones complejos y generar hipótesis que superan la capacidad humana. Este avance se está observando en campos tan diversos como la ciencia de materiales, la biotecnología y la astrofísica.</p>
+                    <p>Por ejemplo, en el desarrollo de fármacos, la IA puede predecir la interacción entre moléculas con una precisión asombrosa, acortando drásticamente los tiempos y costos asociados a la investigación y el desarrollo. Esto no solo acelera la creación de nuevos tratamientos, sino que también permite personalizar terapias de manera más efectiva.</p>
+                    <p>En el ámbito de la ciencia de materiales, la IA está diseñando nuevos compuestos con propiedades específicas, optimizando procesos de fabricación y prediciendo el comportamiento de materiales bajo condiciones extremas. Este enfoque basado en datos promete materiales más eficientes y sostenibles para diversas industrias.</p>
+                    <p>Además, en la astronomía y la climatología, la IA ayuda a procesar datos de telescopios y sensores terrestres y espaciales, revelando nuevos fenómenos cósmicos o patrones climáticos complejos que eran invisibles para los métodos tradicionales. La capacidad de la IA para manejar y dar sentido a la complejidad está empujando los límites del conocimiento humano.</p>
+                `,
+        },
+        {
+          id: "g2",
+          title:
+            "Nuevas Regulaciones Globales Buscan Equilibrar Innovación y Seguridad en IA",
+          source: "Global Tech Policy",
+          date: "16 de Junio, 2025",
+          category: "Política",
+          summary:
+            "Gobiernos de todo el mundo están colaborando para establecer marcos regulatorios que fomenten la innovación en IA, a la vez que mitigan riesgos éticos y de seguridad.",
+          imageUrl:
+            "https://placehold.co/800x500/E0E0E0/1A1A1A?text=Regulación+AI",
+          fullContent: `
+                    <p>A medida que la inteligencia artificial se integra cada vez más en la sociedad, la necesidad de un marco regulatorio global se hace imperativa. Líderes de diferentes naciones se reunieron recientemente en la Cumbre de IA para la Gobernanza Global para discutir un enfoque unificado que equilibre el potencial transformador de la IA con la protección de los derechos humanos y la seguridad pública.</p>
+                    <p>Las discusiones se centraron en la creación de estándares internacionales para la transparencia de los algoritmos, la protección de la privacidad de los datos, la responsabilidad en caso de fallos de la IA y la prevención del uso indebido de estas tecnologías en ámbitos como la vigilancia o la autonomía letal. Existe un consenso creciente de que la autorregulación de la industria no es suficiente para abordar estos desafíos complejos.</p>
+                    <p>Expertos legales y tecnólogos están colaborando en la elaboración de "zonas de pruebas" regulatorias, donde las empresas pueden experimentar con nuevas aplicaciones de IA bajo una supervisión controlada, lo que permite a los reguladores entender mejor las tecnologías antes de establecer leyes permanentes. Este enfoque busca evitar frenar la innovación mientras se construyen salvaguardias efectivas.</p>
+                    <p>El desafío radica en la rapidez con la que avanza la tecnología de IA. Los legisladores deben encontrar formas de crear regulaciones que sean lo suficientemente flexibles para adaptarse a los futuros avances, pero lo suficientemente robustas para proteger a los ciudadanos y asegurar un desarrollo ético de la IA a nivel global.</p>
+                `,
+        },
+        {
+          id: "g3",
+          title:
+            "El Impacto de la IA en la Economía Global: Oportunidades y Desafíos",
+          source: "Economic Foresight",
+          date: "14 de Junio, 2025",
+          category: "Economía",
+          summary:
+            "Un nuevo informe detalla cómo la IA está reconfigurando mercados laborales, cadenas de suministro y el crecimiento económico, exigiendo adaptabilidad global.",
+          imageUrl:
+            "https://placehold.co/800x500/E0E0E0/1A1A1A?text=AI+Economía",
+          fullContent: `
+                    <p>La inteligencia artificial está emergiendo como el motor principal de la próxima ola de crecimiento económico global, con un impacto que se prevé que reconfigure fundamentalmente los mercados laborales y las cadenas de suministro. Un reciente informe del Foro Económico Mundial, generado por IA, destaca tanto las vastas oportunidades como los desafíos significativos que esta transformación conlleva.</p>
+                    <p>En el lado de las oportunidades, la IA está impulsando la productividad a través de la automatización de tareas repetitivas, optimizando la toma de decisiones con análisis de datos avanzados y permitiendo la creación de nuevos productos y servicios. Sectores como la manufactura, la logística y los servicios financieros están viendo eficiencias sin precedentes.</p>
+                    <p>Sin embargo, el informe también subraya los desafíos. La automatización podría desplazar empleos en ciertas industrias, requiriendo programas masivos de recualificación y formación para la fuerza laboral. Además, la concentración de la riqueza y el poder en las empresas líderes en IA podría exacerbar las desigualdades existentes. La resiliencia de las cadenas de suministro también está siendo probada por la dependencia de sistemas de IA complejos y potencialmente vulnerables.</p>
+                    <p>Los gobiernos y las empresas están ante la tarea crítica de diseñar políticas y estrategias que maximicen los beneficios de la IA mientras mitiguen sus riesgos. La inversión en educación, infraestructura digital y marcos regulatorios adaptativos será clave para asegurar una transición económica justa y próspera en la era de la inteligencia artificial.</p>
+                `,
+        },
+        {
+          id: "g4",
+          title:
+            "Explorando Mundos Virtuales: IA Avanza en la Creación de Metaversos Realistas",
+          source: "Virtual Futures Magazine",
+          date: "11 de Junio, 2025",
+          category: "Cultura",
+          summary:
+            "La IA está jugando un papel crucial en el desarrollo de entornos de metaverso más inmersivos y dinámicos, desde la generación de paisajes hasta personajes interactivos.",
+          imageUrl:
+            "https://placehold.co/800x500/E0E0E0/1A1A1A?text=Metaverso+AI",
+          fullContent: `
+                    <p>El concepto de metaverso, un universo digital persistente y compartido, está cobrando vida de formas cada vez más realistas gracias a los avances en inteligencia artificial. La IA no solo está facilitando la creación de vastos paisajes virtuales y objetos detallados, sino que también está dotando de inteligencia a los personajes no jugables (NPCs) y a la interacción con el usuario dentro de estos mundos.</p>
+                    <p>Desde la generación procedural de terrenos y estructuras hasta la simulación de comportamientos complejos de la población virtual, la IA está reduciendo significativamente la carga de trabajo de los desarrolladores y permitiendo una escala y un nivel de detalle sin precedentes. Esto abre la puerta a metaversos más ricos, dinámicos y orgánicos.</p>
+                    <p>Además, la IA está personalizando la experiencia del usuario, adaptando entornos y narrativas a las preferencias individuales. Los NPCs pueden aprender y recordar interacciones pasadas, ofreciendo conversaciones más profundas y respuestas contextualmente relevantes, lo que mejora la inmersión y la sensación de vivir en un mundo real.</p>
+                    <p>Aunque aún hay desafíos tecnológicos por superar, la simbiosis entre IA y metaverso promete revolucionar no solo el entretenimiento, sino también la educación, el comercio y la socialización, creando nuevas fronteras para la interacción humana en el espacio digital.</p>
+                `,
+        },
+        {
+          id: "g5",
+          title:
+            "Grandes Ciudades Implementan Soluciones AI para el Tráfico Urbano",
+          source: "Urban Mobility Review",
+          date: "10 de Junio, 2025",
+          category: "Ciudades",
+          summary:
+            "La IA está siendo clave en la optimización de flujos de tráfico, reducción de congestiones y mejora de la calidad del aire en metrópolis de todo el mundo.",
+          imageUrl:
+            "https://placehold.co/800x500/E0E0E0/1A1A1A?text=Tráfico+AI",
+          fullContent: `
+                    <p>La congestión vehicular es un problema crónico en muchas de las principales ciudades del mundo. Sin embargo, la inteligencia artificial está emergiendo como una herramienta poderosa para aliviar este desafío. Sistemas avanzados de IA están siendo implementados para monitorear y predecir patrones de tráfico, optimizar semáforos en tiempo real y guiar a los vehículos de manera más eficiente.</p>
+                    <p>En ciudades como Singapur y Londres, la IA está analizando datos de sensores, cámaras y GPS para ajustar dinámicamente los tiempos de los semáforos, gestionar carriles reversibles y proporcionar rutas alternativas a los conductores. Esto no solo reduce los tiempos de viaje y el consumo de combustible, sino que también contribuye a una disminución significativa de las emisiones contaminantes y una mejora en la calidad del aire urbano.</p>
+                    <p>Además, la IA se está utilizando para predecir eventos de tráfico inusuales, como accidentes o obras, y alertar a las autoridades y a los conductores con antelación, permitiendo una respuesta más rápida y una mejor gestión de la emergencia. Los sistemas de transporte público también se están beneficiando de la IA para optimizar rutas y horarios, haciendo que el transporte público sea más atractivo y eficiente.</p>
+                    <p>La integración de la IA en la gestión del tráfico urbano es un paso fundamental hacia la creación de ciudades más inteligentes, sostenibles y habitables, donde la movilidad no sea un obstáculo sino un facilitador para la calidad de vida de sus ciudadanos.</p>
+                `,
+        },
+        {
+          id: "g6",
+          title: "Robots Asisten en Desastres Naturales: El Nuevo Rol de la IA",
+          source: "Emergency Response Tech",
+          date: "09 de Junio, 2025",
+          category: "Desastres",
+          summary:
+            "Robots impulsados por IA están siendo desplegados en zonas de desastre para misiones de búsqueda y rescate, evaluación de daños y entrega de suministros, mejorando la seguridad.",
+          imageUrl:
+            "https://placehold.co/800x500/E0E0E0/1A1A1A?text=Robots+Rescate",
+          fullContent: `
+                    <p>En el creciente campo de la respuesta a desastres, la inteligencia artificial y la robótica están desempeñando un papel cada vez más crucial. Después de terremotos, inundaciones o incendios forestales, la rapidez y la seguridad son primordiales. Los robots impulsados por IA pueden acceder a zonas que son demasiado peligrosas o inaccesibles para los humanos, salvando vidas y minimizando riesgos para los equipos de rescate.</p>
+                    <p>Estos robots, equipados con sensores avanzados, cámaras térmicas y capacidades de navegación autónoma, pueden realizar misiones de búsqueda y rescate en escombros, mapear áreas devastadas para evaluar daños y proporcionar información vital a los equipos en tierra. Algunos modelos incluso están siendo diseñados para entregar suministros médicos o alimentos a personas atrapadas.</p>
+                    <p>La IA permite que estos robots aprendan y se adapten a entornos impredecibles y caóticos. Pueden identificar automáticamente señales de vida, detectar peligros estructurales y optimizar sus rutas para cubrir grandes áreas de forma eficiente. Esta capacidad autónoma es invaluable en situaciones donde las comunicaciones tradicionales fallan y el tiempo es crítico.</p>
+                    <p>El desarrollo continuo de robots con IA para la gestión de desastres promete revolucionar la forma en que las sociedades responden a las catástrofes, ofreciendo una esperanza renovada para la protección de vidas y la resiliencia comunitaria frente a eventos extremos.</p>
+                `,
+        },
+        {
+          id: "g7",
+          title:
+            "La Ética de la IA en el Arte: Creación, Propiedad y Originalidad",
+          source: "Art & AI Journal",
+          date: "07 de Junio, 2025",
+          category: "Cultura",
+          summary:
+            "El auge del arte generado por IA plantea preguntas complejas sobre la autoría, los derechos de propiedad intelectual y la definición misma de creatividad humana.",
+          imageUrl: "https://placehold.co/800x500/E0E0E0/1A1A1A?text=Arte+AI",
+          fullContent: `
+                    <p>La inteligencia artificial ha entrado de lleno en el mundo del arte, generando obras visuales, musicales e incluso literarias que desafían nuestras concepciones tradicionales de creatividad. Sin embargo, este floreciente campo también ha abierto un complejo debate ético y legal en torno a la autoría, la propiedad intelectual y la originalidad.</p>
+                    <p>¿Quién es el autor de una pintura generada por una IA? ¿El programador, el artista que la entrena, la propia IA o la colección de datos de la que aprendió? Estas preguntas no tienen respuestas sencillas bajo las leyes de derechos de autor existentes. La discusión se intensifica cuando las IA son entrenadas con obras existentes sin el consentimiento explícito de los artistas originales, planteando preocupaciones sobre la compensación y el plagio.</p>
+                    <p>Además, el arte generado por IA nos obliga a reevaluar qué significa ser "creativo". Si una máquina puede producir arte que emociona o inspira, ¿dónde reside la esencia de la creatividad humana? Los defensores argumentan que la IA es una herramienta, una extensión de la visión del artista, mientras que otros temen una devaluación del esfuerzo y la originalidad humanos.</p>
+                    <p>Este debate es esencial para el futuro del arte y la tecnología. A medida que la IA se vuelve más sofisticada en la creación artística, será fundamental desarrollar marcos legales y éticos que protejan a los artistas, fomenten la innovación responsable y ayuden a la sociedad a comprender y valorar esta nueva forma de expresión.</p>
+                `,
+        },
+        {
+          id: "g8",
+          title:
+            "Ciberseguridad Reforzada: AI Detecta Amenazas Cibernéticas Emergentes",
+          source: "Cyber Defense Review",
+          date: "05 de Junio, 2025",
+          category: "Tecnología",
+          summary:
+            "Los sistemas de ciberseguridad impulsados por IA están demostrando una capacidad superior para identificar y neutralizar amenazas cibernéticas sofisticadas en tiempo real.",
+          imageUrl:
+            "https://placehold.co/800x500/E0E0E0/1A1A1A?text=Ciberseguridad+AI",
+          fullContent: `
+                    <p>En un mundo cada vez más digitalizado, la ciberseguridad se ha convertido en una preocupación primordial para gobiernos, empresas y ciudadanos. La inteligencia artificial está emergiendo como un aliado indispensable en esta batalla, ofreciendo capacidades sin precedentes para detectar y mitigar amenazas cibernéticas emergentes.</p>
+                    <p>Los sistemas de ciberseguridad tradicionales a menudo dependen de bases de datos de firmas conocidas para identificar software malicioso. Sin embargo, los ataques modernos son cada vez más sofisticados y mutantes. Aquí es donde la IA marca la diferencia: sus algoritmos de aprendizaje automático pueden analizar patrones de comportamiento de red, identificar anomalías en tiempo real y predecir ataques antes de que causen daños significativos.</p>
+                    <p>La IA puede procesar y correlacionar enormes volúmenes de datos de logs, tráfico de red y puntos finales, algo inalcanzable para los analistas humanos. Esto permite una detección más rápida de amenazas complejas como ataques de día cero, phishing avanzado y ransomware mutante. Además, la IA puede automatizar respuestas a incidentes, aislando sistemas comprometidos y neutralizando amenazas casi al instante.</p>
+                    <p>Aunque la IA también puede ser utilizada por actores maliciosos, su aplicación en la defensa cibernética ofrece una ventaja crucial. La inversión continua en ciberseguridad impulsada por IA es vital para proteger infraestructuras críticas, datos sensibles y la confianza en nuestro ecosistema digital.</p>
+                `,
+        },
+        {
+          id: "g9",
+          title:
+            "Innovación en Agricultura: AI Mejora Rendimiento de Cultivos y Sostenibilidad",
+          source: "AgriTech Insights",
+          date: "03 de Junio, 2025",
+          category: "Medioambiente",
+          summary:
+            "La IA está transformando la agricultura moderna, desde la optimización del riego y la detección de enfermedades en plantas hasta la mejora de la predicción de cosechas.",
+          imageUrl:
+            "https://placehold.co/800x500/E0E0E0/1A1A1A?text=AI+Agricultura",
+          fullContent: `
+                    <p>La alimentación de una población mundial creciente y la necesidad de una agricultura más sostenible están impulsando la adopción de tecnologías avanzadas, y la inteligencia artificial está a la vanguardia de esta revolución. La IA está permitiendo a los agricultores tomar decisiones más informadas, optimizar sus recursos y aumentar la productividad de manera respetuosa con el medio ambiente.</p>
+                    <p>Los drones y sensores equipados con IA pueden monitorear la salud de los cultivos a nivel de planta, detectando signos tempranos de enfermedades o deficiencias nutricionales. Esto permite una intervención precisa, reduciendo el uso excesivo de pesticidas y fertilizantes. Los sistemas de riego inteligentes, impulsados por IA, ajustan el suministro de agua según las necesidades específicas del suelo y del clima, conservando este recurso vital.</p>
+                    <p>La IA también está mejorando la predicción de cosechas al analizar patrones climáticos históricos, datos de suelo y variables de crecimiento. Esto ayuda a los agricultores a planificar mejor la siembra y la recolección, reduciendo el desperdicio y mejorando la rentabilidad. Además, robots agrícolas autónomos, guiados por IA, pueden realizar tareas como la siembra, la cosecha y el deshierbe con una precisión y eficiencia inigualables.</p>
+                    <p>Al integrar la IA en cada etapa del ciclo de cultivo, la agricultura del futuro será más productiva, sostenible y resiliente a los desafíos climáticos, asegurando la seguridad alimentaria global.</p>
+                `,
+        },
+        {
+          id: "g10",
+          title: "Debate Global sobre el Futuro del Trabajo en la Era de la IA",
+          source: "Future of Work Institute",
+          date: "01 de Junio, 2025",
+          category: "Economía",
+          summary:
+            "Expertos y líderes mundiales discuten cómo la IA transformará los empleos, las habilidades requeridas y la estructura de la fuerza laboral en las próximas décadas.",
+          imageUrl:
+            "https://placehold.co/800x500/E0E0E0/1A1A1A?text=Futuro+del+Trabajo+AI",
+          fullContent: `
+                    <p>La inteligencia artificial no solo está cambiando cómo hacemos las cosas, sino también quién las hace. Un intenso debate global se ha encendido en torno al futuro del trabajo en la era de la IA, con proyecciones que van desde la creación masiva de nuevos empleos hasta el desplazamiento significativo de la fuerza laboral tradicional.</p>
+                    <p>Si bien la IA automatizará muchas tareas rutinarias y repetitivas, también se espera que cree roles completamente nuevos que requieran habilidades en áreas como el desarrollo de IA, la ética de la IA, la interacción humano-IA y el análisis de datos complejos. La clave estará en la capacidad de los trabajadores para adaptarse y adquirir nuevas competencias.</p>
+                    <p>Los gobiernos, las instituciones educativas y las empresas están explorando estrategias para la recualificación y mejora de las habilidades de la fuerza laboral existente. Esto incluye programas de formación continua, inversión en educación STEAM (ciencia, tecnología, ingeniería, arte y matemáticas) y el fomento de habilidades blandas como la creatividad, el pensamiento crítico y la inteligencia emocional, que son difíciles de replicar para las máquinas.</p>
+                    <p>El desafío no es solo tecnológico, sino también social y político. La forma en que las sociedades aborden la transición hacia una economía impulsada por la IA determinará si esta era traerá una prosperidad más equitativa o una mayor polarización. El diálogo y la colaboración entre todos los actores serán esenciales para navegar este cambio transformador.</p>
+                `,
+        },
+        {
+          id: "g11",
+          title: "Avances en Medicina Personalizada Gracias a la IA",
+          source: "HealthTech Review",
+          date: "29 de Mayo, 2025",
+          category: "Salud",
+          summary:
+            "La IA está permitiendo tratamientos médicos más precisos y personalizados, desde diagnósticos tempranos hasta el desarrollo de terapias génicas a medida.",
+          imageUrl:
+            "https://placehold.co/800x500/E0E0E0/1A1A1A?text=Medicina+Personalizada+AI",
+          fullContent: `
+                    <p>La medicina personalizada, el enfoque de adaptar el tratamiento médico a las características individuales de cada paciente, está siendo revolucionada por la inteligencia artificial. La capacidad de la IA para procesar y analizar vastos conjuntos de datos genómicos, historiales clínicos, imágenes médicas y resultados de laboratorio está abriendo puertas a diagnósticos más precisos y terapias altamente efectivas.</p>
+                    <p>Los algoritmos de IA pueden identificar patrones sutiles en los datos de los pacientes que los médicos humanos podrían pasar por alto, lo que lleva a un diagnóstico más temprano y preciso de enfermedades como el cáncer o las patologías cardíacas. Además, la IA ayuda a seleccionar el tratamiento más adecuado para cada paciente, prediciendo cómo reaccionará su cuerpo a diferentes medicamentos o terapias, minimizando efectos secundarios y maximizando la eficacia.</p>
+                    <p>En el desarrollo de fármacos, la IA acelera la identificación de nuevas moléculas y la predicción de su eficacia y seguridad. También está facilitando el avance de terapias génicas y celulares personalizadas, donde los tratamientos se diseñan específicamente para el perfil genético de un individuo, prometiendo curas para enfermedades que antes eran incurables.</p>
+                    <p>Aunque persisten desafíos en la privacidad de los datos y la integración de sistemas, la IA está haciendo que la promesa de la medicina personalizada sea una realidad tangible, llevando la atención sanitaria a un nuevo nivel de precisión y efectividad.</p>
+                `,
+        },
+        {
+          id: "g12",
+          title: "Cumbre de Liderazgo AI: Hacia un Futuro Global Colaborativo",
+          source: "World Leaders Forum",
+          date: "28 de Mayo, 2025",
+          category: "Política",
+          summary:
+            "Líderes mundiales se reúnen para discutir la gobernanza global de la IA, la cooperación internacional y el desarrollo responsable de la tecnología.",
+          imageUrl: "https://placehold.co/800x500/E0E0E0/1A1A1A?text=Cumbre+AI",
+          fullContent: `
+                    <p>En un esfuerzo por abordar los desafíos y oportunidades que presenta la inteligencia artificial a escala global, los líderes de las principales potencias mundiales se reunieron en la primera Cumbre Anual de Liderazgo en IA. El encuentro se centró en la necesidad de una gobernanza colaborativa, la promoción de la investigación ética y la garantía de que los beneficios de la IA sean distribuidos de manera equitativa.</p>
+                    <p>Los temas clave incluyeron la seguridad de los sistemas de IA, la prevención de su uso indebido en conflictos, la promoción de la transparencia algorítmica y el establecimiento de normas internacionales para el desarrollo y despliegue de IA. Hubo un reconocimiento generalizado de que ningún país puede abordar estos desafíos por sí solo, lo que requiere una cooperación sin precedentes.</p>
+                    <p>Las discusiones también abordaron la brecha digital y el acceso a la IA en países en desarrollo, buscando formas de asegurar que la revolución de la IA no deje a nadie atrás. Se propusieron iniciativas para compartir conocimientos, capacitar talento y desarrollar infraestructuras que permitan a todas las naciones participar en y beneficiarse de la economía de la IA.</p>
+                    <p>Esta cumbre marca un paso importante hacia la creación de un marco de gobernanza global para la IA, uniendo a la comunidad internacional en un esfuerzo conjunto para moldear un futuro en el que la inteligencia artificial sirva a la humanidad de manera responsable y beneficiosa.</p>
+                `,
+        },
+      ];
+
+      let currentPage = "public-home";
+      let currentNewsId = null;
+
+      const sections = document.querySelectorAll(".section");
+      const navLinks = document.querySelectorAll(".nav-link");
+
+      const mainNewsCard = document.getElementById("main-news-card");
+      const sideFeaturedNewsContainer = document.getElementById(
+        "side-featured-news-container"
+      );
+      const moreNewsContainer = document.getElementById("more-news-container");
+
+      const detailTitle = document.getElementById("detail-title");
+      const detailMeta = document.getElementById("detail-meta");
+      const detailImage = document.getElementById("detail-image");
+      const detailContent = document.getElementById("detail-content");
+
+      function updateDate() {
+        const dateElement = document.getElementById("current-date");
+        const today = new Date();
+        const options = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        };
+        dateElement.textContent = today.toLocaleDateString("es-ES", options);
+      }
+
+      function showPage(pageId) {
+        sections.forEach((section) => {
+          section.classList.remove("current-page");
+        });
+        document.getElementById(pageId).classList.add("current-page");
+        currentPage = pageId;
+
+        navLinks.forEach((link) => link.classList.remove("active"));
+        if (pageId === "public-home") {
+          document.getElementById("nav-home").classList.add("active");
+        } else if (pageId === "about-ai-news") {
+          document.getElementById("nav-ai-news").classList.add("active");
+        }
+        console.log(`Página actual cambiada a: ${pageId}`);
+      }
+
+      function renderNewsCard(news, isMain = false) {
+        console.log(
+          `Rendering news card for: ${news.title}, isMain: ${isMain}`
+        );
+        return `
+                <div class="relative bg-white rounded-xl overflow-hidden shadow-md border border-[#E0E0E0] cursor-pointer group" data-id="${
+                  news.id
+                }">
+                    <img src="${news.imageUrl}" alt="${
+          news.title
+        }" class="w-full ${isMain ? "h-64 md:h-96" : "h-48"} object-cover">
+                    <div class="${isMain ? "p-6 md:p-8" : "p-6"}">
+                        <p class="text-[#CC0000] text-sm font-bold mb-2">${news.category.toUpperCase()}</p>
+                        <h3 class="news-title ${
+                          isMain ? "text-3xl md:text-4xl" : "text-xl"
+                        } font-extrabold text-[#1A1A1A] mb-2 group-hover:text-[#0066CC] transition-colors">${
+          news.title
+        }</h3>
+                        <p class="text-[#666666] ${
+                          isMain ? "text-base" : "text-sm"
+                        } mb-3">${news.source} | ${news.date}</p>
+                        <p class="text-[#1A1A1A] ${
+                          isMain ? "text-lg" : "text-base"
+                        } leading-relaxed mb-4">${news.summary}</p>
+                        <button data-id="${
+                          news.id
+                        }" class="read-more-button bg-[#CC0000] text-white px-5 py-2 rounded-full hover:bg-opacity-90 transition-colors">Leer Más</button>
+                    </div>
+                </div>
+            `;
+      }
+
+      function renderSideFeaturedNewsCard(news) {
+        console.log(`Rendering side featured news card for: ${news.title}`);
+        return `
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-[#E0E0E0] cursor-pointer group" data-id="${
+                  news.id
+                }">
+                    <p class="text-[#CC0000] text-xs font-bold mb-1">${news.category.toUpperCase()}</p>
+                    <h4 class="news-title text-lg font-bold text-[#1A1A1A] mb-1 group-hover:text-[#0066CC] transition-colors">${
+                      news.title
+                    }</h4>
+                    <p class="text-[#666666] text-xs">${news.source} | ${
+          news.date
+        }</p>
+                </div>
+            `;
+      }
+
+      function populatePublicHome() {
+        console.log("Iniciando populatePublicHome...");
+        // Main news (first article)
+        const mainNews = dummyGlobalNews[0];
+        mainNewsCard.innerHTML = renderNewsCard(mainNews, true);
+        mainNewsCard
+          .querySelector(".read-more-button")
+          .addEventListener("click", (e) =>
+            showNewsDetail(e.target.dataset.id)
+          );
+        console.log("Noticia principal cargada.");
+
+        // Side featured news (next 2 articles)
+        const sideFeaturedNews = dummyGlobalNews.slice(1, 3);
+        sideFeaturedNewsContainer.innerHTML = sideFeaturedNews
+          .map(renderSideFeaturedNewsCard)
+          .join("");
+        sideFeaturedNewsContainer
+          .querySelectorAll("div[data-id]")
+          .forEach((card) => {
+            card.addEventListener("click", (e) =>
+              showNewsDetail(e.currentTarget.dataset.id)
+            );
+          });
+        console.log("Noticias destacadas laterales cargadas.");
+
+        // More news (the remaining articles, starting from the 3rd index)
+        const moreNews = dummyGlobalNews.slice(3);
+        moreNewsContainer.innerHTML = moreNews.map(renderNewsCard).join("");
+        moreNewsContainer.querySelectorAll("div[data-id]").forEach((card) => {
+          card.addEventListener("click", (e) =>
+            showNewsDetail(e.currentTarget.dataset.id)
+          );
+        });
+        console.log("Más noticias cargadas.");
+      }
+
+      function showNewsDetail(id) {
+        console.log(`Mostrando detalle de noticia para ID: ${id}`);
+        const news = dummyGlobalNews.find((n) => n.id === id);
+        if (news) {
+          currentNewsId = id;
+          detailTitle.textContent = news.title;
+          detailMeta.textContent = `${news.source} | ${news.date} | Categoría: ${news.category}`;
+          detailImage.src = news.imageUrl;
+          detailImage.alt = news.title;
+          detailContent.innerHTML = news.fullContent;
+          showPage("news-detail");
+          console.log(`Detalle de noticia "${news.title}" cargado.`);
+        } else {
+          console.error(`Noticia con ID ${id} no encontrada.`);
+        }
+      }
+
+      // Event Listeners
+      document
+        .getElementById("nav-home")
+        .addEventListener("click", () => showPage("public-home"));
+      document
+        .getElementById("nav-ai-news")
+        .addEventListener("click", () => showPage("about-ai-news"));
+      document
+        .getElementById("back-to-home")
+        .addEventListener("click", () => showPage("public-home"));
+
+      // Initial setup on page load
+      document.addEventListener("DOMContentLoaded", () => {
+        console.log(
+          "DOM completamente cargado. Iniciando configuración inicial."
+        );
+        updateDate();
+        populatePublicHome();
+        showPage("public-home"); // Ensure public home is the default view
+      });
+    </script>
+  </body>
+</html>

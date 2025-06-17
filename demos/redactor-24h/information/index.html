@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redactor24h | Información Estratégica Impulsada por IA</title>
+    <!-- Chosen Palette: "Corporate Tech" (Neutral Backgrounds, Deep Blue Accents, Cool Grays) -->
+    <!-- Application Structure Plan: The SPA is architected as a top-to-bottom narrative journey. It starts with a strong Hero section (Slide 1). It then uses interactive tabs to contrast "The Challenge" (Slide 2) with "Our Solution" (Slide 3), enhancing comprehension. A dedicated "How It Works" section visualizes the complex architecture (Slide 4) as a clear, 4-step flow diagram. A "Key Benefits" section uses a combination of cards and a dynamic bar chart (Slide 5) to make efficiency gains tangible. An interactive tabbed component for "Applications & Use Cases" consolidates information from Slides 6 & 9, allowing users to explore different sectors and see specific examples. The SPA concludes with sections on our "Unique Value" and "Adoption Models" (Slides 7 & 8) and a final, visionary CTA (Slide 10). This structure is chosen to guide the user logically from problem to solution to proof, using interactivity to manage detail and maintain engagement. -->
+    <!-- Visualization & Content Choices: [Problem/Solution -> Goal: Compare -> Viz: HTML Tabs -> Justification: Direct comparison is effective for showing a before-and-after state -> Method: Vanilla JS], [Architecture -> Goal: Organize/Explain -> Viz: HTML/CSS Flow Diagram -> Justification: Simplifies a complex process into a linear, digestible flow, avoiding SVG/Mermaid -> Method: HTML/Tailwind], [Efficiency Benefit -> Goal: Compare/Persuade -> Viz: Bar Chart -> Justification: Visually quantifies the time-saving benefit, making it more impactful than text alone -> Library: Chart.js], [Applications/Use Cases -> Goal: Organize/Inform -> Viz: Tabbed Component -> Justification: Segments a large amount of information by user persona/sector, making it highly relevant and explorable -> Method: Vanilla JS]. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&family=Lora:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Lexend", sans-serif;
+        background-color: #f8f9fa; /* Light Gray */
+        color: #212529; /* Dark Gray */
+      }
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-family: "Lora", serif;
+      }
+      .nav-link.active {
+        color: #0d6efd; /* Primary Blue */
+        font-weight: 600;
+      }
+      .tab-button.active {
+        background-color: #0d6efd;
+        color: #ffffff;
+      }
+      .benefit-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .benefit-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+          0 8px 10px -6px rgb(0 0 0 / 0.1);
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 350px;
+        max-height: 40vh;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-in-section {
+        animation: fadeIn 0.8s ease-out forwards;
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <header
+      id="header"
+      class="bg-white/90 backdrop-blur-lg sticky top-0 z-50 border-b border-gray-200"
+    >
+      <nav
+        class="container mx-auto px-6 py-3 flex justify-between items-center"
+      >
+        <a href="#" class="text-3xl font-bold text-gray-800"
+          >Redactor<span class="text-blue-600">24h</span></a
+        >
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="#solution" class="nav-link text-gray-600 hover:text-blue-600"
+            >Solución</a
+          >
+          <a href="#benefits" class="nav-link text-gray-600 hover:text-blue-600"
+            >Beneficios</a
+          >
+          <a
+            href="#technology"
+            class="nav-link text-gray-600 hover:text-blue-600"
+            >Tecnología</a
+          >
+          <a
+            href="#applications"
+            class="nav-link text-gray-600 hover:text-blue-600"
+            >Aplicaciones</a
+          >
+          <a
+            href="#contact"
+            class="bg-blue-600 text-white font-semibold py-2 px-5 rounded-lg hover:bg-blue-700 transition-colors"
+            >Solicitar Demo</a
+          >
+        </div>
+        <button
+          id="mobile-menu-button"
+          class="md:hidden text-3xl text-gray-700"
+        >
+          ☰
+        </button>
+      </nav>
+      <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+        <a
+          href="#solution"
+          class="block py-2 text-center text-gray-600 hover:text-blue-600"
+          >Solución</a
+        >
+        <a
+          href="#benefits"
+          class="block py-2 text-center text-gray-600 hover:text-blue-600"
+          >Beneficios</a
+        >
+        <a
+          href="#technology"
+          class="block py-2 text-center text-gray-600 hover:text-blue-600"
+          >Tecnología</a
+        >
+        <a
+          href="#applications"
+          class="block py-2 text-center text-gray-600 hover:text-blue-600"
+          >Aplicaciones</a
+        >
+        <a
+          href="#contact"
+          class="block mt-4 bg-blue-600 text-white font-semibold py-2 px-5 rounded-lg text-center hover:bg-blue-700 transition-colors"
+          >Solicitar Demo</a
+        >
+      </div>
+    </header>
+
+    <main>
+      <section id="hero" class="py-24 md:py-32 bg-white">
+        <div class="container mx-auto px-6 text-center">
+          <h1
+            class="text-4xl md:text-6xl font-bold text-gray-900 leading-tight mb-6"
+          >
+            Su Aliado Estratégico en la Era de la Información Dinámica
+          </h1>
+          <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-10">
+            Transformamos el torrente diario de noticias en inteligencia
+            procesable y adaptada, impulsando su toma de decisiones, eficiencia
+            y formación especializada.
+          </p>
+          <a
+            href="#solution"
+            class="bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg text-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+            >Descubra el Poder de la IA</a
+          >
+        </div>
+      </section>
+
+      <section id="solution" class="py-20 md:py-28">
+        <div class="container mx-auto px-6">
+          <div class="max-w-4xl mx-auto text-center mb-16">
+            <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
+              De la Sobrecarga a la Claridad Estratégica
+            </h2>
+            <p class="text-lg text-gray-600">
+              Redactor24h aborda los desafíos críticos de la gestión de
+              información con una solución tecnológica de vanguardia.
+            </p>
+          </div>
+          <div class="max-w-5xl mx-auto">
+            <div
+              class="flex flex-col md:flex-row bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-200"
+            >
+              <div class="md:w-1/2 p-8 md:p-12">
+                <h3 class="text-2xl md:text-3xl font-bold text-red-600 mb-4">
+                  El Desafío Actual
+                </h3>
+                <ul class="space-y-4 text-gray-700">
+                  <li class="flex items-start">
+                    <span class="text-red-500 mr-3 mt-1">🔴</span
+                    ><span
+                      ><strong>Infoxicación:</strong> El volumen exponencial de
+                      datos hace imposible identificar lo relevante sin
+                      herramientas avanzadas.</span
+                    >
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-red-500 mr-3 mt-1">🔴</span
+                    ><span
+                      ><strong>Costo Humano:</strong> Equipos enteros dedican
+                      horas valiosas a la curación manual, restando tiempo a
+                      análisis estratégico.</span
+                    >
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-red-500 mr-3 mt-1">🔴</span
+                    ><span
+                      ><strong>Riesgo de Fiabilidad:</strong> La proliferación
+                      de fuentes hace compleja la verificación, aumentando la
+                      exposición a sesgos o "fake news".</span
+                    >
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-red-500 mr-3 mt-1">🔴</span
+                    ><span
+                      ><strong>Falta de Adaptación:</strong> La información
+                      genérica rara vez se ajusta a las necesidades específicas
+                      de cada departamento o audiencia interna.</span
+                    >
+                  </li>
+                </ul>
+              </div>
+              <div class="md:w-1/2 p-8 md:p-12 bg-blue-600 text-white">
+                <h3 class="text-2xl md:text-3xl font-bold mb-4">
+                  La Solución Redactor24h
+                </h3>
+                <ul class="space-y-4">
+                  <li class="flex items-start">
+                    <span class="text-white mr-3 mt-1">🔵</span
+                    ><span
+                      ><strong>Ingesta Inteligente:</strong> Procesamos miles de
+                      noticias de medios confiables, agencias y fuentes
+                      especializadas globales, con validación continua.</span
+                    >
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-white mr-3 mt-1">🔵</span
+                    ><span
+                      ><strong>Transformación con IA Avanzada:</strong> Nuestros
+                      modelos de lenguaje analizan, resumen y recontextualizan
+                      la información para extraer su esencia y relevancia.</span
+                    >
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-white mr-3 mt-1">🔵</span
+                    ><span
+                      ><strong>Adaptabilidad Granular:</strong> Generamos
+                      redacciones diferenciadas por complejidad, nivel técnico,
+                      idioma y propósito específico para cada audiencia interna
+                      o externa.</span
+                    >
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-white mr-3 mt-1">🔵</span
+                    ><span
+                      ><strong>Entrega Omnicanal y API:</strong> Acceso flexible
+                      vía nuestro portal web interactivo, APIs personalizadas
+                      para integración directa, o entrega push a sus plataformas
+                      (email, intranets, CRM).</span
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="technology" class="py-20 md:py-28 bg-white">
+        <div class="container mx-auto px-6">
+          <div class="max-w-4xl mx-auto text-center mb-16">
+            <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
+              Ingeniería y Modernización
+            </h2>
+            <p class="text-lg text-gray-600">
+              Nuestra arquitectura robusta está diseñada para la precisión,
+              escalabilidad, seguridad y una integración sin fisuras con sus
+              sistemas.
+            </p>
+          </div>
+          <div class="max-w-6xl mx-auto grid md:grid-cols-4 gap-8 text-center">
+            <div
+              class="flex flex-col items-center p-4 rounded-lg bg-gray-50 border border-gray-200 shadow-sm"
+            >
+              <div
+                class="bg-blue-100 text-blue-600 rounded-full h-16 w-16 flex items-center justify-center text-2xl font-bold mb-4"
+              >
+                1
+              </div>
+              <h4 class="text-xl font-bold my-2 text-gray-800">
+                Ingesta y Curación de Fuentes
+              </h4>
+              <p class="text-gray-600 text-sm">
+                Monitoreo continuo de miles de fuentes noticiosas globales
+                (agencias, prensa, publicaciones especializadas). Utilizamos
+                algoritmos de validación para asegurar la fiabilidad y filtrar
+                el ruido.
+              </p>
+            </div>
+            <div
+              class="flex flex-col items-center p-4 rounded-lg bg-gray-50 border border-gray-200 shadow-sm"
+            >
+              <div
+                class="bg-blue-100 text-blue-600 rounded-full h-16 w-16 flex items-center justify-center text-2xl font-bold mb-4"
+              >
+                2
+              </div>
+              <h4 class="text-xl font-bold my-2 text-gray-800">
+                Análisis PLN Avanzado
+              </h4>
+              <p class="text-gray-600 text-sm">
+                Procesamiento de Lenguaje Natural para extracción de entidades
+                (personas, organizaciones, lugares), identificación de temas
+                clave, análisis de sentimiento y detección de duplicados para
+                una comprensión profunda del contenido.
+              </p>
+            </div>
+            <div
+              class="flex flex-col items-center p-4 rounded-lg bg-gray-50 border border-gray-200 shadow-sm"
+            >
+              <div
+                class="bg-blue-100 text-blue-600 rounded-full h-16 w-16 flex items-center justify-center text-2xl font-bold mb-4"
+              >
+                3
+              </div>
+              <h4 class="text-xl font-bold my-2 text-gray-800">
+                Redacción Adaptativa con LLMs
+              </h4>
+              <p class="text-gray-600 text-sm">
+                Utilizamos Large Language Models (LLMs) especializados para
+                generar resúmenes abstractivos y extractivos, reescribir textos
+                a distintos niveles de complejidad (ej. ejecutivo, técnico) y
+                adaptar el tono y la terminología al dominio del cliente.
+                Incluye capacidades de fine-tuning.
+              </p>
+            </div>
+            <div
+              class="flex flex-col items-center p-4 rounded-lg bg-gray-50 border border-gray-200 shadow-sm"
+            >
+              <div
+                class="bg-blue-100 text-blue-600 rounded-full h-16 w-16 flex items-center justify-center text-2xl font-bold mb-4"
+              >
+                4
+              </div>
+              <h4 class="text-xl font-bold my-2 text-gray-800">
+                Entrega Omnicanal Segura
+              </h4>
+              <p class="text-gray-600 text-sm">
+                Distribución flexible vía nuestro portal web seguro, APIs
+                RESTful para integración directa en intranets/CRMs, o push
+                directo a correos electrónicos y sistemas de mensajería,
+                garantizando la seguridad de los datos.
+              </p>
+            </div>
+          </div>
+          <div
+            class="max-w-4xl mx-auto text-center mt-12 pt-8 border-t border-gray-200"
+          >
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">
+              Arquitectura Cloud y Seguridad
+            </h3>
+            <p class="text-lg text-gray-600">
+              Desarrollado sobre infraestructura de microservicios en la nube
+              (AWS/GCP), Redactor24h ofrece alta disponibilidad, escalabilidad
+              elástica y robustas medidas de ciberseguridad, incluyendo
+              encriptación de datos y cumplimiento de normativas de privacidad.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="benefits" class="py-20 md:py-28">
+        <div class="container mx-auto px-6">
+          <div class="max-w-4xl mx-auto text-center mb-16">
+            <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
+              Beneficios Estratégicos Tangibles
+            </h2>
+            <p class="text-lg text-gray-600">
+              Impulse a su organización con ventajas medibles en eficiencia
+              operativa, inteligencia de mercado y comunicación estratégica.
+            </p>
+          </div>
+          <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div class="grid sm:grid-cols-2 gap-6">
+              <div
+                class="benefit-card bg-white p-6 rounded-xl shadow-lg border border-gray-200"
+              >
+                <h4 class="font-bold text-lg text-blue-600 mb-2">
+                  Toma de Decisiones Informada
+                </h4>
+                <p class="text-gray-600 text-sm">
+                  Acceso rápido y curado a información crítica: tendencias de
+                  mercado, movimientos de competidores, análisis de riesgos
+                  geopolíticos y macroeconómicos.
+                </p>
+              </div>
+              <div
+                class="benefit-card bg-white p-6 rounded-xl shadow-lg border border-gray-200"
+              >
+                <h4 class="font-bold text-lg text-blue-600 mb-2">
+                  Optimización de Comunicación Interna/Externa
+                </h4>
+                <p class="text-gray-600 text-sm">
+                  Genere briefings ejecutivos, reportes sectoriales y material
+                  de formación actualizado de forma ágil y eficiente, adaptado a
+                  cada audiencia.
+                </p>
+              </div>
+              <div
+                class="benefit-card bg-white p-6 rounded-xl shadow-lg border border-gray-200"
+              >
+                <h4 class="font-bold text-lg text-blue-600 mb-2">
+                  Mitigación Proactiva de Riesgos
+                </h4>
+                <p class="text-gray-600 text-sm">
+                  Detección temprana de riesgos reputacionales, regulatorios,
+                  financieros o de cadena de suministro a través de monitoreo
+                  inteligente.
+                </p>
+              </div>
+              <div
+                class="benefit-card bg-white p-6 rounded-xl shadow-lg border border-gray-200"
+              >
+                <h4 class="font-bold text-lg text-blue-600 mb-2">
+                  Consistencia y Precisión Informacional
+                </h4>
+                <p class="text-gray-600 text-sm">
+                  Asegure que la información crítica que circula en su
+                  organización sea verificada, objetiva y consistente,
+                  reduciendo la dispersión de datos.
+                </p>
+              </div>
+            </div>
+            <div>
+              <div
+                class="bg-white p-6 rounded-xl shadow-lg border border-gray-200"
+              >
+                <h4 class="font-bold text-lg text-center mb-4">
+                  Eficiencia Operacional: Ahorro de Horas/FTE
+                </h4>
+                <p class="text-sm text-center text-gray-500 mb-4">
+                  Reducción estimada del tiempo dedicado a la curación y
+                  adaptación manual de noticias complejas.
+                </p>
+                <div class="chart-container">
+                  <canvas id="efficiencyChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="applications" class="py-20 md:py-28 bg-white">
+        <div class="container mx-auto px-6">
+          <div class="max-w-4xl mx-auto text-center mb-16">
+            <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
+              Aplicaciones Versátiles para Cada Sector
+            </h2>
+            <p class="text-lg text-gray-600">
+              Descubra cómo Redactor24h potencia a equipos de todos los tamaños
+              e industrias con información adaptada a sus necesidades
+              específicas.
+            </p>
+          </div>
+          <div class="max-w-6xl mx-auto">
+            <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-8">
+              <button
+                class="app-tab-button bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-5 rounded-full transition-all active"
+                data-app-tab="consultoria"
+              >
+                Consultoría & Finanzas
+              </button>
+              <button
+                class="app-tab-button bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-5 rounded-full transition-all"
+                data-app-tab="corporativo"
+              >
+                Asuntos Corporativos & RRHH
+              </button>
+              <button
+                class="app-tab-button bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-5 rounded-full transition-all"
+                data-app-tab="investigacion"
+              >
+                I+D, Innovación & Startups
+              </button>
+              <button
+                class="app-tab-button bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-5 rounded-full transition-all"
+                data-app-tab="gobierno"
+              >
+                Gobierno, ONGs & Think Tanks
+              </button>
+            </div>
+            <div
+              id="app-tab-content"
+              class="bg-white p-8 md:p-12 rounded-xl shadow-xl border border-gray-200 min-h-[350px]"
+            ></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="py-20 md:py-28 bg-blue-600 text-white">
+        <div class="container mx-auto px-6 text-center">
+          <h2 class="text-3xl md:text-5xl font-bold mb-6">
+            Impulse su Estrategia con Información Inteligente
+          </h2>
+          <p class="text-lg md:text-xl text-blue-100 max-w-3xl mx-auto mb-10">
+            Contáctenos para una demostración personalizada y descubra cómo
+            Redactor24h puede transformar el flujo de información en su
+            organización, optimizando procesos y potenciando decisiones.
+          </p>
+          <a
+            href="mailto:demo@redactor24h.com"
+            class="bg-white text-blue-600 font-semibold py-3 px-8 rounded-lg text-lg hover:bg-gray-100 transition-colors shadow-lg hover:shadow-xl"
+            >Solicitar una Demo</a
+          >
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-8">
+      <div class="container mx-auto px-6 text-center text-sm">
+        <p>&copy; 2025 Redactor24h. Todos los derechos reservados.</p>
+        <p class="mt-2">Información Inteligente. Decisiones Poderosas.</p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const applicationsData = {
+          consultoria: {
+            title: "Para Consultoras y Empresas de Finanzas",
+            description:
+              "En el vertiginoso mundo de la consultoría y las finanzas, la información actualizada y precisa es su mayor activo. Redactor24h le proporciona una ventaja competitiva al curar y sintetizar datos complejos de mercado en tiempo real.",
+            items: [
+              "<strong>Análisis de Mercado Automatizado:</strong> Generación de resúmenes detallados sobre tendencias sectoriales, movimientos de la competencia y pronósticos económicos, adaptados a sus proyectos.",
+              "<strong>Monitoreo de Portafolios:</strong> Seguimiento en tiempo real de noticias que afectan a empresas o sectores específicos de su interés, con alertas personalizadas.",
+              "<strong>Preparación de Briefings para Clientes:</strong> Creación de documentos informativos de alto impacto, listos para presentar, con la última información relevante para sus clientes.",
+              "<strong>Detección de Oportunidades/Riesgos:</strong> Identificación proactiva de nuevas oportunidades de inversión o posibles riesgos financieros en el horizonte.",
+            ],
+            useCase: {
+              title:
+                "Caso de Uso: Equipo de Gestión de Inversiones (3 personas)",
+              description:
+                "Un pequeño equipo necesitaba monitorear 15 sectores industriales diferentes. Con Redactor24h, reciben un 'Briefing Sectorial Personalizado' cada mañana, con los 5 artículos más influyentes por sector, condensados a nivel ejecutivo. Esto les ahorra más de 20 horas semanales de lectura y curación manual, permitiéndoles enfocar su tiempo en el análisis estratégico y la toma de decisiones.",
+            },
+          },
+          corporativo: {
+            title: "Para Asuntos Corporativos, Legales y Recursos Humanos",
+            description:
+              "La gestión de la reputación, el cumplimiento legal y la comunicación interna efectiva son pilares para cualquier corporación. Redactor24h optimiza estos procesos con inteligencia de medios y contenido adaptado.",
+            items: [
+              "<strong>Monitoreo de Reputación 360°:</strong> Seguimiento en tiempo real de la imagen de marca en medios, detectando menciones positivas o críticas que requieran respuesta.",
+              "<strong>Inteligencia Regulatoria:</strong> Alertas y resúmenes de IA sobre cambios legislativos, nuevas normativas o jurisprudencia relevante para su sector, asegurando el cumplimiento.",
+              "<strong>Comunicación Interna Adaptada:</strong> Generación de resúmenes de noticias internas o de industria adaptados para boletines de empleados o capacitaciones.",
+              "<strong>Análisis de Clima Social/Laboral:</strong> Comprensión de tendencias sociales y noticias que puedan impactar en el ambiente laboral o en la percepción pública de la empresa.",
+            ],
+            useCase: {
+              title: "Caso de Uso: Departamento Legal (4 personas)",
+              description:
+                "Este equipo requería estar al tanto de las actualizaciones en la legislación de privacidad de datos. Redactor24h les proporciona un 'Boletín Legal Inteligente' semanal que resume los cambios normativos más recientes y analiza su implicancia para la empresa, garantizando la anticipación a las exigencias legales.",
+            },
+          },
+          investigacion: {
+            title: "Para Equipos de I+D, Innovación y Startups",
+            description:
+              "La velocidad de la innovación exige mantenerse a la vanguardia. Redactor24h es la herramienta indispensable para equipos que buscan descubrir, analizar y capitalizar los últimos avances tecnológicos y científicos.",
+            items: [
+              "<strong>Vigilancia Tecnológica Continua:</strong> Monitoreo automatizado de patentes, papers científicos, lanzamientos de productos y noticias de disruptores en su nicho.",
+              "<strong>Análisis Competitivo Inteligente:</strong> Obtenga un panorama claro de los movimientos de sus competidores, sus inversiones en I+D y sus estrategias de mercado.",
+              "<strong>Identificación de Oportunidades Emergentes:</strong> Detección de tecnologías incipientes, mercados no explotados o nuevas necesidades de consumo basadas en la información global.",
+              "<strong>Soporte para Desarrollo de Productos:</strong> Información curada sobre materiales, procesos o metodologías que pueden acelerar su ciclo de innovación.",
+            ],
+            useCase: {
+              title:
+                "Caso de Uso: Laboratorio de I+D de Materiales (7 personas)",
+              description:
+                "Este laboratorio necesitaba rastrear avances en nanotecnología y materiales compuestos. Redactor24h les entrega un 'Resumen de Innovación Materiales' diario, destacando los 3-5 descubrimientos más prometedores y sus aplicaciones potenciales, impulsando la creatividad y la dirección de su investigación.",
+            },
+          },
+          gobierno: {
+            title: "Para Instituciones Gubernamentales, ONGs y Think Tanks",
+            description:
+              "La formulación de políticas, la asistencia humanitaria y la influencia en la opinión pública requieren una comprensión profunda y actualizada del entorno. Redactor24h proporciona inteligencia estratégica y contenido adaptado para el sector público y social.",
+            items: [
+              "<strong>Análisis de Políticas Públicas:</strong> Monitoreo global de la implementación y el impacto de políticas en diversas áreas (salud, educación, medioambiente).",
+              "<strong>Inteligencia Geopolítica y Social:</strong> Resúmenes contextualizados de eventos internacionales, crisis humanitarias o movimientos sociales que puedan afectar su misión.",
+              "<strong>Comunicación Estratégica Adaptada:</strong> Creación de informes de situación o briefings para audiencias internas o externas, adaptados a la jerga y necesidades específicas del sector.",
+              "<strong>Evaluación de Percepción Ciudadana:</strong> Análisis del sentimiento mediático y social en torno a iniciativas gubernamentales o campañas de ONGs.",
+            ],
+            useCase: {
+              title:
+                "Caso de Uso: Equipo de Proyectos de Desarrollo (6 personas)",
+              description:
+                "Un equipo que opera en múltiples países necesita comprender el contexto local antes de desplegar proyectos. Redactor24h les ofrece 'Briefings de País' personalizados, que resumen la actualidad política, económica y social relevante para sus operaciones, facilitando una planificación más informada y sensible al contexto.",
+            },
+          },
+        };
+
+        const efficiencyChartCtx = document
+          .getElementById("efficiencyChart")
+          .getContext("2d");
+        new Chart(efficiencyChartCtx, {
+          type: "bar",
+          data: {
+            labels: ["Curación Manual", "Con Redactor24h"],
+            datasets: [
+              {
+                label: "Horas por Semana",
+                data: [10, 2],
+                backgroundColor: [
+                  "rgba(255, 99, 132, 0.6)" /* Red for manual */,
+                  "rgba(13, 110, 253, 0.7)" /* Blue for Redactor24h */,
+                ],
+                borderColor: ["rgba(255, 99, 132, 1)", "rgba(13, 110, 253, 1)"],
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: "Horas Estimadas / Semana",
+                  color: "#495057",
+                },
+                ticks: {
+                  color: "#495057",
+                },
+              },
+              x: {
+                ticks: {
+                  color: "#495057",
+                },
+              },
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                callbacks: {
+                  title: (tooltipItems) => tooltipItems[0].label,
+                  label: (context) =>
+                    ` ${context.parsed.y} horas. Ahorro estimado del 80%.`,
+                  labelTextColor: function (context) {
+                    return "#343a40"; // Dark text for tooltip labels
+                  },
+                  titleColor: function (context) {
+                    return "#343a40"; // Dark text for tooltip titles
+                  },
+                  bodyColor: function (context) {
+                    return "#343a40"; // Dark text for tooltip body
+                  },
+                  backgroundColor: "rgba(255, 255, 255, 0.9)", // White background for tooltip
+                  borderColor: "#e9ecef", // Light border for tooltip
+                  borderWidth: 1,
+                  padding: 10,
+                  displayColors: false, // Hide color box in tooltip
+                },
+              },
+            },
+          },
+        });
+
+        const appTabContent = document.getElementById("app-tab-content");
+        const appTabButtons = document.querySelectorAll(".app-tab-button");
+
+        function updateAppTabContent(tab) {
+          const data = applicationsData[tab];
+          appTabContent.innerHTML = `
+                    <div class="fade-in-section">
+                        <h3 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center">${
+                          data.title
+                        }</h3>
+                        <p class="text-lg text-gray-700 mb-8 max-w-3xl mx-auto text-center">${
+                          data.description
+                        }</p>
+                        <ul class="space-y-3 mb-8 list-disc list-inside text-gray-700 max-w-2xl mx-auto">
+                            ${data.items
+                              .map((item) => `<li>${item}</li>`)
+                              .join("")}
+                        </ul>
+                        <div class="mt-8 bg-blue-50 p-6 rounded-lg border border-blue-200">
+                             <h4 class="font-bold text-lg text-blue-700 mb-2">${
+                               data.useCase.title
+                             }</h4>
+                             <p class="text-gray-700">${
+                               data.useCase.description
+                             }</p>
+                        </div>
+                    </div>
+                `;
+          appTabButtons.forEach((button) => {
+            button.classList.toggle("active", button.dataset.appTab === tab);
+            button.classList.toggle(
+              "bg-blue-600",
+              button.dataset.appTab === tab
+            );
+            button.classList.toggle(
+              "text-white",
+              button.dataset.appTab === tab
+            );
+            button.classList.toggle("bg-white", button.dataset.appTab !== tab);
+            button.classList.toggle(
+              "text-gray-700",
+              button.dataset.appTab !== tab
+            );
+          });
+        }
+
+        appTabButtons.forEach((button) => {
+          button.addEventListener("click", () =>
+            updateAppTabContent(button.dataset.appTab)
+          );
+        });
+
+        updateAppTabContent("consultoria");
+
+        const mobileMenuButton = document.getElementById("mobile-menu-button");
+        const mobileMenu = document.getElementById("mobile-menu");
+        mobileMenuButton.addEventListener("click", () => {
+          mobileMenu.classList.toggle("hidden");
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+          anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute("href")).scrollIntoView({
+              behavior: "smooth",
+            });
+            if (!mobileMenu.classList.contains("hidden")) {
+              mobileMenu.classList.add("hidden");
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
