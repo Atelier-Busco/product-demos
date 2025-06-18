@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html
+  lang="es"
+  class="scroll-smooth"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Alma: Acompañamiento Emocional para la Maternidad</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Chosen Palette: Warm Harmony -->
+    <!-- Application Structure Plan: He diseñado la aplicación como un viaje narrativo en una sola página. Comienza con una introducción impactante (el "porqué"), presenta la solución de forma interactiva (el "qué" y el "cómo"), detalla los principios que generan confianza, visualiza el alcance del contenido, muestra la visión a futuro y termina con una llamada a la acción clara. Esta estructura guía al usuario (inversor/aliado) desde el problema hasta la oportunidad de una manera lógica y persuasiva, fomentando la conexión emocional y la comprensión del valor del proyecto. -->
+    <!-- Visualization & Content Choices: 
+        - Propósito: Goal=Informar. Method=Texto destacado. Interaction=Ninguna. Justification=Captar la atención sobre la necesidad del mercado.
+        - Funcionalidades: Goal=Organizar/Informar. Method=Pestañas interactivas. Interaction=Click para cambiar de contenido. Justification=Permite explorar las dos funciones principales sin saturar la vista, simulando la interacción en una app.
+        - El Viaje de la Maternidad: Goal=Mostrar cambio/Organizar. Method=Gráfico de barras horizontal interactivo (Chart.js). Interaction=Click en una etapa para ver temas de ejemplo. Justification=Transforma una lista de FAQs en una visualización de datos tangible y atractiva, demostrando la profundidad y estructura del contenido de la app.
+        - Pilares y Oportunidad: Goal=Informar/Organizar. Method=Tarjetas en formato grid. Interaction=Hover sutil. Justification=Presenta información clave de forma escaneable, visualmente ordenada y fácil de digerir.
+        - Library/Method: TailwindCSS para estructura y estilo, Chart.js (Canvas) para la visualización de datos, Vanilla JS para la interactividad.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+      body {
+        font-family: 'Lexend', sans-serif;
+        background-color: #fefbf9;
+        color: #4a4a4a;
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 350px;
+        max-height: 50vh;
+      }
+      @media (min-width: 768px) {
+        .chart-container {
+          height: 450px;
+        }
+      }
+      .nav-link {
+        transition: color 0.3s, border-bottom-color 0.3s;
+        border-bottom: 2px solid transparent;
+      }
+      .nav-link:hover,
+      .nav-link.active {
+        color: #e18b95;
+        border-bottom-color: #e18b95;
+      }
+      .tab-btn.active {
+        background-color: #e18b95;
+        color: #ffffff;
+      }
+      .card-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05),
+          0 4px 6px -4px rgb(0 0 0 / 0.05);
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+      <nav
+        class="container mx-auto px-6 py-3 flex justify-between items-center"
+      >
+        <h1 class="text-2xl font-bold text-[#D47A85]">Alma</h1>
+        <div class="hidden md:flex space-x-8">
+          <a
+            href="#proposito"
+            class="nav-link"
+            >Propósito</a
+          >
+          <a
+            href="#solucion"
+            class="nav-link"
+            >La Solución</a
+          >
+          <a
+            href="#viaje"
+            class="nav-link"
+            >El Viaje</a
+          >
+          <a
+            href="#oportunidad"
+            class="nav-link"
+            >Oportunidad</a
+          >
+        </div>
+        <a
+          href="#oportunidad"
+          class="bg-[#E18B95] text-white px-4 py-2 rounded-full hover:bg-[#D47A85] transition-colors text-sm font-semibold"
+          >Contactar</a
+        >
+      </nav>
+    </header>
+
+    <main>
+      <section
+        id="hero"
+        class="py-20 md:py-32 bg-rose-50"
+      >
+        <div class="container mx-auto px-6 text-center">
+          <h2 class="text-4xl md:text-6xl font-bold text-slate-800 mb-4">
+            Tu Aliada Emocional en el
+          </h2>
+          <h1 class="text-4xl md:text-6xl font-bold text-[#E18B95] mb-8">
+            Viaje de la Maternidad
+          </h1>
+          <p class="max-w-3xl mx-auto text-lg text-slate-600">
+            Una aplicación móvil diseñada para acompañar, escuchar y validar las
+            emociones de mujeres embarazadas y madres recientes. Un espacio
+            seguro, empático y siempre accesible.
+          </p>
+        </div>
+      </section>
+
+      <section
+        id="proposito"
+        class="py-16 md:py-24"
+      >
+        <div class="container mx-auto px-6">
+          <div class="text-center max-w-4xl mx-auto">
+            <h3
+              class="text-sm font-semibold uppercase text-[#D47A85] tracking-wider mb-2"
+            >
+              El Propósito Fundamental
+            </h3>
+            <p class="text-3xl md:text-4xl font-bold text-slate-800 mb-6">
+              "Acompañar sin juzgar, escuchar sin interrumpir y estar presente
+              sin invadir."
+            </p>
+            <p class="text-slate-600 text-lg">
+              En una etapa profundamente transformadora, muchas mujeres
+              enfrentan emociones intensas, soledad y dudas. Alma nace para
+              ofrecer un refugio digital donde la autenticidad emocional es
+              bienvenida y comprendida, complementando el ecosistema de apoyo
+              existente sin reemplazar la atención profesional.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="solucion"
+        class="py-16 md:py-24 bg-rose-50"
+      >
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12">
+            <h3
+              class="text-sm font-semibold uppercase text-[#D47A85] tracking-wider mb-2"
+            >
+              Nuestra Solución
+            </h3>
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-800">
+              Funcionalidades Diseñadas con Empatía
+            </h2>
+            <p class="mt-4 max-w-2xl mx-auto text-slate-600">
+              Alma ofrece herramientas prácticas y sensibles, centradas en las
+              necesidades reales de las madres. Explore nuestras funcionalidades
+              principales para entender cómo brindamos apoyo.
+            </p>
+          </div>
+
+          <div class="max-w-4xl mx-auto">
+            <div class="flex justify-center mb-8 border-b border-gray-200">
+              <button
+                id="tab-btn-chat"
+                class="tab-btn py-3 px-6 text-lg font-medium text-slate-500 transition-colors duration-300 active"
+              >
+                🧠 Chat Emocional
+              </button>
+              <button
+                id="tab-btn-faq"
+                class="tab-btn py-3 px-6 text-lg font-medium text-slate-500 transition-colors duration-300"
+              >
+                📚 FAQs por Etapa
+              </button>
+            </div>
+
+            <div
+              id="tab-content-chat"
+              class="tab-content"
+            >
+              <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h4 class="font-bold text-2xl text-slate-800 mb-4">
+                  Conversaciones que Alivian
+                </h4>
+                <p class="text-slate-600 mb-6">
+                  Un espacio confidencial con una IA entrenada en empatía y
+                  contención perinatal. No da consejos clínicos, pero responde
+                  con calidez, escucha activa y comprensión, aliviando la carga
+                  emocional de forma instantánea.
+                </p>
+                <div class="grid md:grid-cols-3 gap-6 text-center">
+                  <div class="bg-rose-50 p-4 rounded-lg">
+                    <p class="text-4xl mb-2">💖</p>
+                    <h5 class="font-semibold text-slate-700">
+                      Lenguaje Respetuoso
+                    </h5>
+                    <p class="text-sm text-slate-500">
+                      Validado por profesionales para ser no invasivo y seguro.
+                    </p>
+                  </div>
+                  <div class="bg-rose-50 p-4 rounded-lg">
+                    <p class="text-4xl mb-2">🕒</p>
+                    <h5 class="font-semibold text-slate-700">
+                      Disponibilidad 24/7
+                    </h5>
+                    <p class="text-sm text-slate-500">
+                      Soporte inmediato día y noche, sin turnos ni esperas.
+                    </p>
+                  </div>
+                  <div class="bg-rose-50 p-4 rounded-lg">
+                    <p class="text-4xl mb-2">🛡️</p>
+                    <h5 class="font-semibold text-slate-700">Límites Claros</h5>
+                    <p class="text-sm text-slate-500">
+                      Un rol de acompañamiento puro, sin diagnósticos ni
+                      terapia.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              id="tab-content-faq"
+              class="tab-content hidden"
+            >
+              <div class="bg-white p-8 rounded-lg shadow-lg">
+                <h4 class="font-bold text-2xl text-slate-800 mb-4">
+                  Respuestas a Inquietudes Reales
+                </h4>
+                <p class="text-slate-600">
+                  Una biblioteca de contenido estructurada por etapas, que
+                  aborda las dudas y miedos más comunes con un lenguaje humano y
+                  empático. Desde el miedo a perder al bebé hasta la culpa o el
+                  cansancio extremo, normalizamos la experiencia materna para
+                  ofrecer consuelo y comprensión.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="viaje"
+        class="py-16 md:py-24"
+      >
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12">
+            <h3
+              class="text-sm font-semibold uppercase text-[#D47A85] tracking-wider mb-2"
+            >
+              El Viaje de la Maternidad
+            </h3>
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-800">
+              Contenido Estructurado para Cada Momento
+            </h2>
+            <p class="mt-4 max-w-3xl mx-auto text-slate-600">
+              Nuestra sección de Preguntas Frecuentes está organizada para
+              acompañar a la mujer en cada fase. Haga clic en una etapa del
+              gráfico para ver ejemplos de los temas que abordamos, demostrando
+              cómo nuestro contenido se adapta a sus necesidades cambiantes.
+            </p>
+          </div>
+          <div class="flex flex-col lg:flex-row items-center gap-8">
+            <div class="w-full lg:w-2/3">
+              <div class="chart-container">
+                <canvas id="stagesChart"></canvas>
+              </div>
+            </div>
+            <div
+              class="w-full lg:w-1/3 bg-white p-6 rounded-lg shadow-md min-h-[200px]"
+            >
+              <h4
+                id="stage-title"
+                class="font-bold text-xl text-slate-800 mb-3"
+              >
+                Seleccione una etapa
+              </h4>
+              <p
+                id="stage-description"
+                class="text-slate-600"
+              >
+                Aquí aparecerán los temas de ejemplo correspondientes a la etapa
+                seleccionada en el gráfico.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="pilares"
+        class="py-16 md:py-24 bg-rose-50"
+      >
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12">
+            <h3
+              class="text-sm font-semibold uppercase text-[#D47A85] tracking-wider mb-2"
+            >
+              Nuestros Pilares
+            </h3>
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-800">
+              Confianza, Calma y Respeto
+            </h2>
+            <p class="mt-4 max-w-2xl mx-auto text-slate-600">
+              La experiencia Alma se basa en principios fundamentales que
+              garantizan un entorno seguro y acogedor para todas nuestras
+              usuarias.
+            </p>
+          </div>
+          <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div class="bg-white p-6 rounded-lg text-center card-hover">
+              <p class="text-5xl mb-4">🎨</p>
+              <h4 class="text-xl font-semibold text-slate-800 mb-2">
+                Diseño Calmado
+              </h4>
+              <p class="text-slate-500">
+                Una interfaz minimalista y una paleta de colores cuidada que
+                transmite bienestar y facilita la navegación.
+              </p>
+            </div>
+            <div class="bg-white p-6 rounded-lg text-center card-hover">
+              <p class="text-5xl mb-4">🔒</p>
+              <h4 class="text-xl font-semibold text-slate-800 mb-2">
+                Privacidad Absoluta
+              </h4>
+              <p class="text-slate-500">
+                Uso anónimo, sin recolección de datos sensibles y libre de
+                publicidad. La confianza es nuestra prioridad.
+              </p>
+            </div>
+            <div class="bg-white p-6 rounded-lg text-center card-hover">
+              <p class="text-5xl mb-4">📱</p>
+              <h4 class="text-xl font-semibold text-slate-800 mb-2">
+                Accesibilidad Universal
+              </h4>
+              <p class="text-slate-500">
+                Disponible en iOS y Android, con un diseño intuitivo para todos
+                los niveles de alfabetización digital.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="oportunidad"
+        class="py-16 md:py-24"
+      >
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12">
+            <h3
+              class="text-sm font-semibold uppercase text-[#D47A85] tracking-wider mb-2"
+            >
+              Impacto y Oportunidad
+            </h3>
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-800">
+              Un Proyecto con Potencial de Escalabilidad
+            </h2>
+            <p class="mt-4 max-w-3xl mx-auto text-slate-600">
+              Alma se posiciona en una tendencia creciente de soluciones de
+              salud digital. Con un nicho validado y un MVP funcional, buscamos
+              aliados para amplificar nuestro impacto y llevar este apoyo a más
+              mujeres en todo el mundo.
+            </p>
+          </div>
+          <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div
+              class="bg-white p-8 rounded-lg shadow-md text-center card-hover"
+            >
+              <h4 class="text-xl font-bold text-[#E18B95] mb-3">
+                Inversores de Impacto
+              </h4>
+              <p class="text-slate-600 mb-4">
+                Buscamos capital para escalar la plataforma, desarrollar nuevas
+                funcionalidades y expandirnos a nuevos mercados.
+              </p>
+              <button class="font-semibold text-[#D47A85] hover:text-[#E18B95]">
+                Saber más →
+              </button>
+            </div>
+            <div
+              class="bg-white p-8 rounded-lg shadow-md text-center card-hover"
+            >
+              <h4 class="text-xl font-bold text-[#E18B95] mb-3">
+                Profesionales de la Salud
+              </h4>
+              <p class="text-slate-600 mb-4">
+                Colaboramos con expertos en salud mental perinatal para validar
+                y enriquecer nuestro contenido y enfoque.
+              </p>
+              <button class="font-semibold text-[#D47A85] hover:text-[#E18B95]">
+                Colaborar →
+              </button>
+            </div>
+            <div
+              class="bg-white p-8 rounded-lg shadow-md text-center card-hover"
+            >
+              <h4 class="text-xl font-bold text-[#E18B95] mb-3">
+                Instituciones y Fundaciones
+              </h4>
+              <p class="text-slate-600 mb-4">
+                Podemos integrar Alma en programas de apoyo a la maternidad y
+                estrategias de prevención en salud mental.
+              </p>
+              <button class="font-semibold text-[#D47A85] hover:text-[#E18B95]">
+                Contactar →
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-slate-800 text-white py-8">
+      <div class="container mx-auto px-6 text-center">
+        <p>&copy; 2025 Alma. Todos los derechos reservados.</p>
+        <p class="text-sm text-slate-400 mt-2">
+          Un refugio emocional para cada madre.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const tabsData = {
+          chat: {
+            btn: document.getElementById('tab-btn-chat'),
+            content: document.getElementById('tab-content-chat')
+          },
+          faq: {
+            btn: document.getElementById('tab-btn-faq'),
+            content: document.getElementById('tab-content-faq')
+          }
+        }
+
+        function switchTab(activeTab) {
+          Object.keys(tabsData).forEach((key) => {
+            const is_active = key === activeTab
+            tabsData[key].btn.classList.toggle('active', is_active)
+            tabsData[key].content.classList.toggle('hidden', !is_active)
+          })
+        }
+
+        tabsData.chat.btn.addEventListener('click', () => switchTab('chat'))
+        tabsData.faq.btn.addEventListener('click', () => switchTab('faq'))
+
+        const stagesData = [
+          {
+            stage: 'Embarazo: Trimestre 1',
+            topics:
+              'Miedo a perder al bebé, náuseas y cambios de humor, dudas sobre el futuro.'
+          },
+          {
+            stage: 'Embarazo: Trimestre 2',
+            topics:
+              'Ansiedad por las pruebas médicas, cambios en la imagen corporal, sentir los primeros movimientos.'
+          },
+          {
+            stage: 'Embarazo: Trimestre 3',
+            topics:
+              'Miedo al parto, cansancio extremo, preparación del nido, impaciencia.'
+          },
+          {
+            stage: 'Postparto: 0-1 mes',
+            topics:
+              'Tristeza inesperada (baby blues), agotamiento, dudas sobre la lactancia, recuperación física.'
+          },
+          {
+            stage: 'Postparto: 2-3 meses',
+            topics:
+              'Adaptación a la nueva rutina, sentimientos de soledad, presión por "hacerlo bien".'
+          },
+          {
+            stage: 'Postparto: 4-7 meses',
+            topics:
+              'Ansiedad por la separación, dudas sobre el vínculo con el bebé, identidad personal.'
+          },
+          {
+            stage: 'Postparto: 8-12 meses',
+            topics:
+              'Culpabilidad al volver al trabajo, comparación con otras madres, celebrar los hitos y sentir nostalgia.'
+          }
+        ]
+
+        const stageTitleEl = document.getElementById('stage-title')
+        const stageDescriptionEl = document.getElementById('stage-description')
+
+        const ctx = document.getElementById('stagesChart').getContext('2d')
+        const stagesChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: stagesData.map((d) => d.stage),
+            datasets: [
+              {
+                label: 'Etapas del Acompañamiento',
+                data: stagesData.map(() => 10),
+                backgroundColor: [
+                  'rgba(225, 139, 149, 0.6)',
+                  'rgba(225, 139, 149, 0.7)',
+                  'rgba(225, 139, 149, 0.8)',
+                  'rgba(212, 122, 133, 0.6)',
+                  'rgba(212, 122, 133, 0.7)',
+                  'rgba(212, 122, 133, 0.8)',
+                  'rgba(212, 122, 133, 0.9)'
+                ],
+                borderColor: [
+                  'rgba(225, 139, 149, 1)',
+                  'rgba(225, 139, 149, 1)',
+                  'rgba(225, 139, 149, 1)',
+                  'rgba(212, 122, 133, 1)',
+                  'rgba(212, 122, 133, 1)',
+                  'rgba(212, 122, 133, 1)',
+                  'rgba(212, 122, 133, 1)'
+                ],
+                borderWidth: 1,
+                borderRadius: 5
+              }
+            ]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
+              },
+              tooltip: {
+                enabled: false
+              }
+            },
+            scales: {
+              x: {
+                display: false
+              },
+              y: {
+                ticks: {
+                  font: {
+                    size: 14,
+                    family: 'Lexend'
+                  }
+                }
+              }
+            },
+            onClick: (event, elements) => {
+              if (elements.length > 0) {
+                const index = elements[0].index
+                const selectedData = stagesData[index]
+                stageTitleEl.textContent = selectedData.stage
+                stageDescriptionEl.textContent = selectedData.topics
+              }
+            },
+            onHover: (event, chartElement) => {
+              event.native.target.style.cursor = chartElement[0]
+                ? 'pointer'
+                : 'default'
+            }
+          }
+        })
+
+        const navLinks = document.querySelectorAll('a.nav-link')
+        const sections = document.querySelectorAll('section')
+
+        window.addEventListener('scroll', () => {
+          let current = ''
+          sections.forEach((section) => {
+            const sectionTop = section.offsetTop
+            if (pageYOffset >= sectionTop - 100) {
+              current = section.getAttribute('id')
+            }
+          })
+
+          navLinks.forEach((link) => {
+            link.classList.remove('active')
+            if (link.getAttribute('href').includes(current)) {
+              link.classList.add('active')
+            }
+          })
+        })
+      })
+    </script>
+  </body>
+</html>
