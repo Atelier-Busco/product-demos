@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Propuesta de Inversión - Patriot News 24/7</title>
+    <!-- Chosen Palette: Corporate Patriot (Deep Blue, Slate Gray, Light Gray, Gold Accent) -->
+    <!-- Application Structure Plan: The SPA is structured as a single-page investment dashboard. This design allows investors to quickly navigate through key business pillars (Opportunity, Business Model, Financials, Roadmap) via a sticky navigation bar. The flow is designed for executive review, presenting high-level data first with the ability to scroll for details. Interactive charts and clear visual sections make complex financial data easily digestible, which is more effective for a pitch than a dense text document. -->
+    <!-- Visualization & Content Choices:
+        - Revenue Mix -> Goal: Compare Composition -> Viz: Donut Chart (Chart.js) -> Justification: Ideal for showing percentage breakdowns of revenue streams (70/20/10).
+        - MRR Projections -> Goal: Show Change/Growth -> Viz: Bar Chart (Chart.js) -> Justification: Clearly compares projected annual revenue totals, highlighting growth year-over-year.
+        - Use of Funds -> Goal: Compare Composition -> Viz: Donut Chart (Chart.js) -> Justification: Effectively visualizes the allocation of the initial investment (40/35/25).
+        - Roadmap -> Goal: Organize Process -> Viz: HTML/CSS Vertical Timeline -> Justification: A clean, standard UI pattern to display phased project development without using SVG/Mermaid.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f1f5f9; /* slate-100 */
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: "Roboto Slab", serif;
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 300px;
+        max-height: 350px;
+      }
+      @media (min-width: 768px) {
+        .chart-container {
+          height: 320px;
+        }
+      }
+      .nav-link {
+        transition: all 0.2s ease-in-out;
+      }
+      .nav-link.active {
+        color: #ca8a04; /* yellow-600 */
+        border-bottom-color: #ca8a04;
+      }
+    </style>
+  </head>
+  <body class="bg-slate-100 text-slate-800">
+    <header class="bg-white shadow-md sticky top-0 z-50">
+      <nav class="container mx-auto px-6 py-3">
+        <div class="flex justify-between items-center">
+          <div class="text-xl font-black tracking-tighter text-slate-900">
+            PATRIOT NEWS 24/7
+          </div>
+          <div class="hidden md:flex space-x-6">
+            <a
+              href="#overview"
+              class="nav-link font-semibold text-slate-600 hover:text-yellow-600 border-b-2 border-transparent pb-1"
+              >Resumen</a
+            >
+            <a
+              href="#model"
+              class="nav-link font-semibold text-slate-600 hover:text-yellow-600 border-b-2 border-transparent pb-1"
+              >Modelo</a
+            >
+            <a
+              href="#financials"
+              class="nav-link font-semibold text-slate-600 hover:text-yellow-600 border-b-2 border-transparent pb-1"
+              >Finanzas</a
+            >
+            <a
+              href="#roadmap"
+              class="nav-link font-semibold text-slate-600 hover:text-yellow-600 border-b-2 border-transparent pb-1"
+              >Hoja de Ruta</a
+            >
+            <a
+              href="#ask"
+              class="nav-link font-semibold text-slate-600 hover:text-yellow-600 border-b-2 border-transparent pb-1"
+              >La Petición</a
+            >
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-10">
+      <!-- Section: Overview -->
+      <section id="overview" class="mb-16 text-center">
+        <h1 class="text-4xl md:text-5xl font-black text-slate-900 mb-4">
+          Propuesta de Inversión
+        </h1>
+        <p class="text-xl max-w-4xl mx-auto text-slate-600 mb-10">
+          Una oportunidad para capitalizar un mercado mediático masivo y
+          desatendido con un modelo de negocio digital escalable y de alto
+          margen.
+        </p>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-2xl font-bold mb-2 text-blue-900">
+              La Oportunidad
+            </h3>
+            <p class="text-slate-600">
+              Un 72% de los republicanos desconfía de los medios tradicionales,
+              creando una demanda masiva de contenido validante. Mercado probado
+              con competidores generando +$200M anuales.
+            </p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-2xl font-bold mb-2 text-blue-900">La Solución</h3>
+            <p class="text-slate-600">
+              Un motor de contenido híbrido (IA + Supervisión Humana) para
+              producir un alto volumen de noticias alineadas ideológicamente a
+              una fracción del coste tradicional.
+            </p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-2xl font-bold mb-2 text-blue-900">La Tesis</h3>
+            <p class="text-slate-600">
+              Convertir la lealtad ideológica en un negocio rentable y duradero,
+              explotando las ineficiencias del modelo mediático actual con
+              tecnología y agilidad.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Business Model -->
+      <section id="model" class="mb-16">
+        <h2 class="text-4xl font-black text-center mb-10 text-slate-900">
+          Modelo de Negocio y Flujos de Ingresos
+        </h2>
+        <p class="text-center max-w-3xl mx-auto text-slate-600 mb-12">
+          Nuestra arquitectura de ingresos está diseñada para ser resiliente,
+          priorizando la monetización directa de la audiencia para asegurar
+          ingresos recurrentes predecibles (MRR) y de alto margen.
+        </p>
+
+        <div class="grid lg:grid-cols-5 gap-8 items-center">
+          <div class="lg:col-span-3 bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-2xl font-bold text-center mb-6">
+              Niveles de Membresía Freemium
+            </h3>
+            <div class="grid md:grid-cols-2 gap-6">
+              <div class="border border-slate-200 p-6 rounded-lg text-center">
+                <h4 class="font-bold text-xl">Miembro Patriota</h4>
+                <p class="text-4xl font-black my-3 text-blue-900">
+                  $10<span class="text-lg font-normal text-slate-500"
+                    >/mes</span
+                  >
+                </p>
+                <ul
+                  class="text-sm text-slate-600 space-y-2 text-left list-disc list-inside"
+                >
+                  <li>Acceso ilimitado a artículos</li>
+                  <li>Navegación sin publicidad</li>
+                  <li>Boletín exclusivo para miembros</li>
+                </ul>
+              </div>
+              <div
+                class="border-2 border-yellow-500 p-6 rounded-lg text-center relative"
+              >
+                <div
+                  class="absolute top-0 -translate-y-1/2 bg-yellow-500 text-white text-xs font-bold px-3 py-1 rounded-full"
+                >
+                  MÁS POPULAR
+                </div>
+                <h4 class="font-bold text-xl text-yellow-600">
+                  Miembro Patriota Plus
+                </h4>
+                <p class="text-4xl font-black my-3 text-blue-900">
+                  $20<span class="text-lg font-normal text-slate-500"
+                    >/mes</span
+                  >
+                </p>
+                <ul
+                  class="text-sm text-slate-600 space-y-2 text-left list-disc list-inside"
+                >
+                  <li>Todo lo de Patriota, y además:</li>
+                  <li>Acceso a contenido de vídeo/podcast</li>
+                  <li>Acceso a canal de Telegram privado</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-2xl font-bold text-center mb-4">
+              Mix de Ingresos Proyectado
+            </h3>
+            <div class="chart-container mx-auto">
+              <canvas id="revenueChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Financials -->
+      <section id="financials" class="mb-16">
+        <h2 class="text-4xl font-black text-center mb-10 text-slate-900">
+          Proyecciones Financieras Clave
+        </h2>
+        <p class="text-center max-w-3xl mx-auto text-slate-600 mb-12">
+          Las proyecciones se basan en una tasa de conversión conservadora del
+          3.5% sobre la base de usuarios gratuitos y un Ingreso Promedio Por
+          Usuario (ARPU) de $12.85/mes.
+        </p>
+        <div class="bg-white p-8 rounded-lg shadow-lg">
+          <h3 class="text-2xl font-bold text-center mb-6">
+            Crecimiento Proyectado del Ingreso Mensual Recurrente (MRR)
+          </h3>
+          <div class="chart-container mx-auto" style="height: 350px">
+            <canvas id="mrrChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Roadmap -->
+      <section id="roadmap" class="mb-16">
+        <h2 class="text-4xl font-black text-center mb-10 text-slate-900">
+          Hoja de Ruta hacia el Dominio del Mercado
+        </h2>
+        <p class="text-center max-w-3xl mx-auto text-slate-600 mb-12">
+          La inversión se desplegará en fases estratégicas para maximizar el
+          crecimiento mientras se construye un ecosistema mediático defensible.
+        </p>
+
+        <div class="relative pl-8 border-l-4 border-slate-300">
+          <!-- Phase 1 -->
+          <div class="mb-12 relative">
+            <div
+              class="absolute -left-5 top-1 w-10 h-10 bg-blue-900 text-white rounded-full flex items-center justify-center font-black text-xl z-10"
+            >
+              1
+            </div>
+            <div class="ml-8">
+              <h3 class="text-2xl font-bold text-blue-900">
+                Fase 1 (Año 1): Fundación y Crecimiento
+              </h3>
+              <p class="text-slate-600 mt-2">
+                Lanzamiento del portal de noticias (MVP). Foco en la adquisición
+                masiva de suscriptores gratuitos. KPI Clave: Crecimiento de la
+                lista de correo.
+              </p>
+            </div>
+          </div>
+          <!-- Phase 2 -->
+          <div class="mb-12 relative">
+            <div
+              class="absolute -left-5 top-1 w-10 h-10 bg-slate-600 text-white rounded-full flex items-center justify-center font-black text-xl z-10"
+            >
+              2
+            </div>
+            <div class="ml-8">
+              <h3 class="text-2xl font-bold">
+                Fase 2 (Año 2-3): Monetización y Expansión
+              </h3>
+              <p class="text-slate-600 mt-2">
+                Implementación del muro de pago. Lanzamiento de podcasts y shows
+                de video para aumentar el valor de la suscripción y el LTV. KPI
+                Clave: Tasa de conversión, MRR, Churn.
+              </p>
+            </div>
+          </div>
+          <!-- Phase 3 -->
+          <div class="relative">
+            <div
+              class="absolute -left-5 top-1 w-10 h-10 bg-slate-600 text-white rounded-full flex items-center justify-center font-black text-xl z-10"
+            >
+              3
+            </div>
+            <div class="ml-8">
+              <h3 class="text-2xl font-bold">
+                Fase 3 (Año 4+): Creación del Ecosistema
+              </h3>
+              <p class="text-slate-600 mt-2">
+                Lanzamiento de la App Móvil y el mercado de E-commerce.
+                Expansión a verticales de entretenimiento de alto margen. KPI
+                Clave: Ingresos por diversificación, ARPU total.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: The Ask -->
+      <section id="ask" class="text-center">
+        <h2 class="text-4xl font-black text-center mb-10 text-slate-900">
+          La Petición y Uso de Fondos
+        </h2>
+        <p class="text-center max-w-3xl mx-auto text-slate-600 mb-12">
+          Buscamos una inversión inicial para acelerar nuestro crecimiento,
+          capturar el mercado y alcanzar la rentabilidad en un plazo de 24 a 30
+          meses.
+        </p>
+        <div class="grid lg:grid-cols-2 gap-8 items-center">
+          <div class="bg-white p-8 rounded-lg shadow-lg">
+            <h3 class="text-2xl font-bold text-center mb-4">
+              Uso de la Inversión
+            </h3>
+            <div class="chart-container mx-auto">
+              <canvas id="fundsChart"></canvas>
+            </div>
+          </div>
+          <div
+            class="bg-blue-900 text-white p-8 rounded-lg shadow-lg text-left"
+          >
+            <h3 class="text-3xl font-bold mb-4">La Petición</h3>
+            <p class="text-6xl font-black mb-4">USD 40,000</p>
+            <p class="text-lg mb-6">
+              Esta inversión financiará las siguientes áreas clave para asegurar
+              una ejecución exitosa y un rápido escalamiento:
+            </p>
+            <ul class="space-y-2 list-disc list-inside">
+              <li>
+                <strong>Desarrollo de Producto y Tecnología:</strong>
+                Perfeccionamiento de la plataforma y las herramientas de IA.
+              </li>
+              <li>
+                <strong>Marketing y Adquisición de Usuarios:</strong> Campañas
+                para alcanzar la masa crítica de audiencia.
+              </li>
+              <li>
+                <strong>Personal y Operaciones:</strong> Contratación del equipo
+                editorial y de ventas.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-slate-900 text-white mt-16">
+      <div
+        class="container mx-auto px-6 py-4 text-center text-sm text-slate-400"
+      >
+        &copy; 2025 Patriot News 24/7 Investment Proposal. Confidential &
+        Proprietary.
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const tooltipTitleCallback = (tooltipItems) => {
+          const item = tooltipItems[0];
+          let label = item.chart.data.labels[item.dataIndex];
+          if (Array.isArray(label)) {
+            return label.join(" ");
+          }
+          return label;
+        };
+
+        const commonOptions = {
+          maintainAspectRatio: false,
+          responsive: true,
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: {
+                font: {
+                  family: "'Inter', sans-serif",
+                },
+              },
+            },
+            tooltip: {
+              callbacks: {
+                title: tooltipTitleCallback,
+              },
+            },
+          },
+        };
+
+        const processLabels = (labels) => {
+          const maxLen = 16;
+          return labels.map((label) => {
+            if (typeof label !== "string" || label.length <= maxLen) {
+              return label;
+            }
+            const words = label.split(" ");
+            const lines = [];
+            let currentLine = "";
+            words.forEach((word) => {
+              if (
+                (currentLine + " " + word).trim().length > maxLen &&
+                currentLine.length > 0
+              ) {
+                lines.push(currentLine);
+                currentLine = word;
+              } else {
+                currentLine = currentLine ? currentLine + " " + word : word;
+              }
+            });
+            if (currentLine) lines.push(currentLine);
+            return lines;
+          });
+        };
+
+        // Revenue Mix Chart
+        const revenueCtx = document
+          .getElementById("revenueChart")
+          .getContext("2d");
+        new Chart(revenueCtx, {
+          type: "doughnut",
+          data: {
+            labels: ["Suscripciones (70%)", "Publicidad (20%)", "Otros (10%)"],
+            datasets: [
+              {
+                data: [70, 20, 10],
+                backgroundColor: [
+                  "#1e3a8a", // blue-900
+                  "#475569", // slate-600
+                  "#ca8a04", // yellow-600
+                ],
+                borderColor: "#f1f5f9",
+                hoverOffset: 4,
+              },
+            ],
+          },
+          options: commonOptions,
+        });
+
+        // MRR Chart
+        const mrrCtx = document.getElementById("mrrChart").getContext("2d");
+        new Chart(mrrCtx, {
+          type: "bar",
+          data: {
+            labels: ["Final Año 1", "Final Año 2", "Final Año 3"],
+            datasets: [
+              {
+                label: "MRR Proyectado ($)",
+                data: [45000, 135000, 337500],
+                backgroundColor: "#1e3a8a",
+                borderColor: "#1e40af",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            ...commonOptions,
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: { callback: (value) => "$" + value / 1000 + "k" },
+              },
+            },
+          },
+        });
+
+        // Use of Funds Chart
+        const fundsCtx = document.getElementById("fundsChart").getContext("2d");
+        new Chart(fundsCtx, {
+          type: "doughnut",
+          data: {
+            labels: processLabels([
+              "Desarrollo y Tecnología (40%)",
+              "Marketing y Adquisición (35%)",
+              "Personal y Operaciones (25%)",
+            ]),
+            datasets: [
+              {
+                data: [40, 35, 25],
+                backgroundColor: [
+                  "#1e3a8a", // blue-900
+                  "#475569", // slate-600
+                  "#ca8a04", // yellow-600
+                ],
+                borderColor: "#ffffff",
+                hoverOffset: 4,
+              },
+            ],
+          },
+          options: commonOptions,
+        });
+
+        // Active Nav Link on Scroll
+        const sections = document.querySelectorAll("section");
+        const navLinks = document.querySelectorAll(".nav-link");
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                navLinks.forEach((link) => {
+                  link.classList.remove("active");
+                  if (
+                    link.getAttribute("href").substring(1) === entry.target.id
+                  ) {
+                    link.classList.add("active");
+                  }
+                });
+              }
+            });
+          },
+          { rootMargin: "-50% 0px -50% 0px" }
+        );
+        sections.forEach((section) => observer.observe(section));
+      });
+    </script>
+  </body>
+</html>
