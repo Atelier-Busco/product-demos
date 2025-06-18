@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel Estratégico - Patriot News 24/7</title>
+    <!-- Chosen Palette: Patriotic Professional (Deep Blue, Off-White, Accent Red/Gold) -->
+    <!-- Application Structure Plan: The SPA is designed as a strategic dashboard with thematic sections (Audience, Product, Monetization, Roadmap). This non-linear structure allows stakeholders to quickly jump to areas of interest and digest complex information through visual aids like charts and diagrams, which is more effective than reading a long, linear report. The goal is clarity, quick comprehension, and professional presentation for decision-makers. -->
+    <!-- Visualization & Content Choices:
+        - Audience Demographics -> Goal: Compare -> Viz: Bar Chart (Chart.js) -> Justification: Clearly displays age distribution. Donut chart for gender.
+        - Audience Psychographics -> Goal: Inform -> Viz: HTML/CSS Cards -> Justification: Best for presenting qualitative values/fears concisely.
+        - AI Workflow -> Goal: Organize -> Viz: HTML/CSS Flowchart -> Justification: Visually explains the multi-step process better than text. No SVG/Mermaid used.
+        - Monetization -> Goal: Compare -> Viz: Stacked Bar Chart (Chart.js) & HTML Pricing Table -> Justification: Chart shows revenue mix, table clearly details subscription value.
+        - Roadmap -> Goal: Change -> Viz: HTML/CSS Timeline -> Justification: Effectively shows the project's phased evolution over time.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f3f4f6; /* gray-100 */
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: "Roboto Slab", serif;
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 300px;
+        max-height: 400px;
+      }
+      @media (min-width: 768px) {
+        .chart-container {
+          height: 350px;
+        }
+      }
+      .nav-link {
+        transition: all 0.2s ease-in-out;
+      }
+      .nav-link.active {
+        color: #d97706; /* amber-600 */
+        border-bottom-color: #d97706;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 text-gray-800">
+    <header class="bg-white shadow-md sticky top-0 z-50">
+      <nav class="container mx-auto px-6 py-3">
+        <div class="flex justify-between items-center">
+          <div class="text-xl font-black tracking-tighter">
+            PATRIOT NEWS 24/7
+            <span class="text-sm font-semibold text-amber-600"
+              >| Panel Estratégico</span
+            >
+          </div>
+          <div class="hidden md:flex space-x-6">
+            <a
+              href="#overview"
+              class="nav-link font-semibold text-gray-600 hover:text-amber-600 border-b-2 border-transparent pb-1"
+              >Visión General</a
+            >
+            <a
+              href="#audience"
+              class="nav-link font-semibold text-gray-600 hover:text-amber-600 border-b-2 border-transparent pb-1"
+              >Audiencia</a
+            >
+            <a
+              href="#strategy"
+              class="nav-link font-semibold text-gray-600 hover:text-amber-600 border-b-2 border-transparent pb-1"
+              >Estrategia</a
+            >
+            <a
+              href="#monetization"
+              class="nav-link font-semibold text-gray-600 hover:text-amber-600 border-b-2 border-transparent pb-1"
+              >Monetización</a
+            >
+            <a
+              href="#roadmap"
+              class="nav-link font-semibold text-gray-600 hover:text-amber-600 border-b-2 border-transparent pb-1"
+              >Hoja de Ruta</a
+            >
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-10">
+      <!-- Section: Visión General -->
+      <section id="overview" class="mb-16">
+        <h1 class="text-5xl font-black text-center mb-4 text-gray-900">
+          Una Oportunidad Estratégica
+        </h1>
+        <p class="text-center text-xl max-w-4xl mx-auto text-gray-600 mb-10">
+          Este panel resume el plan de negocio para Patriot News 24/7, un medio
+          digital diseñado para capitalizar un mercado desatendido y altamente
+          comprometido, ofreciendo una narrativa que valida y refuerza la
+          cosmovisión conservadora americana.
+        </p>
+
+        <div class="grid md:grid-cols-3 gap-8 text-center">
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-2xl font-bold mb-2">Propuesta de Valor</h3>
+            <p class="text-gray-600">
+              Reinterpretar noticias fácticas en tiempo real a través de una
+              lente patriota y de "America First", satisfaciendo la demanda de
+              contenido validante.
+            </p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-2xl font-bold mb-2">Modelo Operativo</h3>
+            <p class="text-gray-600">
+              Un sistema híbrido que utiliza IA para la generación de borradores
+              y supervisión editorial humana para garantizar calidad, coherencia
+              y mitigación de riesgos.
+            </p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-2xl font-bold mb-2">Ventaja Competitiva</h3>
+            <p class="text-gray-600">
+              Construir un ecosistema mediático (noticias, entretenimiento,
+              comunidad) que cree una lealtad profunda y una barrera de entrada
+              a la competencia.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Audiencia -->
+      <section id="audience" class="mb-16">
+        <h2 class="text-4xl font-black text-center mb-10">
+          Análisis Profundo de la Audiencia Objetivo
+        </h2>
+        <p class="text-center max-w-3xl mx-auto text-gray-600 mb-12">
+          El éxito del proyecto depende de una comprensión profunda de la psique
+          del votante MAGA. No solo buscan noticias; buscan afirmación,
+          validación y un sentido de pertenencia.
+        </p>
+
+        <div class="grid lg:grid-cols-2 gap-8 mb-8">
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-2xl font-bold text-center mb-4">
+              Perfil Demográfico
+            </h3>
+            <div class="chart-container mx-auto">
+              <canvas id="ageChart"></canvas>
+            </div>
+            <p class="text-center text-sm text-gray-500 mt-2">
+              Distribución por Edad (Estimada)
+            </p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-2xl font-bold text-center mb-4">
+              Psicografía Clave
+            </h3>
+            <div class="space-y-6">
+              <div>
+                <h4 class="font-bold text-lg text-green-700">
+                  ✅ Valores y Aspiraciones
+                </h4>
+                <p class="text-gray-600">
+                  Patriotismo, disciplina, tradición y el deseo de restaurar la
+                  grandeza de América a través de un liderazgo fuerte.
+                </p>
+              </div>
+              <div>
+                <h4 class="font-bold text-lg text-red-700">
+                  🔥 Miedos y Resentimientos
+                </h4>
+                <p class="text-gray-600">
+                  Profundo sentimiento de marginación cultural y económica.
+                  Miedo a la globalización, la inmigración ilegal y la erosión
+                  de los valores tradicionales.
+                </p>
+              </div>
+              <div>
+                <h4 class="font-bold text-lg text-blue-800">
+                  📰 Consumo de Medios
+                </h4>
+                <p class="text-gray-600">
+                  Desconfianza arraigada en los medios tradicionales (MSM),
+                  creando una alta receptividad a narrativas alternativas y
+                  fuentes de "verdad" ocultas.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Estrategia -->
+      <section id="strategy" class="mb-16">
+        <h2 class="text-4xl font-black text-center mb-10">
+          El Motor de Contenido: IA con Supervisión Humana
+        </h2>
+        <p class="text-center max-w-3xl mx-auto text-gray-600 mb-12">
+          Nuestro modelo operativo no reemplaza a los humanos, los potencia. La
+          IA realiza el trabajo pesado de reescritura, mientras que los editores
+          humanos garantizan la alineación ideológica, la calidad y el control
+          de riesgos.
+        </p>
+
+        <div class="bg-white p-8 rounded-lg shadow-lg">
+          <h3 class="text-2xl font-bold text-center mb-8">
+            Flujo de Trabajo de Transformación de Contenido
+          </h3>
+          <div
+            class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4"
+          >
+            <div class="text-center p-4 bg-gray-100 rounded-lg w-full md:w-1/5">
+              <div class="text-3xl mb-2">1️⃣</div>
+              <h4 class="font-bold">Extracción</h4>
+              <p class="text-sm">
+                Scraping automatizado de fuentes (AP, Reuters) basado en
+                palabras clave.
+              </p>
+            </div>
+            <div class="text-2xl font-bold text-gray-400">→</div>
+            <div class="text-center p-4 bg-gray-100 rounded-lg w-full md:w-1/5">
+              <div class="text-3xl mb-2">2️⃣</div>
+              <h4 class="font-bold">Borrador IA</h4>
+              <p class="text-sm">
+                Un LLM reinterpreta la noticia con un prompt detallado,
+                generando un borrador y titulares.
+              </p>
+            </div>
+            <div class="text-2xl font-bold text-gray-400">→</div>
+            <div
+              class="text-center p-4 bg-red-100 border-2 border-red-500 rounded-lg w-full md:w-1/5"
+            >
+              <div class="text-3xl mb-2">3️⃣</div>
+              <h4 class="font-bold text-red-800">Revisión Humana</h4>
+              <p class="text-sm text-red-800">
+                Un editor pule la narrativa, verifica hechos y mitiga riesgos.
+                **(Paso Crítico)**
+              </p>
+            </div>
+            <div class="text-2xl font-bold text-gray-400">→</div>
+            <div
+              class="text-center p-4 bg-green-100 rounded-lg w-full md:w-1/5"
+            >
+              <div class="text-3xl mb-2">4️⃣</div>
+              <h4 class="font-bold">Publicación</h4>
+              <p class="text-sm">
+                El artículo aprobado se distribuye en el sitio web, boletín,
+                Telegram, etc.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Monetización -->
+      <section id="monetization" class="mb-16">
+        <h2 class="text-4xl font-black text-center mb-10">
+          Arquitectura de Monetización Resiliente
+        </h2>
+        <p class="text-center max-w-3xl mx-auto text-gray-600 mb-12">
+          Un modelo diversificado centrado en la monetización directa de la
+          audiencia para garantizar ingresos recurrentes y estables, inmunes a
+          la volatilidad de la publicidad programática.
+        </p>
+
+        <div class="grid lg:grid-cols-5 gap-8">
+          <div class="lg:col-span-3 bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-2xl font-bold text-center mb-4">
+              Niveles de Membresía Sugeridos
+            </h3>
+            <div class="grid md:grid-cols-2 gap-6">
+              <div class="border border-gray-200 p-4 rounded-lg">
+                <h4 class="font-bold text-lg">Miembro Patriota</h4>
+                <p class="text-2xl font-black my-2">
+                  $10<span class="text-sm font-normal">/mes</span>
+                </p>
+                <ul class="text-sm space-y-1 list-disc list-inside">
+                  <li>Acceso ilimitado a artículos</li>
+                  <li>Navegación sin publicidad</li>
+                  <li>Boletín exclusivo</li>
+                </ul>
+              </div>
+              <div class="border-2 border-amber-500 p-4 rounded-lg relative">
+                <div
+                  class="absolute top-0 -translate-y-1/2 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full"
+                >
+                  MÁS POPULAR
+                </div>
+                <h4 class="font-bold text-lg text-amber-600">
+                  Miembro Patriota Plus
+                </h4>
+                <p class="text-2xl font-black my-2">
+                  $20<span class="text-sm font-normal">/mes</span>
+                </p>
+                <ul class="text-sm space-y-1 list-disc list-inside">
+                  <li>Todo lo de Patriota, y además:</li>
+                  <li>Acceso a canal de Telegram privado</li>
+                  <li>Contenido de vídeo y podcasts</li>
+                  <li>Q&A mensual en directo</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-2xl font-bold text-center mb-4">
+              Mix de Ingresos Proyectado
+            </h3>
+            <div class="chart-container mx-auto" style="height: 280px">
+              <canvas id="revenueChart"></canvas>
+            </div>
+            <p class="text-center text-sm text-gray-500 mt-2">
+              La diversificación reduce el riesgo y aumenta la estabilidad.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Hoja de Ruta -->
+      <section id="roadmap" class="mb-16">
+        <h2 class="text-4xl font-black text-center mb-10">
+          Construyendo el Ecosistema del Futuro
+        </h2>
+        <p class="text-center max-w-3xl mx-auto text-gray-600 mb-12">
+          El portal de noticias es el cimiento. La visión a largo plazo es crear
+          un "centro contracultural" integral que genere lealtad y un foso
+          defensivo contra la competencia.
+        </p>
+
+        <div class="relative pl-8 border-l-4 border-gray-300">
+          <!-- Fase 1 -->
+          <div class="mb-10">
+            <div
+              class="absolute -left-4 top-1 w-8 h-8 bg-blue-800 text-white rounded-full flex items-center justify-center font-bold"
+            >
+              1
+            </div>
+            <h3 class="text-2xl font-bold text-blue-800">
+              Fase 1: Fundación (Año 1)
+            </h3>
+            <p class="text-gray-600 mt-2">
+              Lanzamiento del portal de noticias **Patriot News 24/7**. Foco en
+              construir la audiencia inicial, establecer el flujo de trabajo de
+              IA + Humano, y hacer crecer la lista de correo electrónico.
+              Monetización inicial a través de donaciones y publicidad directa.
+            </p>
+          </div>
+          <!-- Fase 2 -->
+          <div class="mb-10">
+            <div
+              class="absolute -left-4 top-1 w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center font-bold text-white"
+            >
+              2
+            </div>
+            <h3 class="text-2xl font-bold">
+              Fase 2: Expansión de Medios (Año 2-3)
+            </h3>
+            <p class="text-gray-600 mt-2">
+              Introducción del modelo de membresía de pago. Lanzamiento de
+              podcasts y programas de vídeo en Rumble para expandirse al
+              entretenimiento. El objetivo es aumentar el valor de la
+              suscripción y el tiempo de permanencia en el ecosistema.
+            </p>
+          </div>
+          <!-- Fase 3 -->
+          <div class="mb-10">
+            <div
+              class="absolute -left-4 top-1 w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center font-bold text-white"
+            >
+              3
+            </div>
+            <h3 class="text-2xl font-bold">
+              Fase 3: Comunidad y E-commerce (Año 3-4)
+            </h3>
+            <p class="text-gray-600 mt-2">
+              Lanzamiento de la App Móvil con funcionalidades comunitarias
+              robustas (foros, grupos locales). Integración de un mercado de
+              comercio electrónico con productos de marca y de afiliados
+              "Patriot-approved".
+            </p>
+          </div>
+          <!-- Fase 4 -->
+          <div>
+            <div
+              class="absolute -left-4 top-1 w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center font-bold text-white"
+            >
+              4
+            </div>
+            <h3 class="text-2xl font-bold">
+              Fase 4: Dominio Cultural (Año 5+)
+            </h3>
+            <p class="text-gray-600 mt-2">
+              Expansión a contenido de formato largo como documentales y
+              películas. Desarrollo de una marca de entretenimiento infantil. El
+              objetivo es convertirse en una institución cultural indispensable
+              para la audiencia conservadora.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-16">
+      <div class="container mx-auto px-6 py-4 text-center text-sm">
+        &copy; 2025 Patriot News 24/7 Strategic Plan. Confidential &
+        Proprietary.
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const tooltipTitleCallback = (tooltipItems) => {
+          const item = tooltipItems[0];
+          let label = item.chart.data.labels[item.dataIndex];
+          if (Array.isArray(label)) {
+            return label.join(" ");
+          }
+          return label;
+        };
+
+        const commonOptions = {
+          maintainAspectRatio: false,
+          responsive: true,
+          plugins: {
+            legend: {
+              position: "bottom",
+            },
+            tooltip: {
+              callbacks: {
+                title: tooltipTitleCallback,
+              },
+            },
+          },
+        };
+
+        const processLabels = (labels) => {
+          const maxLen = 16;
+          return labels.map((label) => {
+            if (label.length <= maxLen) {
+              return label;
+            }
+            const words = label.split(" ");
+            const lines = [];
+            let currentLine = "";
+            words.forEach((word) => {
+              if (
+                (currentLine + " " + word).length > maxLen &&
+                currentLine.length > 0
+              ) {
+                lines.push(currentLine);
+                currentLine = word;
+              } else {
+                currentLine = currentLine ? currentLine + " " + word : word;
+              }
+            });
+            lines.push(currentLine);
+            return lines;
+          });
+        };
+
+        // Age Chart
+        const ageCtx = document.getElementById("ageChart").getContext("2d");
+        new Chart(ageCtx, {
+          type: "bar",
+          data: {
+            labels: ["18-29", "30-44", "45-64", "65+"],
+            datasets: [
+              {
+                label: "Distribución por Edad",
+                data: [12, 25, 45, 18],
+                backgroundColor: "rgba(30, 64, 175, 0.8)", // blue-800
+                borderColor: "rgba(30, 64, 175, 1)",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: { ...commonOptions, scales: { y: { beginAtZero: true } } },
+        });
+
+        // Revenue Chart
+        const revenueCtx = document
+          .getElementById("revenueChart")
+          .getContext("2d");
+        new Chart(revenueCtx, {
+          type: "doughnut",
+          data: {
+            labels: processLabels([
+              "Suscripciones y Membresías",
+              "Publicidad Directa",
+              "Donaciones",
+              "E-commerce y Afiliados",
+            ]),
+            datasets: [
+              {
+                label: "Mix de Ingresos",
+                data: [55, 25, 10, 10],
+                backgroundColor: [
+                  "rgba(30, 64, 175, 0.9)", // blue-800
+                  "rgba(217, 119, 6, 0.9)", // amber-600
+                  "rgba(185, 28, 28, 0.9)", // red-700
+                  "rgba(107, 114, 128, 0.9)", // gray-500
+                ],
+                hoverOffset: 4,
+              },
+            ],
+          },
+          options: commonOptions,
+        });
+
+        // Active Nav Link on Scroll
+        const sections = document.querySelectorAll("section");
+        const navLinks = document.querySelectorAll(".nav-link");
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                navLinks.forEach((link) => {
+                  link.classList.remove("active");
+                  if (
+                    link.getAttribute("href").substring(1) === entry.target.id
+                  ) {
+                    link.classList.add("active");
+                  }
+                });
+              }
+            });
+          },
+          { rootMargin: "-50% 0px -50% 0px" }
+        );
+
+        sections.forEach((section) => {
+          observer.observe(section);
+        });
+      });
+    </script>
+  </body>
+</html>
