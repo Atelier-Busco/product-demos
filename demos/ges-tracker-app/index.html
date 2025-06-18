@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Radiografía del Sistema GES en Chile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f0f4f8;
+        color: #374151;
+      }
+      .container {
+        max-width: 1024px;
+      }
+      .header-bg {
+        background-color: #003f5c;
+      }
+      .kpi-value {
+        font-weight: 900;
+        color: #003f5c;
+      }
+      .kpi-card {
+        background-color: white;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+        border-left: 5px solid;
+        transition: transform 0.2s;
+      }
+      .kpi-card:hover {
+        transform: translateY(-5px);
+      }
+      .flow-step {
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding-bottom: 2rem;
+      }
+      .flow-step:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        left: 1.25rem;
+        top: 2.5rem;
+        width: 2px;
+        height: calc(100% - 2.5rem);
+        background-color: #bc5090;
+        opacity: 0.5;
+      }
+      .flow-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        color: white;
+        z-index: 10;
+      }
+      .chart-container {
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        max-width: 600px;
+        height: 300px;
+        max-height: 400px;
+      }
+      @media (min-width: 768px) {
+        .chart-container {
+          height: 350px;
+        }
+      }
+      .btn-call-to-action {
+        background-color: #ffa600; /* Gold */
+        color: #003f5c; /* Deep Blue */
+        font-weight: 700;
+        padding: 1rem 2rem;
+        border-radius: 0.75rem;
+        transition: background-color 0.3s ease;
+      }
+      .btn-call-to-action:hover {
+        background-color: #ff764a; /* Orange */
+        color: white;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <!-- Chosen Palette: Energetic & Playful - Warm neutrals for background, #003F5C (Deep Blue - Text/Headers), #7A5195 (Purple - Accent/Buttons), #BC5090 (Magenta - Accent), #FF764A (Orange - Highlight), #FFA600 (Gold - Highlight) -->
+    <!-- Application Structure Plan: The SPA is structured to tell a narrative: Introduction & Key Facts -> Problem Overview (delays) -> Deep Dive into Patient Journey -> Socioeconomic Impact -> Root Causes -> Solutions/Path Forward -> Call to Action for the App. This flow was chosen to guide the user from general understanding to specific challenges and potential personal solutions, making complex information digestible and actionable. Interactive elements include chart filtering/hover for detail, and a clear call to action at the end. -->
+    <!-- Visualization & Content Choices:
+    - KPIs: Single Big Number (Inform) - Styled cards with distinct border colors. Justification: Quick, high-impact statistics. Method: HTML/CSS with Tailwind.
+    - Delay Trend: Line Chart (Change) - Shows trend over time. Justification: Clearly visualizes increasing delays. Method: Chart.js/Canvas. Interaction: Hover for specific values.
+    - Top Delayed Pathologies: Horizontal Bar Chart (Compare/Rank) - Shows comparison of delays across pathologies. Justification: Easy to compare multiple categories and identify prevalent issues. Method: Chart.js/Canvas. Interaction: Hover for specific values.
+    - GES Process Flow: Flow Chart (Organize/Process) - Illustrates the stages of the GES process with specific delay examples. Justification: Simplifies a complex bureaucratic process into digestible steps. Method: Structured HTML/CSS with Tailwind. NO SVG/Mermaid.
+    - Access Barriers: Donut Chart (Compare/Composition) - Shows proportion of different access barriers. Justification: Effectively visualizes parts of a whole for quick comparison. Method: Chart.js/Canvas. Interaction: Hover for specific percentages.
+    - Socioeconomic Concentration: Textual Cards (Inform/Compare) - Presents key statistics on Fonasa/Isapre demographics. Justification: Highlights disparities with direct numbers. Method: HTML/CSS with Tailwind.
+    - Root Causes: Iconography/Text Cards (Inform/Organize) - Summarizes key systemic issues. Justification: Quick, digestible points for complex problems. Method: HTML/CSS with Tailwind with Unicode icons.
+    - Tech Solution Mockup: HTML/CSS Diagram (Inform) - Visual representation of a patient empowerment app. Justification: Illustrates a tangible solution. Method: Structured HTML/CSS with Tailwind.
+    - Recommendations: List (Organize) - Clear, actionable bullet points for improvement. Justification: Provides concise takeaways. Method: HTML list.
+    - Call to Action: Dedicated Section (Inform/Action) - Clearly states app benefits. Justification: Concludes the narrative with a direct solution for the user. Method: HTML/CSS with Tailwind.
+    CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+
+    <div class="header-bg text-white py-6 shadow-md">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold">
+          Radiografía del Sistema GES en Chile
+        </h1>
+        <p class="text-lg md:text-xl mt-2 max-w-3xl mx-auto">
+          Un análisis interactivo de los desafíos y oportunidades en las
+          Garantías Explícitas en Salud, para que entiendas la realidad de tu
+          derecho.
+        </p>
+      </div>
+    </div>
+
+    <main class="container mx-auto px-4 py-8">
+      <section
+        id="kpis"
+        class="mb-16"
+      >
+        <h2 class="text-3xl font-bold text-center text-[#003F5C] mb-8">
+          La Doble Cara del GES: Cobertura vs. Realidad
+        </h2>
+        <p class="text-center text-gray-700 mb-8 max-w-4xl mx-auto">
+          El sistema de Garantías Explícitas en Salud (GES) en Chile promete
+          acceso y oportunidad para 87 patologías. Sin embargo, la realidad
+          muestra una creciente brecha entre lo garantizado y lo que los
+          pacientes experimentan. Esta sección te da una visión rápida del
+          panorama actual.
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="kpi-card border-l-[#7A5195]">
+            <div class="text-5xl kpi-value">87</div>
+            <p class="text-lg text-gray-700 mt-2">Patologías Priorizadas</p>
+            <p class="text-sm text-gray-500">
+              Cubiertas por ley para toda la población.
+            </p>
+          </div>
+          <div class="kpi-card border-l-[#BC5090]">
+            <div class="text-5xl kpi-value">77,107</div>
+            <p class="text-lg text-gray-700 mt-2">Garantías Retrasadas</p>
+            <p class="text-sm text-gray-500">
+              A febrero de 2025, evidenciando un incumplimiento crítico.
+            </p>
+          </div>
+          <div class="kpi-card border-l-[#FF764A]">
+            <div class="text-5xl kpi-value">+46.8%</div>
+            <p class="text-lg text-gray-700 mt-2">Aumento de Retrasos</p>
+            <p class="text-sm text-gray-500">
+              Entre 2020 y 2024, una tendencia alarmante.
+            </p>
+          </div>
+          <div class="kpi-card border-l-[#FFA600]">
+            <div class="text-5xl kpi-value">+488%</div>
+            <p class="text-lg text-gray-700 mt-2">Retrasos en Cáncer</p>
+            <p class="text-sm text-gray-500">
+              Incremento entre dic. 2019 y 2024, un área de máxima criticidad.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="delays"
+        class="mb-16"
+      >
+        <h2 class="text-3xl font-bold text-center text-[#003F5C] mb-8">
+          La Brecha Creciente: Patologías con Mayores Tiempos de Espera
+        </h2>
+        <p class="text-center text-gray-700 mb-8 max-w-4xl mx-auto">
+          El incumplimiento de la garantía de oportunidad se concentra en
+          enfermedades crónicas y sus complicaciones, así como en patologías
+          oncológicas, donde el tiempo es un factor vital. Explora los gráficos
+          para entender las tendencias y las patologías más afectadas.
+        </p>
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <div class="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
+            <div class="md:col-span-3 flex flex-col items-center">
+              <h3 class="text-xl font-bold text-center mb-4">
+                Top 10 Patologías con Garantías Retrasadas (4T 2024)
+              </h3>
+              <div class="chart-container h-96 md:h-[500px]">
+                <canvas id="topDelaysChart"></canvas>
+              </div>
+              <p class="text-center text-gray-600 mt-4 text-sm">
+                Estas patologías concentran la mayor cantidad de incumplimientos
+                de plazos, reflejando problemas sistémicos de capacidad y
+                gestión.
+              </p>
+            </div>
+            <div class="md:col-span-2 flex flex-col items-center">
+              <h3 class="text-xl font-bold text-center mb-4">
+                Evolución de Retrasos Totales (2020-2024)
+              </h3>
+              <div class="chart-container h-80">
+                <canvas id="delayTrendChart"></canvas>
+              </div>
+              <p class="text-center text-gray-600 mt-4 text-sm">
+                El número total de garantías GES retrasadas ha mostrado un
+                aumento constante, indicando que los problemas subyacentes del
+                sistema se están intensificando con el tiempo.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="patient-journey"
+        class="mb-16"
+      >
+        <h2 class="text-3xl font-bold text-center text-[#003F5C] mb-8">
+          La Carrera de Obstáculos del Paciente: Un Viaje a Través de las Etapas
+          GES
+        </h2>
+        <p class="text-center text-gray-700 mb-8 max-w-4xl mx-auto">
+          El proceso GES está definido por etapas con plazos máximos, pero la
+          realidad muestra retrasos significativos. Esta sección ilustra cómo se
+          define formalmente cada etapa y dónde se acumulan las demoras más
+          críticas, afectando directamente el pronóstico de los pacientes.
+          Usamos el Cáncer de Mama como ejemplo.
+        </p>
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <div class="max-w-3xl mx-auto">
+            <div class="flow-step">
+              <div class="flow-icon bg-[#7A5195]">1</div>
+              <div class="ml-6">
+                <h4 class="font-bold text-lg">Sospecha</h4>
+                <p class="text-gray-600">
+                  Inicio del proceso. La Circular IF/N°461 (2024) la formaliza
+                  como hito trazable para evitar "listas de espera ocultas"
+                  desde el primer momento. Aquí el médico emite el Formulario de
+                  Constancia GES.
+                </p>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-icon bg-[#BC5090]">2</div>
+              <div class="ml-6">
+                <h4 class="font-bold text-lg">Diagnóstico</h4>
+                <p class="text-gray-600">
+                  Confirmación de la patología GES. El inicio formal de esta
+                  etapa se considera desde la sospecha. Plazo legal para Cáncer
+                  de Mama: 45 días.
+                </p>
+                <div
+                  class="mt-2 p-3 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-r-lg"
+                >
+                  <span class="font-bold"
+                    >Retraso Promedio Real (Cáncer de Mama):
+                    <span class="text-[#003F5C] font-extrabold">101</span>
+                    días</span
+                  >
+                  <p class="text-sm">
+                    Más del doble del tiempo garantizado por ley.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-icon bg-[#FF764A]">3</div>
+              <div class="ml-6">
+                <h4 class="font-bold text-lg">Tratamiento</h4>
+                <p class="text-gray-600">
+                  Inicio de intervenciones terapéuticas. El inicio formal de
+                  esta etapa se considera desde la confirmación diagnóstica.
+                  Plazo legal para Cáncer de Mama: 20 días.
+                </p>
+                <div
+                  class="mt-2 p-3 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-r-lg"
+                >
+                  <span class="font-bold"
+                    >Retraso Promedio Real (Cáncer de Mama):
+                    <span class="text-[#003F5C] font-extrabold">77</span>
+                    días</span
+                  >
+                  <p class="text-sm">
+                    Casi cuatro veces el plazo máximo establecido.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-icon bg-[#FFA600]">4</div>
+              <div class="ml-6">
+                <h4 class="font-bold text-lg">Rehabilitación / Seguimiento</h4>
+                <p class="text-gray-600">
+                  Recuperación funcional, control post-tratamiento y manejo de
+                  secuelas. El inicio formal se considera desde el fin del
+                  tratamiento. Plazo legal para Cáncer de Mama (ej. secuelas de
+                  cáncer): 132 días.
+                </p>
+                <div
+                  class="mt-2 p-3 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-r-lg"
+                >
+                  <span class="font-bold"
+                    >Retraso Promedio Real (Cáncer de Mama):
+                    <span class="text-[#003F5C] font-extrabold">132</span>
+                    días</span
+                  >
+                  <p class="text-sm">
+                    Demoras críticas que pueden afectar la recuperación a largo
+                    plazo.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="socioeconomic"
+        class="mb-16"
+      >
+        <h2 class="text-3xl font-bold text-center text-[#003F5C] mb-8">
+          La Desigualdad en el Acceso: Perfil del Paciente y Barreras
+          Estructurales
+        </h2>
+        <p class="text-center text-gray-700 mb-8 max-w-4xl mx-auto">
+          Aunque el GES busca la equidad universal, el perfil socioeconómico y
+          geográfico del paciente en Chile afecta significativamente su acceso
+          efectivo a las garantías. Esta sección explora las barreras reportadas
+          y cómo la vulnerabilidad se concentra en ciertos grupos.
+        </p>
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div class="flex flex-col items-center">
+              <h3 class="text-xl font-bold text-center mb-4">
+                Barreras de Acceso Reportadas (Casen 2022)
+              </h3>
+              <div class="chart-container h-80">
+                <canvas id="accessBarriersChart"></canvas>
+              </div>
+              <p class="text-center text-gray-600 mt-4 text-sm">
+                Los problemas administrativos y de oportunidad son las barreras
+                más comunes, superando incluso a los costos directos, lo que
+                refleja fallas de gestión en la red.
+              </p>
+            </div>
+            <div class="space-y-6">
+              <h3 class="text-xl font-bold text-center mb-4">
+                Concentración de Vulnerabilidad en Fonasa
+              </h3>
+              <div class="kpi-card !text-left border-l-[#003F5C]">
+                <p class="text-lg text-gray-700">
+                  <span class="text-4xl kpi-value">86.1%</span> de los adultos
+                  de 60+ años están en Fonasa.
+                </p>
+              </div>
+              <div class="kpi-card !text-left border-l-[#003F5C]">
+                <p class="text-lg text-gray-700">
+                  <span class="text-4xl kpi-value">~90%</span> de la población
+                  indígena y con discapacidad está en Fonasa.
+                </p>
+              </div>
+              <div class="kpi-card !text-left border-l-[#003F5C]">
+                <p class="text-lg text-gray-700">
+                  Afiliación a Isapres en zonas rurales es de solo
+                  <span class="text-4xl kpi-value">5.9%</span> vs. 16.6% en
+                  zonas urbanas.
+                </p>
+              </div>
+              <p class="text-center text-gray-600 mt-4 text-sm">
+                Esta concentración significa que cualquier ineficiencia en el
+                sistema público afecta desproporcionadamente a los grupos más
+                necesitados, perpetuando las desigualdades en salud.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="root-causes"
+        class="mb-16"
+      >
+        <h2 class="text-3xl font-bold text-center text-[#003F5C] mb-8">
+          ¿Por Qué Falla el Sistema? Causas Raíz de los Retrasos
+        </h2>
+        <p class="text-center text-gray-700 mb-8 max-w-4xl mx-auto">
+          La persistencia de los retrasos en las garantías GES no obedece a una
+          única razón. Esta sección identifica las principales causas
+          estructurales que dificultan el cumplimiento oportuno de las
+          atenciones.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="kpi-card text-center border-l-[#7A5195]">
+            <div class="text-5xl mb-4">🏥</div>
+            <h3 class="font-bold text-xl mb-2">Ineficiencia Operacional</h3>
+            <p class="text-gray-600">
+              El 50% de las cirugías suspendidas en hospitales públicos se deben
+              a problemas de gestión interna. La optimización del uso de
+              pabellones es crítica.
+            </p>
+          </div>
+          <div class="kpi-card text-center border-l-[#BC5090]">
+            <div class="text-5xl mb-4">👨‍⚕️</div>
+            <h3 class="font-bold text-xl mb-2">Escasez de Especialistas</h3>
+            <p class="text-gray-600">
+              La falta de profesionales en áreas clave como endocrinología y
+              coloproctología genera cuellos de botella que retrasan todo el
+              proceso de atención.
+            </p>
+          </div>
+          <div class="kpi-card text-center border-l-[#FF764A]">
+            <div class="text-5xl mb-4">💸</div>
+            <h3 class="font-bold text-xl mb-2">Inestabilidad Financiera</h3>
+            <p class="text-gray-600">
+              La crisis de las Isapres y las deudas de Fonasa con prestadores
+              privados (US$450M) debilitan la red de atención y amenazan la
+              continuidad del servicio.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="solutions"
+        class="mb-16"
+      >
+        <h2 class="text-3xl font-bold text-center text-[#003F5C] mb-8">
+          El Camino Hacia Adelante: Empoderamiento y Reformas
+        </h2>
+        <p class="text-center text-gray-700 mb-8 max-w-4xl mx-auto">
+          Abordar los desafíos del GES requiere una combinación de mejoras
+          sistémicas y herramientas que empoderen al paciente. Esta sección
+          presenta un prototipo de solución tecnológica y recomendaciones clave
+          para fortalecer el sistema.
+        </p>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div
+            class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center"
+          >
+            <h3 class="text-xl font-bold text-center mb-4 text-[#003F5C]">
+              Tecnología para Empoderar al Paciente: GES Tracker App
+            </h3>
+            <p class="text-center text-gray-600 mb-6 text-sm">
+              Soluciones digitales privadas, sin acceso a datos clínicos, pueden
+              dar al paciente el control sobre su proceso GES, ofreciendo una
+              visión clara y en tiempo real.
+            </p>
+            <div
+              class="bg-gray-800 rounded-2xl p-4 max-w-sm w-full mx-auto shadow-xl"
+            >
+              <div class="bg-white rounded-lg p-4">
+                <h4 class="font-bold text-[#003F5C] text-lg">
+                  Mi Trazabilidad GES
+                </h4>
+                <div class="mt-4 space-y-3">
+                  <div class="flex justify-between items-center">
+                    <span>Sospecha:</span>
+                    <span
+                      class="px-2 py-1 rounded-full text-sm font-semibold bg-green-200 text-green-800"
+                      >Registrada</span
+                    >
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span>Diagnóstico:</span>
+                    <span
+                      class="px-2 py-1 rounded-full text-sm font-semibold bg-yellow-200 text-yellow-800"
+                      >Plazo Vence: 5 días</span
+                    >
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div
+                      class="bg-[#FF764A] h-2.5 rounded-full"
+                      style="width: 85%"
+                    ></div>
+                  </div>
+                  <button
+                    class="w-full bg-[#7A5195] text-white py-2 rounded-lg mt-4 font-semibold"
+                  >
+                    ¿Plazo incumplido? Reclama aquí
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-bold text-center mb-4 text-[#003F5C]">
+              Recomendaciones Clave al Sistema
+            </h3>
+            <ul class="space-y-4 text-gray-700">
+              <li class="flex items-start">
+                <span class="text-[#7A5195] font-bold mr-3">1.</span>
+                <span
+                  ><strong class="text-[#003F5C]"
+                    >Fortalecer la Atención Primaria (APS):</strong
+                  >
+                  Aumentar su financiamiento y capacidad resolutiva para que
+                  actúe como una verdadera "puerta de entrada" y descongestione
+                  los hospitales.</span
+                >
+              </li>
+              <li class="flex items-start">
+                <span class="text-[#BC5090] font-bold mr-3">2.</span>
+                <span
+                  ><strong class="text-[#003F5C]"
+                    >Optimizar la Gestión de la Red:</strong
+                  >
+                  Mejorar el uso de pabellones, implementar sistemas de
+                  agendamiento eficientes y coordinar mejor los distintos
+                  niveles de atención.</span
+                >
+              </li>
+              <li class="flex items-start">
+                <span class="text-[#FF764A] font-bold mr-3">3.</span>
+                <span
+                  ><strong class="text-[#003F5C]"
+                    >Reforzar la Fiscalización:</strong
+                  >
+                  Ampliar las atribuciones de la Superintendencia de Salud para
+                  fiscalizar a Fonasa con el mismo rigor que a las Isapres y
+                  publicar indicadores de desempeño.</span
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- New Section for Client Deliverables -->
+      <section
+        id="app-benefits-cta"
+        class="mb-16 p-8 bg-[#E0E7FF] rounded-lg shadow-inner text-center"
+      >
+        <h2 class="text-3xl font-bold text-[#003F5C] mb-6">
+          Tu Control GES Comienza Aquí: ¡Inscríbete en la App!
+        </h2>
+        <p class="text-gray-700 text-lg mb-8 max-w-3xl mx-auto">
+          Al registrarte en la **GES Tracker App**, te entregamos dos
+          herramientas poderosas para que nunca más te sientas solo en tu
+          proceso de salud:
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <div
+            class="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#7A5195]"
+          >
+            <h3 class="text-xl font-bold text-[#003F5C] mb-3">
+              1. Seguimiento Garantizado por el Estado
+            </h3>
+            <p class="text-gray-700">
+              Recibe un **seguimiento preciso y en tiempo real** de las fechas
+              de atención garantizadas por el Estado para tu patología GES.
+              Conoce el plazo exacto para cada etapa (sospecha, diagnóstico,
+              tratamiento, rehabilitación) y si se está cumpliendo, todo desde
+              tu bolsillo.
+            </p>
+          </div>
+          <div
+            class="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#BC5090]"
+          >
+            <h3 class="text-xl font-bold text-[#003F5C] mb-3">
+              2. Acompañamiento Activo en el Reclamo
+            </h3>
+            <p class="text-gray-700">
+              Si tu atención no se produce en las fechas garantizadas, te
+              **acompañamos directamente en el proceso de reclamo**. Esto
+              incluye la **generación automática de la carta formal** para que
+              la envíes a la autoridad competente y un **seguimiento continuo**
+              de tu caso, orientándote en cada paso hasta obtener una solución.
+            </p>
+          </div>
+        </div>
+
+        <p class="text-gray-700 text-lg mb-8 max-w-3xl mx-auto">
+          No dejes tus derechos al azar. Con la **GES Tracker App**, tienes la
+          información y el apoyo que necesitas para garantizar tu atención de
+          salud.
+        </p>
+        <button class="btn-call-to-action">
+          ¡Descarga la App y Empieza Ahora!
+        </button>
+      </section>
+    </main>
+
+    <script>
+      const wrapLabel = (label) => {
+        if (label.length <= 16) return label
+        const words = label.split(' ')
+        let currentLine = ''
+        const lines = []
+        words.forEach((word) => {
+          if (
+            (currentLine + ' ' + word).trim().length > 16 &&
+            currentLine.length > 0
+          ) {
+            lines.push(currentLine)
+            currentLine = word
+          } else {
+            currentLine = (currentLine + ' ' + word).trim()
+          }
+        })
+        if (currentLine) lines.push(currentLine)
+        return lines
+      }
+
+      const tooltipTitleCallback = (tooltipItems) => {
+        const item = tooltipItems[0]
+        let label = item.chart.data.labels[item.dataIndex]
+        if (Array.isArray(label)) {
+          return label.join(' ')
+        }
+        return label
+      }
+
+      const sharedChartOptions = {
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: {
+              color: '#003F5C',
+              font: {
+                family: "'Inter', sans-serif"
+              }
+            }
+          },
+          tooltip: {
+            callbacks: {
+              title: tooltipTitleCallback
+            },
+            backgroundColor: '#003F5C',
+            titleFont: {
+              size: 14,
+              family: "'Inter', sans-serif"
+            },
+            bodyFont: {
+              size: 12,
+              family: "'Inter', sans-serif"
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: '#374C80',
+              font: { family: "'Inter', sans-serif" }
+            },
+            grid: { display: false }
+          },
+          y: {
+            ticks: {
+              color: '#374C80',
+              font: { family: "'Inter', sans-serif" }
+            },
+            grid: { color: '#E0E0E0', borderDash: [2, 4] }
+          }
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        const topDelaysCtx = document
+          .getElementById('topDelaysChart')
+          .getContext('2d')
+        new Chart(topDelaysCtx, {
+          type: 'bar',
+          data: {
+            labels: [
+              wrapLabel('Diabetes Mellitus tipo 2'),
+              wrapLabel('Cataratas'),
+              wrapLabel('Retinopatía Diabética'),
+              wrapLabel('Vicios de Refracción'),
+              wrapLabel('Hipoacusia en adultos'),
+              wrapLabel('Ayudas Técnicas'),
+              wrapLabel('Cáncer de Mama'),
+              wrapLabel('Cáncer Colorrectal'),
+              wrapLabel('Cáncer Cervicouterino'),
+              wrapLabel('Colecistectomía Preventiva')
+            ].reverse(),
+            datasets: [
+              {
+                label: 'Número de Atrasos',
+                data: [
+                  15237, 10129, 5571, 5375, 4838, 4684, 4610, 3285, 2842, 1923
+                ].reverse(),
+                backgroundColor: [
+                  '#7A5195',
+                  '#885697',
+                  '#955c99',
+                  '#a3629b',
+                  '#b0689d',
+                  '#bd6e9f',
+                  '#c975a1',
+                  '#d57ca3',
+                  '#e184a5',
+                  '#ed8da7'
+                ].reverse(),
+                borderColor: '#FFFFFF',
+                borderWidth: 1
+              }
+            ]
+          },
+          options: { ...sharedChartOptions, indexAxis: 'y' }
+        })
+
+        const delayTrendCtx = document
+          .getElementById('delayTrendChart')
+          .getContext('2d')
+        new Chart(delayTrendCtx, {
+          type: 'line',
+          data: {
+            labels: ['2020', '2021', '2022', '2023', '2024'],
+            datasets: [
+              {
+                label: 'Garantías GES Retrasadas',
+                data: [52525, 60100, 68900, 70417, 77107],
+                fill: true,
+                backgroundColor: 'rgba(255, 118, 74, 0.2)',
+                borderColor: '#FF764A',
+                tension: 0.3,
+                pointBackgroundColor: '#FF764A',
+                pointRadius: 5
+              }
+            ]
+          },
+          options: sharedChartOptions
+        })
+
+        const accessBarriersCtx = document
+          .getElementById('accessBarriersChart')
+          .getContext('2d')
+        new Chart(accessBarriersCtx, {
+          type: 'doughnut',
+          data: {
+            labels: [
+              wrapLabel('Atendido en el establecimiento'),
+              wrapLabel('Conseguir cita/atención'),
+              wrapLabel('Distancia/Conectividad'),
+              wrapLabel('Costo de medicamentos'),
+              wrapLabel('Costo de atención')
+            ],
+            datasets: [
+              {
+                label: '% de encuestados que reportan problemas',
+                data: [20.5, 20.2, 11.3, 11.2, 8.9],
+                backgroundColor: [
+                  '#7A5195',
+                  '#BC5090',
+                  '#EF5675',
+                  '#FF764A',
+                  '#FFA600'
+                ],
+                hoverOffset: 4
+              }
+            ]
+          },
+          options: {
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { color: '#003F5C' } },
+              tooltip: {
+                callbacks: {
+                  title: tooltipTitleCallback
+                }
+              }
+            }
+          }
+        })
+      })
+    </script>
+  </body>
+</html>
