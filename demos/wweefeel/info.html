@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reclamos+ | Visualizador Interactivo del Proyecto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Chosen Palette: Calm Harmony (Slate/Gray neutrals with Teal accent) -->
+    <!-- Application Structure Plan: Se ha diseñado una SPA (Single Page Application) con un enfoque de dashboard temático. La navegación principal permite al usuario desplazarse suavemente a diferentes secciones lógicas (Visión, Flujo, Arquitectura, Ecosistema, Hoja de Ruta). Esta estructura es superior a un documento lineal porque permite una exploración no secuencial y se enfoca en la comprensión visual de los conceptos clave. El elemento central es un diagrama de flujo interactivo que desglosa el 'Viaje del Reclamo', convirtiendo el proceso más complejo del informe en una experiencia de aprendizaje intuitiva. -->
+    <!-- Visualization & Content Choices: 
+        - Resumen Ejecutivo -> Visión General: (Informar) Se usan tarjetas con íconos para destacar los pilares del proyecto (Confianza, Eficiencia, Empoderamiento), facilitando una comprensión rápida.
+        - Flujo Funcional -> El Viaje del Reclamo: (Organizar/Cambio) Un diagrama de flujo interactivo creado con HTML/CSS/JS reemplaza el texto denso. El objetivo es que el usuario pueda explorar el proceso paso a paso. La interacción de clic revela detalles, lo que es más atractivo que leer una lista.
+        - Arquitectura Técnica -> Arquitectura Tecnológica: (Organizar) Se usan tarjetas en una cuadrícula para desglosar la pila tecnológica. Es visualmente más accesible que un diagrama técnico formal y utiliza íconos para una rápida identificación.
+        - Gestión de Estados -> Gráfico de Complejidad por Fase: (Comparar) Un gráfico de barras de Chart.js compara la cantidad de estados en cada fase del flujo. Esto responde visualmente a la pregunta "¿Qué tan compleja es cada etapa del proceso?".
+        - Hoja de Ruta -> Hoja de Ruta Interactiva: (Informar) Una lista simple con efectos de hover para mantener el enfoque en los planes futuros de manera limpia.
+        - Justificación: Todos los elementos buscan simplificar información compleja, priorizando la interacción y la claridad visual sobre la densidad del texto. Se evita SVG/Mermaid para cumplir los requisitos.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 400px;
+        max-height: 50vh;
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-800">
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+      <nav
+        class="container mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <h1 class="text-2xl font-bold text-teal-600">Reclamos+</h1>
+        <ul class="hidden md:flex space-x-8">
+          <li>
+            <a
+              href="#vision"
+              class="text-slate-600 hover:text-teal-600 transition-colors"
+              >Visión General</a
+            >
+          </li>
+          <li>
+            <a
+              href="#flujo"
+              class="text-slate-600 hover:text-teal-600 transition-colors"
+              >El Viaje del Reclamo</a
+            >
+          </li>
+          <li>
+            <a
+              href="#arquitectura"
+              class="text-slate-600 hover:text-teal-600 transition-colors"
+              >Arquitectura</a
+            >
+          </li>
+          <li>
+            <a
+              href="#hoja-de-ruta"
+              class="text-slate-600 hover:text-teal-600 transition-colors"
+              >Hoja de Ruta</a
+            >
+          </li>
+        </ul>
+        <button id="mobile-menu-button" class="md:hidden text-slate-600">
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16m-7 6h7"
+            ></path>
+          </svg>
+        </button>
+      </nav>
+      <div id="mobile-menu" class="hidden md:hidden">
+        <ul class="px-6 pb-4 flex flex-col space-y-4">
+          <li>
+            <a
+              href="#vision"
+              class="block text-slate-600 hover:text-teal-600 transition-colors"
+              >Visión General</a
+            >
+          </li>
+          <li>
+            <a
+              href="#flujo"
+              class="block text-slate-600 hover:text-teal-600 transition-colors"
+              >El Viaje del Reclamo</a
+            >
+          </li>
+          <li>
+            <a
+              href="#arquitectura"
+              class="block text-slate-600 hover:text-teal-600 transition-colors"
+              >Arquitectura</a
+            >
+          </li>
+          <li>
+            <a
+              href="#hoja-de-ruta"
+              class="block text-slate-600 hover:text-teal-600 transition-colors"
+              >Hoja de Ruta</a
+            >
+          </li>
+        </ul>
+      </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+      <section id="vision" class="text-center mb-24">
+        <h2 class="text-4xl font-bold mb-4">
+          Transformando la Gestión de Reclamos Ciudadanos
+        </h2>
+        <p class="text-lg text-slate-600 max-w-3xl mx-auto mb-12">
+          Reclamos+ es una plataforma digital integral que crea un ecosistema
+          transparente y eficiente para resolver la opacidad y lentitud de los
+          procesos de reclamación tradicionales.
+        </p>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div
+            class="bg-white p-8 rounded-xl shadow-md border border-slate-100"
+          >
+            <div class="text-4xl mb-4">🤝</div>
+            <h3 class="text-xl font-bold mb-2">Generación de Confianza</h3>
+            <p class="text-slate-600">
+              Ofrecemos un proceso claro y trazable que fortalece la relación
+              entre los ciudadanos y las entidades.
+            </p>
+          </div>
+          <div
+            class="bg-white p-8 rounded-xl shadow-md border border-slate-100"
+          >
+            <div class="text-4xl mb-4">⏱️</div>
+            <h3 class="text-xl font-bold mb-2">Reducción de Tiempos</h3>
+            <p class="text-slate-600">
+              Automatizamos y optimizamos los flujos de trabajo para acelerar la
+              resolución de cada caso.
+            </p>
+          </div>
+          <div
+            class="bg-white p-8 rounded-xl shadow-md border border-slate-100"
+          >
+            <div class="text-4xl mb-4">🚀</div>
+            <h3 class="text-xl font-bold mb-2">Empoderamiento Ciudadano</h3>
+            <p class="text-slate-600">
+              Damos a los usuarios el control y la visibilidad para seguir sus
+              reclamos desde el inicio hasta el fin.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="flujo" class="mb-24">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold mb-4">El Viaje del Reclamo</h2>
+          <p class="text-lg text-slate-600 max-w-3xl mx-auto">
+            Cada reclamo sigue un ciclo de vida claro y estructurado. Haz clic
+            en cada fase para explorar los detalles y los estados involucrados.
+          </p>
+        </div>
+
+        <div
+          class="flex flex-col md:flex-row justify-center items-center gap-4 text-center mb-8 overflow-x-auto pb-4"
+        >
+          <div class="flex items-center gap-4">
+            <div
+              class="phase-item cursor-pointer p-4 bg-white rounded-lg shadow-sm border border-slate-200 min-w-[150px]"
+              data-phase="inicio"
+            >
+              <span class="text-teal-600 font-bold">1. Inicio</span>
+            </div>
+            <div class="text-slate-400 font-bold text-2xl hidden md:block">
+              &rarr;
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div
+              class="phase-item cursor-pointer p-4 bg-white rounded-lg shadow-sm border border-slate-200 min-w-[150px]"
+              data-phase="revision"
+            >
+              <span class="text-teal-600 font-bold">2. Revisión Interna</span>
+            </div>
+            <div class="text-slate-400 font-bold text-2xl hidden md:block">
+              &rarr;
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div
+              class="phase-item cursor-pointer p-4 bg-white rounded-lg shadow-sm border border-slate-200 min-w-[150px]"
+              data-phase="gestion"
+            >
+              <span class="text-teal-600 font-bold">3. Gestión Entidad</span>
+            </div>
+            <div class="text-slate-400 font-bold text-2xl hidden md:block">
+              &rarr;
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div
+              class="phase-item cursor-pointer p-4 bg-white rounded-lg shadow-sm border border-slate-200 min-w-[150px]"
+              data-phase="proceso"
+            >
+              <span class="text-teal-600 font-bold">4. En Proceso</span>
+            </div>
+            <div class="text-slate-400 font-bold text-2xl hidden md:block">
+              &rarr;
+            </div>
+          </div>
+          <div
+            class="phase-item cursor-pointer p-4 bg-white rounded-lg shadow-sm border border-slate-200 min-w-[150px]"
+            data-phase="cierre"
+          >
+            <span class="text-teal-600 font-bold">5. Cierre</span>
+          </div>
+        </div>
+
+        <div
+          id="phase-details"
+          class="bg-white p-8 rounded-xl shadow-lg border border-slate-200 min-h-[200px] transition-all duration-500"
+        >
+          <div class="text-center text-slate-500">
+            Selecciona una fase para ver su descripción y estados.
+          </div>
+        </div>
+
+        <div class="text-center mt-20 mb-12">
+          <h3 class="text-2xl font-bold mb-4">
+            Complejidad del Flujo por Fase
+          </h3>
+          <p class="text-lg text-slate-600 max-w-3xl mx-auto">
+            Este gráfico muestra el número de estados técnicos que componen cada
+            fase del proceso, revelando dónde se concentra la mayor parte de la
+            lógica del flujo de trabajo.
+          </p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+          <div class="chart-container">
+            <canvas id="phasesChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section id="arquitectura" class="mb-24">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold mb-4">Arquitectura Tecnológica</h2>
+          <p class="text-lg text-slate-600 max-w-3xl mx-auto">
+            Reclamos+ se construye sobre una pila de tecnologías modernas,
+            modulares y escalables, diseñadas para un rendimiento y
+            mantenibilidad óptimos.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div
+            class="bg-white p-6 rounded-xl shadow-md border border-slate-100"
+          >
+            <h3 class="text-xl font-bold mb-4 text-teal-700">
+              📱 Frontend (Cliente)
+            </h3>
+            <ul class="space-y-3">
+              <li class="flex items-center">
+                <span class="mr-2">🔹</span
+                ><strong class="mr-1">Flutter:</strong> App móvil para Android e
+                iOS.
+              </li>
+              <li class="flex items-center">
+                <span class="mr-2">🔹</span
+                ><strong class="mr-1">React/NextJS:</strong> Paneles web de
+                gestión.
+              </li>
+            </ul>
+          </div>
+          <div
+            class="bg-white p-6 rounded-xl shadow-md border border-slate-100"
+          >
+            <h3 class="text-xl font-bold mb-4 text-teal-700">
+              ⚙️ Backend (Servidor)
+            </h3>
+            <ul class="space-y-3">
+              <li class="flex items-center">
+                <span class="mr-2">🔸</span
+                ><strong class="mr-1">Node.js/Express:</strong> API REST
+                central.
+              </li>
+              <li class="flex items-center">
+                <span class="mr-2">🔸</span
+                ><strong class="mr-1">Zod:</strong> Validación de datos (DTOs).
+              </li>
+            </ul>
+          </div>
+          <div
+            class="bg-white p-6 rounded-xl shadow-md border border-slate-100"
+          >
+            <h3 class="text-xl font-bold mb-4 text-teal-700">
+              🗃️ Base de Datos
+            </h3>
+            <ul class="space-y-3">
+              <li class="flex items-center">
+                <span class="mr-2">▪️</span
+                ><strong class="mr-1">MySQL/MariaDB:</strong> Almacenamiento
+                relacional.
+              </li>
+            </ul>
+          </div>
+          <div
+            class="bg-white p-6 rounded-xl shadow-md border border-slate-100"
+          >
+            <h3 class="text-xl font-bold mb-4 text-teal-700">
+              ☁️ Infraestructura (AWS)
+            </h3>
+            <ul class="space-y-3">
+              <li class="flex items-center">
+                <span class="mr-2">▫️</span
+                ><strong class="mr-1">Lambda & API Gateway:</strong> Backend
+                Serverless.
+              </li>
+              <li class="flex items-center">
+                <span class="mr-2">▫️</span
+                ><strong class="mr-1">S3:</strong> Almacenamiento de archivos.
+              </li>
+              <li class="flex items-center">
+                <span class="mr-2">▫️</span
+                ><strong class="mr-1">SES/SNS & Firebase:</strong> Correos y
+                notificaciones.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="hoja-de-ruta" class="mb-12">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold mb-4">Hoja de Ruta y Próximos Pasos</h2>
+          <p class="text-lg text-slate-600 max-w-3xl mx-auto">
+            El proyecto tiene un camino claro hacia su consolidación y evolución
+            futura, enfocado en el lanzamiento, branding y la mejora continua.
+          </p>
+        </div>
+        <div
+          class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-slate-200"
+        >
+          <div class="grid md:grid-cols-2 gap-12">
+            <div>
+              <h3 class="text-xl font-bold mb-4 text-teal-700">
+                Lanzamiento y Consolidación
+              </h3>
+              <ul class="space-y-4">
+                <li class="flex items-start">
+                  <span class="text-teal-500 mr-3 mt-1">&#10003;</span
+                  ><span
+                    ><strong class="block">Despliegue Final en AWS:</strong>
+                    Configurar todos los servicios en la cuenta final del
+                    cliente.</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <span class="text-teal-500 mr-3 mt-1">&#10003;</span
+                  ><span
+                    ><strong class="block">Publicación en Tiendas:</strong>
+                    Finalizar el lanzamiento en Google Play y completar el
+                    proceso en la App Store de Apple.</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <span class="text-teal-500 mr-3 mt-1">&#10003;</span
+                  ><span
+                    ><strong class="block">Branding Completo:</strong>
+                    Implementar la nueva identidad visual (logo, nombre,
+                    colores) en toda la plataforma.</span
+                  >
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold mb-4 text-teal-700">
+                Evolución Futura
+              </h3>
+              <ul class="space-y-4">
+                <li class="flex items-start">
+                  <span class="text-teal-500 mr-3 mt-1">&#10148;</span
+                  ><span
+                    ><strong class="block"
+                      >Módulo de Reportes Avanzados:</strong
+                    >
+                    Crear herramientas de analítica para la toma de
+                    decisiones.</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <span class="text-teal-500 mr-3 mt-1">&#10148;</span
+                  ><span
+                    ><strong class="block">Refresh Tokens:</strong> Mejorar la
+                    experiencia de usuario con sesiones más largas y
+                    seguras.</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <span class="text-teal-500 mr-3 mt-1">&#10148;</span
+                  ><span
+                    ><strong class="block">Pruebas Automatizadas:</strong>
+                    Implementar un pipeline de testing para garantizar la
+                    calidad del software a largo plazo.</span
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 mt-16">
+      <div class="container mx-auto px-6 py-8 text-center">
+        <p>&copy; 2025 Reclamos+. Un nuevo estándar en la gestión ciudadana.</p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const mobileMenuButton = document.getElementById("mobile-menu-button");
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        mobileMenuButton.addEventListener("click", () => {
+          mobileMenu.classList.toggle("hidden");
+        });
+
+        document.querySelectorAll("#mobile-menu a").forEach((link) => {
+          link.addEventListener("click", () => {
+            mobileMenu.classList.add("hidden");
+          });
+        });
+
+        const phasesData = {
+          inicio: {
+            title: "Fase 1: Inicio",
+            description:
+              "El ciudadano registra su reclamo en la plataforma. Puede guardar un borrador y enviarlo cuando esté listo, iniciando formalmente el proceso.",
+            states: ["DRAFT (Borrador)", "ENTERED (Ingresado)"],
+          },
+          revision: {
+            title: "Fase 2: Revisión Interna",
+            description:
+              "Un gestor de la plataforma recibe y analiza el caso. En esta etapa se determina la validez y se decide si se resuelve internamente o se deriva a la entidad correspondiente.",
+            states: [
+              "SENT (Enviado)",
+              "REVIEWED (Revisado)",
+              "FORWARDED_TO_COMPANY (Derivado a Empresa)",
+              "PENDING (Pendiente)",
+              "BLOCKED (Bloqueado)",
+            ],
+          },
+          gestion: {
+            title: "Fase 3: Gestión Entidad",
+            description:
+              "La entidad responsable recibe el reclamo. Su equipo debe analizarlo, gestionarlo internamente y proponer una solución formal al ciudadano.",
+            states: [
+              "UNDER_COMPANY_REVIEW (En Revisión Empresa)",
+              "RESPONDED (Respondido)",
+            ],
+          },
+          proceso: {
+            title: "Fase 4: En Proceso",
+            description:
+              "Esta fase maneja las interacciones post-respuesta. El ciudadano puede apelar la solución, o el caso puede escalar a otras instancias si no hay acuerdo.",
+            states: [
+              "APPEALED (Apelado)",
+              "REJECTED (Rechazado)",
+              "IN_JUDICIAL_DEMAND (En Demanda Judicial)",
+              "WAITING_USER_RESPONSE (Esperando respuesta del usuario)",
+            ],
+          },
+          cierre: {
+            title: "Fase 5: Cierre",
+            description:
+              "La fase final del ciclo de vida del reclamo. El caso se cierra por diversas razones, como la aceptación de la solución, el desistimiento del usuario o la eliminación del sistema.",
+            states: [
+              "CLOSED_BY_USER",
+              "FINALIZED",
+              "ACCEPTED",
+              "CLOSED_WITH_REJECTION",
+              "CLOSED_WITH_PARTIAL_SOLUTION",
+              "CLOSED_WITH_TOTAL_SOLUTION",
+              "DELETED",
+              "CLOSED_FOR_OTHER_REASON",
+              "USER_WITHDRAWN",
+            ],
+          },
+        };
+
+        const phaseItems = document.querySelectorAll(".phase-item");
+        const detailsContainer = document.getElementById("phase-details");
+
+        phaseItems.forEach((item) => {
+          item.addEventListener("click", () => {
+            phaseItems.forEach((i) =>
+              i.classList.remove("bg-teal-100", "border-teal-500", "scale-105")
+            );
+            item.classList.add("bg-teal-100", "border-teal-500", "scale-105");
+
+            const phaseKey = item.dataset.phase;
+            const data = phasesData[phaseKey];
+
+            detailsContainer.innerHTML = `
+                        <h3 class="text-2xl font-bold text-teal-700 mb-3">${
+                          data.title
+                        }</h3>
+                        <p class="text-slate-600 mb-6">${data.description}</p>
+                        <h4 class="font-semibold text-slate-700 mb-2">Estados en esta fase:</h4>
+                        <div class="flex flex-wrap gap-2">
+                            ${data.states
+                              .map(
+                                (state) =>
+                                  `<span class="bg-slate-200 text-slate-700 px-3 py-1 rounded-full text-sm">${state}</span>`
+                              )
+                              .join("")}
+                        </div>
+                    `;
+          });
+        });
+
+        const ctx = document.getElementById("phasesChart").getContext("2d");
+        new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: [
+              "Inicio",
+              "Revisión Interna",
+              "Gestión Entidad",
+              "En Proceso",
+              "Cierre",
+            ],
+            datasets: [
+              {
+                label: "Número de Estados",
+                data: [2, 5, 2, 4, 9],
+                backgroundColor: "rgba(15, 118, 110, 0.6)",
+                borderColor: "rgba(15, 118, 110, 1)",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  stepSize: 1,
+                },
+                title: {
+                  display: true,
+                  text: "Cantidad de Estados",
+                },
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: "Fase del Proceso",
+                },
+              },
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    let label = context.dataset.label || "";
+                    if (label) {
+                      label += ": ";
+                    }
+                    if (context.parsed.y !== null) {
+                      label += context.parsed.y + " estados";
+                    }
+                    return label;
+                  },
+                },
+              },
+            },
+          },
+        });
+      });
+    </script>
+  </body>
+</html>
