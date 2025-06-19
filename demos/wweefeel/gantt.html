@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Chosen Palette: Warm Neutrals (Slate background, Blue accent) -->
+    <!-- Application Structure Plan: A single-page dashboard design featuring a top navigation bar, a summary section with key metrics, a grid of interactive cards for detailed task exploration, and a dynamic Gantt chart for visualizing the project timeline. This structure was chosen to transform a dense text document into an easily scannable and engaging visual experience, allowing users to choose their level of detail (high-level summary vs. in-depth task descriptions). -->
+    <!-- Visualization & Content Choices: 
+        - Project Summary -> Inform -> Key Metric Cards (HTML/CSS) -> Quick, high-level overview of project scope.
+        - Task Details -> Organize/Inform -> Interactive Cards (HTML/CSS/JS) -> Allows users to explore details on demand without being overwhelmed. Clicking a card reveals technical descriptions and dependencies.
+        - Project Timeline -> Change/Time -> Interactive Gantt Chart (Chart.js/Canvas) -> Provides a clear, visual representation of the project schedule, task durations, and overlaps. Tooltips on hover offer quick info. This is superior to a static table for understanding project flow.
+        - Dependencies/Risks -> Inform -> Styled Callout Sections (HTML/CSS) -> Uses visual cues to highlight critical information that requires client action or awareness.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <title>Plan de Proyecto Interactivo: Wweefeel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8fafc; /* slate-50 */
+        color: #334155; /* slate-700 */
+      }
+      .task-card {
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
+      }
+      .task-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+          0 4px 6px -4px rgb(0 0 0 / 0.1);
+      }
+      .task-details {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-in-out;
+      }
+      .task-card.open .task-details {
+        max-height: 1000px; /* Large enough to fit content */
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 500px;
+        max-height: 70vh;
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <header
+      class="bg-white/90 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200"
+    >
+      <nav
+        class="container mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <h1 class="text-2xl font-extrabold text-blue-600">Wweefeel</h1>
+        <ul
+          class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600"
+        >
+          <li>
+            <a href="#resumen" class="hover:text-blue-600 transition-colors"
+              >Resumen</a
+            >
+          </li>
+          <li>
+            <a href="#tareas" class="hover:text-blue-600 transition-colors"
+              >Plan de Trabajo</a
+            >
+          </li>
+          <li>
+            <a href="#cronograma" class="hover:text-blue-600 transition-colors"
+              >Cronograma</a
+            >
+          </li>
+          <li>
+            <a
+              href="#dependencias"
+              class="hover:text-blue-600 transition-colors"
+              >Dependencias</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12 md:py-20">
+      <!-- SECCIÓN 1: RESUMEN DEL PROYECTO -->
+      <section id="resumen" class="mb-20 md:mb-28 text-center">
+        <h2 class="text-4xl md:text-5xl font-extrabold text-slate-800 mb-4">
+          Plan de Proyecto: Evolución a Wweefeel
+        </h2>
+        <p class="text-lg text-slate-500 max-w-3xl mx-auto mb-12">
+          Una hoja de ruta interactiva que detalla el alcance, los plazos y las
+          tareas clave para la transformación de la plataforma y su lanzamiento
+          en el ecosistema Apple.
+        </p>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+          <div
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm"
+          >
+            <p class="text-sm font-medium text-slate-500">Fecha de Inicio</p>
+            <p class="text-2xl font-bold text-slate-800 mt-1">23/06/2025</p>
+          </div>
+          <div
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm"
+          >
+            <p class="text-sm font-medium text-slate-500">
+              Duración Estimada (Dev)
+            </p>
+            <p class="text-2xl font-bold text-slate-800 mt-1">14 Semanas</p>
+          </div>
+          <div
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm"
+          >
+            <p class="text-sm font-medium text-slate-500">Disponibilidad</p>
+            <p class="text-2xl font-bold text-slate-800 mt-1">4 Horas / Día</p>
+          </div>
+          <div
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm"
+          >
+            <p class="text-sm font-medium text-slate-500">Entregables</p>
+            <p class="text-2xl font-bold text-slate-800 mt-1">Semanales</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN 2: PLAN DE TRABAJO -->
+      <section id="tareas" class="mb-20 md:mb-28">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">
+            Plan de Trabajo Interactivo
+          </h2>
+          <p class="text-lg text-slate-500 max-w-3xl mx-auto">
+            Haz clic en cada fase para explorar las tareas, descripciones
+            técnicas y dependencias.
+          </p>
+        </div>
+        <div id="task-container" class="space-y-6">
+          <!-- Las tareas se generarán aquí con JavaScript -->
+        </div>
+      </section>
+
+      <!-- SECCIÓN 3: CRONOGRAMA VISUAL -->
+      <section id="cronograma" class="mb-20 md:mb-28">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">
+            Carta Gantt del Proyecto
+          </h2>
+          <p class="text-lg text-slate-500 max-w-3xl mx-auto">
+            Una visualización del cronograma de 14 semanas. Pasa el cursor sobre
+            las barras para ver los detalles de cada tarea.
+          </p>
+        </div>
+        <div
+          class="bg-white p-4 sm:p-6 md:p-8 rounded-xl border border-slate-200 shadow-lg"
+        >
+          <div class="chart-container">
+            <canvas id="ganttChart"></canvas>
+          </div>
+        </div>
+        <p
+          class="text-xs text-center text-amber-700 bg-amber-100 p-3 rounded-md mt-8 max-w-3xl mx-auto"
+        >
+          <strong>Nota Importante:</strong> El cronograma de desarrollo finaliza
+          en la semana 14 con el envío a Apple. La fase de "Soporte de Revisión"
+          es un período de espera y trabajo variable de 30 a 60 días que
+          comienza después de esta fecha.
+        </p>
+      </section>
+
+      <!-- SECCIÓN 4: DEPENDENCIAS CRÍTICAS -->
+      <section id="dependencias" class="mb-16">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">
+            Dependencias Clave del Cliente
+          </h2>
+          <p class="text-lg text-slate-500 max-w-3xl mx-auto">
+            El éxito y cumplimiento del cronograma dependen de la provisión
+            oportuna de los siguientes elementos.
+          </p>
+        </div>
+        <div
+          class="max-w-4xl mx-auto bg-blue-50 p-8 rounded-lg border-l-4 border-blue-500"
+        >
+          <ul class="space-y-4">
+            <li class="flex items-start">
+              <span class="text-blue-600 mr-3 mt-1 font-bold text-lg"
+                >&#10003;</span
+              >
+              <div>
+                <h4 class="font-semibold text-slate-800">
+                  Manual de Marca "Wweefeel"
+                </h4>
+                <p class="text-sm text-slate-600">
+                  Logo, paleta de colores, tipografía y guía de estilo aprobada.
+                </p>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <span class="text-blue-600 mr-3 mt-1 font-bold text-lg"
+                >&#10003;</span
+              >
+              <div>
+                <h4 class="font-semibold text-slate-800">Textos y Políticas</h4>
+                <p class="text-sm text-slate-600">
+                  Política de privacidad y textos de marketing para las tiendas.
+                </p>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <span class="text-blue-600 mr-3 mt-1 font-bold text-lg"
+                >&#10003;</span
+              >
+              <div>
+                <h4 class="font-semibold text-slate-800">Accesos a Cuentas</h4>
+                <p class="text-sm text-slate-600">
+                  Acceso de administrador a App Store Connect y Google Play
+                  Console.
+                </p>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <span class="text-blue-600 mr-3 mt-1 font-bold text-lg"
+                >&#10003;</span
+              >
+              <div>
+                <h4 class="font-semibold text-slate-800">
+                  Definición de Políticas Internas
+                </h4>
+                <p class="text-sm text-slate-600">
+                  Aprobación de la política de eliminación de datos y moderación
+                  de contenido.
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- SECCIÓN 5: COSTOS Y TIEMPOS DEFINITIVOS -->
+      <section id="costos" class="mb-20 md:mb-28">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">
+            Estimación Definitiva de Costos
+          </h2>
+          <p class="text-lg text-slate-500 max-w-3xl mx-auto">
+            Resumen cuantitativo del esfuerzo y costos definitivos para la
+            planificación financiera.
+          </p>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          <div
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center"
+          >
+            <p class="text-sm font-medium text-slate-500">
+              Esfuerzo Planificado
+            </p>
+            <p class="text-4xl font-extrabold text-slate-800 my-2">278</p>
+            <p class="text-sm text-slate-500">Horas</p>
+          </div>
+          <div
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center"
+          >
+            <p class="text-sm font-medium text-slate-500">
+              Soporte Revisión Apple
+            </p>
+            <p class="text-4xl font-extrabold text-slate-800 my-2">50</p>
+            <p class="text-sm text-slate-500">Horas (Bolsa)</p>
+          </div>
+          <div
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center"
+          >
+            <p class="text-sm font-medium text-slate-500">
+              Plazo Revisión Apple
+            </p>
+            <p class="text-4xl font-extrabold text-slate-800 my-2">30 - 60</p>
+            <p class="text-sm text-slate-500">Días de Espera</p>
+          </div>
+          <div
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center"
+          >
+            <p class="text-sm font-medium text-slate-500">Costos Externos</p>
+            <p class="text-4xl font-extrabold text-slate-800 my-2">$99</p>
+            <p class="text-sm text-slate-500">USD / Año</p>
+          </div>
+        </div>
+        <div
+          class="mt-12 max-w-4xl mx-auto bg-blue-50 p-8 rounded-lg border border-blue-200"
+        >
+          <h4 class="font-bold text-slate-800 text-center text-xl mb-6">
+            Presupuesto Definitivo
+          </h4>
+          <div class="text-center mb-4">
+            <p class="text-sm text-slate-500">
+              Tarifa: <strong>0.7 UF por Hora</strong> (UF = $39,000 CLP)
+            </p>
+            <p class="text-sm text-slate-500">
+              Valor Hora: <strong>$27,300 CLP</strong>
+            </p>
+          </div>
+          <div class="grid md:grid-cols-2 gap-6 text-center">
+            <div class="bg-white p-4 rounded-lg">
+              <h5 class="font-semibold text-slate-700">
+                Costo Desarrollo Planificado
+              </h5>
+              <p class="text-lg font-bold text-blue-600 mt-1">195 UF</p>
+              <p class="text-sm text-slate-500">($7.590.000 CLP)</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg">
+              <h5 class="font-semibold text-slate-700">
+                Costo Soporte Revisión
+              </h5>
+              <p class="text-lg font-bold text-blue-600 mt-1">35 UF</p>
+              <p class="text-sm text-slate-500">($1.365.000 CLP)</p>
+            </div>
+          </div>
+          <p class="text-xs text-center text-slate-500 mt-6">
+            <strong>Nota:</strong> Los valores en CLP son aproximados. El costo
+            del soporte de revisión corresponde a una bolsa de horas prepagada.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400 mt-16">
+      <div class="container mx-auto px-6 py-8 text-center text-sm">
+        <p>Plan de Proyecto Interactivo para Wweefeel &copy; 2025</p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- DATA ---
+        const projectStartDate = new Date("2025-06-23T00:00:00");
+        const tasks = [
+          {
+            phase: "Fase 1: Rebranding y Diseño (Semanas 1-7)",
+            color: "rgba(59, 130, 246, 0.7)", // blue-500
+            items: [
+              {
+                name: "1.1 Cambio de Nombre",
+                weeks: [1, 2],
+                description:
+                  "Este es un cambio transversal que requiere una búsqueda y reemplazo en toda la base de código. Afectará a la app Flutter (variables de texto, constantes, nombres de paquetes), la API en Node.js (respuestas, plantillas de correo/notificaciones) y potencialmente a configuraciones en la Base de Datos. También se actualizará toda la documentación técnica.",
+                dependency: 'Confirmación final del nombre "Wweefeel".',
+              },
+              {
+                name: "1.2 Diseño Gráfico",
+                weeks: [1, 2],
+                description:
+                  "Proceso de diseño y desarrollo UI. Se creará el nuevo logo en todos los formatos requeridos por iOS y Android. Se diseñarán los screenshots y banners promocionales que muestren la nueva interfaz. Finalmente, se integrarán estos assets en el proyecto Flutter.",
+                dependency:
+                  'Aprobación del manual de marca o guía de estilo para "Wweefeel".',
+              },
+              {
+                name: "1.3 Aplicación Nuevo Diseño",
+                weeks: [3, 7],
+                description:
+                  "Es la tarea de mayor impacto en el frontend. Implica una refactorización de la UI/UX en Flutter, actualizando el tema global de la aplicación (colores, tipografías), modificando componentes reutilizables (botones, tarjetas, diálogos) y reestructurando las pantallas principales para alinearse con la nueva identidad de marca. Requiere un testeo visual exhaustivo.",
+                dependency:
+                  "Entrega del diseño completo (ej. en Figma) o guía de estilo detallada.",
+              },
+            ],
+          },
+          {
+            phase:
+              "Fase 2: Desarrollo de Requisitos y Moderación (Semanas 4-11)",
+            color: "rgba(234, 88, 12, 0.7)", // orange-600
+            items: [
+              {
+                name: "2.1 Sign in with Apple",
+                weeks: [4, 6],
+                description:
+                  "Funcionalidad full-stack obligatoria. Frontend (Flutter): se integrará el SDK de autenticación de Apple. Backend (Node.js): se creará un nuevo endpoint para validar el token de Apple, consultar los datos del usuario y vincularlo a una cuenta en la base de datos `user`, generando un JWT de sesión para nuestra plataforma.",
+                dependency: "Cuenta de Apple Developer activa y configurada.",
+              },
+              {
+                name: "2.2 Eliminación de Cuenta",
+                weeks: [6, 8],
+                description:
+                  "Requisito de privacidad crítico. Frontend: se creará una sección clara para solicitar la eliminación. Backend: se desarrollará un endpoint seguro que ejecute la lógica de borrado (físico o anonimización), que debe ser definida previamente.",
+                dependency:
+                  "Decisión y aprobación del cliente sobre la política de eliminación de datos.",
+              },
+              {
+                name: "2.3 Sistema de Moderación (UGC)",
+                weeks: [8, 11],
+                description:
+                  'Requisito indispensable de Apple para apps con contenido generado por usuarios. Frontend: añadir opción de "Denunciar" en casos y comentarios. Backend: crear endpoints y tabla `reports` en la BD. Panel de Administración: crear nueva sección para gestionar denuncias y tomar acciones.',
+                dependency: "Definición de políticas de moderación.",
+              },
+            ],
+          },
+          {
+            phase: "Fase 3: Configuración y Publicación (Semanas 12-14)",
+            color: "rgba(22, 163, 74, 0.7)", // green-600
+            items: [
+              {
+                name: "3.1 Configuración Tiendas",
+                weeks: [12, 12],
+                description:
+                  "Tarea administrativa que consiste en llenar todos los metadatos en App Store Connect y Google Play Console: textos de marketing, política de privacidad, clasificación de contenido, información de contacto, etc.",
+                dependency:
+                  "Textos finales y política de privacidad actualizados. Acceso a ambas consolas.",
+              },
+              {
+                name: "3.2 Permisos (iOS)",
+                weeks: [12, 12],
+                description:
+                  "Tarea específica de iOS. Se identificarán todos los permisos que la app requiere (Cámara, Localización, etc.) y se redactarán descripciones claras en el archivo `info.plist` explicando al usuario por qué se necesita cada permiso.",
+                dependency: "Listado final de permisos utilizados por la app.",
+              },
+              {
+                name: "QA y Pruebas Finales",
+                weeks: [13, 14],
+                description:
+                  "Periodo dedicado a pruebas de regresión completas, asegurando la estabilidad de la aplicación y la correcta implementación de todas las nuevas funcionalidades antes del envío final.",
+                dependency: "Finalización de todas las tareas de desarrollo.",
+              },
+              {
+                name: "Envío a Apple",
+                weeks: [14.5, 14.5], // A single point in time at the end
+                description:
+                  "El hito final del desarrollo: compilación de la versión final de la aplicación y envío formal al equipo de revisión de Apple a través de App Store Connect.",
+                dependency: "Aprobación final del cliente para el envío.",
+              },
+            ],
+          },
+        ];
+
+        // --- RENDER TASKS ---
+        const taskContainer = document.getElementById("task-container");
+        tasks.forEach((phase) => {
+          const phaseElement = document.createElement("div");
+          phaseElement.className =
+            "task-card bg-white p-6 rounded-xl border border-slate-200 shadow-md";
+
+          let itemsHtml = phase.items
+            .map(
+              (item) => `
+            <div class="py-4 border-b border-slate-100 last:border-b-0">
+                <h4 class="font-semibold text-slate-800">${item.name}</h4>
+                <div class="task-details">
+                    <p class="text-sm text-slate-600 mt-2">${item.description}</p>
+                    <p class="text-xs text-blue-600 bg-blue-50 p-2 rounded-md mt-3"><strong>Dependencia:</strong> ${item.dependency}</p>
+                </div>
+            </div>
+        `
+            )
+            .join("");
+
+          phaseElement.innerHTML = `
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-bold text-slate-900">${phase.phase}</h3>
+                <span class="transform transition-transform duration-300 text-2xl text-slate-400">&#9662;</span>
+            </div>
+            <div class="task-details-wrapper mt-4">${itemsHtml}</div>
+        `;
+
+          taskContainer.appendChild(phaseElement);
+        });
+
+        // --- INTERACTIVITY ---
+        document.querySelectorAll(".task-card").forEach((card) => {
+          card.addEventListener("click", () => {
+            const wrapper = card.querySelector(".task-details-wrapper");
+            const items = wrapper.querySelectorAll(".task-details");
+            const arrow = card.querySelector("span");
+
+            card.classList.toggle("open");
+            if (card.classList.contains("open")) {
+              items.forEach(
+                (item) => (item.style.maxHeight = item.scrollHeight + "px")
+              );
+              arrow.style.transform = "rotate(180deg)";
+            } else {
+              items.forEach((item) => (item.style.maxHeight = "0"));
+              arrow.style.transform = "rotate(0deg)";
+            }
+          });
+        });
+
+        // --- GANTT CHART ---
+        const ganttCtx = document.getElementById("ganttChart").getContext("2d");
+
+        // Helper to add days to a date
+        const addDays = (date, days) => {
+          const result = new Date(date);
+          result.setDate(result.getDate() + days);
+          return result;
+        };
+
+        // Prepare data for the chart
+        const chartData = {
+          labels: tasks.flatMap((phase) =>
+            phase.items.map((item) => item.name)
+          ),
+          datasets: [
+            {
+              label: "Duración de Tarea (Semanas)",
+              data: tasks.flatMap((phase) =>
+                phase.items.map((item) => {
+                  const startWeek = item.weeks[0];
+                  const endWeek = item.weeks[1];
+                  const startDate = addDays(
+                    projectStartDate,
+                    (startWeek - 1) * 7
+                  );
+                  const endDate = addDays(projectStartDate, endWeek * 7);
+                  return [startDate, endDate];
+                })
+              ),
+              backgroundColor: tasks.flatMap((phase) =>
+                Array(phase.items.length).fill(phase.color)
+              ),
+              borderColor: tasks.flatMap((phase) =>
+                Array(phase.items.length).fill(phase.color.replace("0.7", "1"))
+              ),
+              borderWidth: 1,
+              barPercentage: 0.6,
+              categoryPercentage: 0.8,
+              borderSkipped: false,
+              borderRadius: 4,
+            },
+          ],
+        };
+
+        // Chart Configuration
+        new Chart(ganttCtx, {
+          type: "bar",
+          data: chartData,
+          options: {
+            indexAxis: "y",
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    const item = tasks.flatMap((p) => p.items)[
+                      context.dataIndex
+                    ];
+                    const start = item.weeks[0];
+                    const end = item.weeks[1];
+                    if (start >= end) {
+                      return `Semana ${Math.floor(start)}`;
+                    }
+                    return `Semanas ${start} a ${end}`;
+                  },
+                },
+              },
+            },
+            scales: {
+              x: {
+                type: "time",
+                time: {
+                  unit: "week",
+                  tooltipFormat: "MMM d, yyyy",
+                  displayFormats: {
+                    week: "MMM d",
+                  },
+                },
+                min: projectStartDate,
+                max: addDays(projectStartDate, 14 * 7),
+                position: "top",
+                title: {
+                  display: true,
+                  text: "Cronograma del Proyecto (Semanas)",
+                },
+                grid: {
+                  color: "rgba(203, 213, 225, 0.5)",
+                },
+              },
+              y: {
+                grid: {
+                  display: false,
+                },
+              },
+            },
+          },
+        });
+      });
+    </script>
+  </body>
+</html>

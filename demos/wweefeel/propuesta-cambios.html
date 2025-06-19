@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Canvas: Wweefeel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .task-card {
+        transition: all 0.3s ease-in-out;
+      }
+      .task-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+          0 4px 6px -4px rgb(0 0 0 / 0.1);
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-700">
+    <header
+      class="bg-white/90 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200"
+    >
+      <nav
+        class="container mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <h1 class="text-3xl font-extrabold text-blue-600">Wweefeel</h1>
+        <ul
+          class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600"
+        >
+          <li>
+            <a href="#objetivos" class="hover:text-blue-600 transition-colors"
+              >Objetivos</a
+            >
+          </li>
+          <li>
+            <a href="#tareas" class="hover:text-blue-600 transition-colors"
+              >Plan de Trabajo</a
+            >
+          </li>
+          <li>
+            <a href="#riesgos" class="hover:text-blue-600 transition-colors"
+              >Gestión de Riesgos</a
+            >
+          </li>
+          <li>
+            <a href="#costos" class="hover:text-blue-600 transition-colors"
+              >Estimación</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-16">
+      <!-- SECCIÓN 1: OBJETIVOS DEL PROYECTO -->
+      <section id="objetivos" class="mb-24 text-center">
+        <h2 class="text-4xl font-extrabold text-slate-800 mb-4">
+          Evolución Estratégica del Producto
+        </h2>
+        <p class="text-lg text-slate-500 max-w-3xl mx-auto mb-12">
+          Transformar "Reclamos+" en "Wweefeel", implementando una nueva
+          identidad visual y expandiendo su alcance al ecosistema de Apple.
+        </p>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          <div
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm"
+          >
+            <h3 class="font-bold text-lg mb-2 text-slate-800">
+              Rebranding Integral
+            </h3>
+            <p class="text-sm text-slate-600">
+              Implementar la nueva marca "Wweefeel" en todas las capas de la
+              plataforma: código, diseño y comunicación.
+            </p>
+          </div>
+          <div
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm"
+          >
+            <h3 class="font-bold text-lg mb-2 text-slate-800">
+              Cumplimiento Apple
+            </h3>
+            <p class="text-sm text-slate-600">
+              Desarrollar y adaptar la app para cumplir con todos los requisitos
+              técnicos y de políticas de la App Store.
+            </p>
+          </div>
+          <div
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm"
+          >
+            <h3 class="font-bold text-lg mb-2 text-slate-800">
+              Publicación Exitosa
+            </h3>
+            <p class="text-sm text-slate-600">
+              Gestionar proactivamente el proceso de revisión de Apple para
+              asegurar una publicación sin contratiempos.
+            </p>
+          </div>
+          <div
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm"
+          >
+            <h3 class="font-bold text-lg mb-2 text-slate-800">
+              Estabilidad y Continuidad
+            </h3>
+            <p class="text-sm text-slate-600">
+              Garantizar que la plataforma se mantenga funcional y estable
+              durante y después de la transición.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN 2: DESGLOSE DE TAREAS -->
+      <section id="tareas" class="mb-24">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-extrabold text-slate-800 mb-4">
+            Plan de Trabajo Detallado
+          </h2>
+          <p class="text-lg text-slate-500 max-w-3xl mx-auto">
+            El proyecto se organiza en áreas de trabajo claras, cada una con
+            tareas específicas y un esfuerzo estimado.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Card 1: Branding y UI/UX -->
+          <div
+            class="task-card bg-white p-8 rounded-xl border border-slate-200 shadow-lg flex flex-col"
+          >
+            <div class="mb-4"><span class="text-3xl">🎨</span></div>
+            <h3 class="text-xl font-bold mb-3 text-slate-800">
+              Branding y UI/UX
+            </h3>
+            <p class="text-slate-600 text-sm mb-4">
+              Actualización completa de la identidad visual y experiencia de
+              usuario.
+            </p>
+            <ul
+              class="text-sm space-y-2 mb-4 list-disc list-inside text-slate-600"
+            >
+              <li>Cambio de nombre a "Wweefeel"</li>
+              <li>Creación de iconografía y material gráfico</li>
+              <li>Aplicación de nuevo diseño en la App</li>
+            </ul>
+            <div class="mt-auto pt-4 border-t border-slate-200">
+              <p class="text-sm font-medium text-slate-500">
+                Esfuerzo Estimado:
+              </p>
+              <p class="text-2xl font-bold text-blue-600">80 - 124 hrs</p>
+            </div>
+          </div>
+
+          <!-- Card 2: Desarrollo Funcional -->
+          <div
+            class="task-card bg-white p-8 rounded-xl border border-slate-200 shadow-lg flex flex-col"
+          >
+            <div class="mb-4"><span class="text-3xl">💻</span></div>
+            <h3 class="text-xl font-bold mb-3 text-slate-800">
+              Desarrollo Funcional
+            </h3>
+            <p class="text-slate-600 text-sm mb-4">
+              Implementación de funcionalidades obligatorias para el
+              cumplimiento de políticas.
+            </p>
+            <ul
+              class="text-sm space-y-2 mb-4 list-disc list-inside text-slate-600"
+            >
+              <li>Sign in with Apple (Full-stack)</li>
+              <li>Eliminación de Cuenta y Datos (Full-stack)</li>
+            </ul>
+            <div class="mt-auto pt-4 border-t border-slate-200">
+              <p class="text-sm font-medium text-slate-500">
+                Esfuerzo Estimado:
+              </p>
+              <p class="text-2xl font-bold text-blue-600">44 - 62 hrs</p>
+            </div>
+          </div>
+
+          <!-- Card 3: Publicación y Configuración -->
+          <div
+            class="task-card bg-white p-8 rounded-xl border border-slate-200 shadow-lg flex flex-col"
+          >
+            <div class="mb-4"><span class="text-3xl">🚀</span></div>
+            <h3 class="text-xl font-bold mb-3 text-slate-800">
+              Publicación y Configuración
+            </h3>
+            <p class="text-slate-600 text-sm mb-4">
+              Tareas administrativas y técnicas para preparar las tiendas de
+              aplicaciones.
+            </p>
+            <ul
+              class="text-sm space-y-2 mb-4 list-disc list-inside text-slate-600"
+            >
+              <li>Configuración de fichas en tiendas</li>
+              <li>Declaración de permisos para iOS (info.plist)</li>
+            </ul>
+            <div class="mt-auto pt-4 border-t border-slate-200">
+              <p class="text-sm font-medium text-slate-500">
+                Esfuerzo Estimado:
+              </p>
+              <p class="text-2xl font-bold text-blue-600">10 - 15 hrs</p>
+            </div>
+          </div>
+
+          <!-- Card 4: Gestión de Riesgos -->
+          <div
+            class="task-card bg-white p-8 rounded-xl border border-slate-200 shadow-lg flex flex-col"
+          >
+            <div class="mb-4"><span class="text-3xl">🛡️</span></div>
+            <h3 class="text-xl font-bold mb-3 text-slate-800">
+              Soporte de Revisión Apple
+            </h3>
+            <p class="text-slate-600 text-sm mb-4">
+              Gestión reactiva de los requerimientos del equipo de revisión de
+              Apple.
+            </p>
+            <ul
+              class="text-sm space-y-2 mb-4 list-disc list-inside text-slate-600"
+            >
+              <li>Análisis de feedback de Apple</li>
+              <li>Implementación de correcciones</li>
+              <li>Ciclos de re-envío a revisión</li>
+            </ul>
+            <div class="mt-auto pt-4 border-t border-slate-200">
+              <p class="text-sm font-medium text-slate-500">
+                Esfuerzo Estimado:
+              </p>
+              <p class="text-2xl font-bold text-blue-600">Bolsa de 16-32 hrs</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN 3: DEPENDENCIAS -->
+      <section id="dependencias" class="mb-24">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-extrabold text-slate-800 mb-4">
+            Recursos y Dependencias Críticas
+          </h2>
+          <p class="text-lg text-slate-500 max-w-3xl mx-auto">
+            Para asegurar un flujo de trabajo ágil, se requiere la colaboración
+            del cliente en la provisión de los siguientes elementos.
+          </p>
+        </div>
+        <div
+          class="max-w-4xl mx-auto bg-white p-8 rounded-xl border border-slate-200 shadow-lg"
+        >
+          <div class="grid md:grid-cols-2 gap-10">
+            <div>
+              <h3 class="font-bold text-lg text-slate-800 mb-4">
+                Aportes del Cliente
+              </h3>
+              <ul class="space-y-3 text-sm">
+                <li class="flex items-start">
+                  <span class="text-blue-500 mr-3 mt-1">&#10140;</span
+                  ><strong>Manual de Marca "Wweefeel":</strong> Logo, colores, y
+                  guía de estilo aprobados.
+                </li>
+                <li class="flex items-start">
+                  <span class="text-blue-500 mr-3 mt-1">&#10140;</span
+                  ><strong>Textos Legales y de Marketing:</strong> Políticas de
+                  privacidad y descripciones para tiendas.
+                </li>
+                <li class="flex items-start">
+                  <span class="text-blue-500 mr-3 mt-1">&#10140;</span
+                  ><strong>Accesos a Cuentas:</strong> Permisos de administrador
+                  para App Store Connect y Google Play Console.
+                </li>
+                <li class="flex items-start">
+                  <span class="text-blue-500 mr-3 mt-1">&#10140;</span
+                  ><strong>Política de Eliminación de Datos:</strong> Definición
+                  clara del procedimiento de borrado de cuentas.
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg text-slate-800 mb-4">
+                Recursos Técnicos Requeridos
+              </h3>
+              <ul class="space-y-3 text-sm">
+                <li class="flex items-start">
+                  <span class="text-blue-500 mr-3 mt-1">&#10140;</span
+                  ><strong>Cuenta de Apple Developer:</strong> Suscripción anual
+                  activa ($99 USD).
+                </li>
+                <li class="flex items-start">
+                  <span class="text-blue-500 mr-3 mt-1">&#10140;</span
+                  ><strong>Entorno de Compilación:</strong> Un computador macOS
+                  con Xcode instalado.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN 4: GESTIÓN DE RIESGOS -->
+      <section id="riesgos" class="mb-24">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-extrabold text-slate-800 mb-4">
+            Gestión de Riesgos: El Proceso de Revisión de Apple
+          </h2>
+          <p class="text-lg text-slate-500 max-w-3xl mx-auto">
+            Esta es la fase más impredecible. Nuestra estrategia se basa en la
+            preparación, la transparencia y un plan de mitigación claro.
+          </p>
+        </div>
+        <div
+          class="bg-amber-50 border-l-4 border-amber-400 p-8 rounded-r-lg max-w-5xl mx-auto"
+        >
+          <h3 class="font-bold text-lg text-amber-800 mb-4">
+            Plan de Mitigación y Estrategia
+          </h3>
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h4 class="font-semibold text-slate-700 mb-2">
+                Riesgos Principales Identificados:
+              </h4>
+              <ul class="text-sm space-y-2 text-slate-600">
+                <li>
+                  <span class="font-bold">Privacidad (Guideline 5.1):</span>
+                  Alto escrutinio sobre el uso de cámara, ubicación y datos
+                  sensibles.
+                </li>
+                <li>
+                  <span class="font-bold">Contenido de Usuario (UGC):</span>
+                  Necesidad de sistemas de moderación (reportar/bloquear).
+                </li>
+                <li>
+                  <span class="font-bold">Diseño y Rendimiento:</span> La app
+                  debe ser pulida, estable y sentirse nativa en iOS.
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-slate-700 mb-2">
+                Nuestro Plan de Acción:
+              </h4>
+              <ul class="text-sm space-y-2 text-slate-600">
+                <li>
+                  <span class="font-bold"
+                    >Bolsa de Horas de Soporte (16-32h):</span
+                  >
+                  Un retainer dedicado para implementar ágilmente las
+                  correcciones que Apple solicite.
+                </li>
+                <li>
+                  <span class="font-bold">Comunicación Transparente:</span>
+                  Informes periódicos sobre el estado de la revisión y cualquier
+                  comunicación con Apple.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN 5: COSTOS Y TIEMPOS -->
+      <section id="costos" class="mb-24">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-extrabold text-slate-800 mb-4">
+            Estimación de Tiempos y Costos
+          </h2>
+          <p class="text-lg text-slate-500 max-w-3xl mx-auto">
+            Un resumen cuantitativo del esfuerzo y los plazos estimados para una
+            planificación financiera clara.
+          </p>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          <div
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center"
+          >
+            <p class="text-sm font-medium text-slate-500">
+              Esfuerzo Planificado
+            </p>
+            <p class="text-4xl font-extrabold text-slate-800 my-2">134 - 201</p>
+            <p class="text-sm text-slate-500">Horas</p>
+          </div>
+          <div
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center"
+          >
+            <p class="text-sm font-medium text-slate-500">
+              Soporte Variable (Apple)
+            </p>
+            <p class="text-4xl font-extrabold text-slate-800 my-2">16 - 32</p>
+            <p class="text-sm text-slate-500">Horas</p>
+          </div>
+          <div
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center"
+          >
+            <p class="text-sm font-medium text-slate-500">
+              Plazo Revisión Apple
+            </p>
+            <p class="text-4xl font-extrabold text-slate-800 my-2">30 - 60</p>
+            <p class="text-sm text-slate-500">Días de Espera</p>
+          </div>
+          <div
+            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center"
+          >
+            <p class="text-sm font-medium text-slate-500">Costos Externos</p>
+            <p class="text-4xl font-extrabold text-slate-800 my-2">$99</p>
+            <p class="text-sm text-slate-500">USD / Año</p>
+          </div>
+        </div>
+        <div
+          class="mt-12 max-w-4xl mx-auto bg-blue-50 p-8 rounded-lg border border-blue-200"
+        >
+          <h4 class="font-bold text-slate-800 text-center text-xl mb-6">
+            Modelo de Presupuesto
+          </h4>
+          <div class="text-center mb-4">
+            <p class="text-sm text-slate-500">
+              Tarifa: <strong>0.7 UF por Hora</strong> (UF = $39,000 CLP)
+            </p>
+            <p class="text-sm text-slate-500">
+              Valor Hora: <strong>$27,300 CLP</strong>
+            </p>
+          </div>
+          <div class="grid md:grid-cols-2 gap-6 text-center">
+            <div class="bg-white p-4 rounded-lg">
+              <h5 class="font-semibold text-slate-700">
+                Costo Desarrollo Planificado
+              </h5>
+              <p class="text-lg font-bold text-blue-600 mt-1">93 - 140 UF</p>
+              <p class="text-sm text-slate-500">
+                ($3.627.000 - $5.460.000 CLP)
+              </p>
+            </div>
+            <div class="bg-white p-4 rounded-lg">
+              <h5 class="font-semibold text-slate-700">
+                Costo Soporte Variable
+              </h5>
+              <p class="text-lg font-bold text-blue-600 mt-1">11 - 22 UF</p>
+              <p class="text-sm text-slate-500">($429.000 - $858.000 CLP)</p>
+            </div>
+          </div>
+          <p class="text-xs text-center text-slate-500 mt-6">
+            <strong>Nota:</strong> Los valores en CLP son aproximados y se basan
+            en el valor de la UF proporcionado. El costo total final dependerá
+            de las horas efectivamente utilizadas.
+          </p>
+        </div>
+      </section>
+
+      <!-- SECCIÓN 6: CRONOGRAMA PROYECTADO -->
+      <section id="cronograma" class="mb-24">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-extrabold text-slate-800 mb-4">
+            Cronograma y Metodología
+          </h2>
+          <p class="text-lg text-slate-500 max-w-3xl mx-auto">
+            Traducción del esfuerzo total a un calendario de trabajo y acuerdos
+            clave para la ejecución del proyecto.
+          </p>
+        </div>
+        <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
+          <div
+            class="bg-white p-8 rounded-xl border border-slate-200 shadow-lg text-center"
+          >
+            <h3 class="font-bold text-lg text-slate-800 mb-4">
+              Duración Estimada del Desarrollo
+            </h3>
+            <p class="text-sm text-slate-500 mb-4">
+              Considerando una disponibilidad de
+              <strong>4 horas diarias</strong> de trabajo efectivo (Lunes a
+              Viernes):
+            </p>
+            <div class="bg-slate-100 p-6 rounded-lg">
+              <p class="text-sm font-medium text-slate-500">
+                Tiempo de Trabajo Total Estimado:
+              </p>
+              <p class="text-5xl font-extrabold text-blue-600 my-2">8 a 12</p>
+              <p class="text-lg font-medium text-slate-600">Semanas</p>
+            </div>
+            <p
+              class="text-xs text-center text-amber-700 bg-amber-100 p-3 rounded-md mt-6"
+            >
+              <strong>Importante:</strong> Este cronograma de desarrollo es
+              independiente del tiempo de espera de la revisión de Apple (30-60
+              días). El tiempo total hasta la publicación será la suma de ambos
+              períodos.
+            </p>
+          </div>
+          <div
+            class="bg-white p-8 rounded-xl border border-slate-200 shadow-lg"
+          >
+            <h3 class="font-bold text-lg text-slate-800 mb-4">
+              Metodología de Trabajo y Acuerdos
+            </h3>
+            <ul class="space-y-4">
+              <li class="flex items-start">
+                <span class="text-green-500 mr-4 mt-1 text-xl">&#9658;</span>
+                <div>
+                  <h4 class="font-semibold text-slate-700">
+                    Fecha de Inicio del Proyecto
+                  </h4>
+                  <p class="text-sm text-slate-600">
+                    Lunes, 23 de Junio, 2025.
+                  </p>
+                </div>
+              </li>
+              <li class="flex items-start">
+                <span class="text-green-500 mr-4 mt-1 text-xl">&#9658;</span>
+                <div>
+                  <h4 class="font-semibold text-slate-700">
+                    Entregables y Seguimiento
+                  </h4>
+                  <p class="text-sm text-slate-600">
+                    Se entregará un informe de avance detallado cada
+                    <strong>lunes a las 12:00 PM (hora de Chile)</strong>,
+                    resumiendo las tareas completadas y la planificación para la
+                    nueva semana.
+                  </p>
+                </div>
+              </li>
+              <li class="flex items-start">
+                <span class="text-green-500 mr-4 mt-1 text-xl">&#9658;</span>
+                <div>
+                  <h4 class="font-semibold text-slate-700">Modelo de Pagos</h4>
+                  <p class="text-sm text-slate-600">
+                    Los pagos se realizarán de forma <strong>semanal</strong>,
+                    correspondientes al valor de las horas planificadas para
+                    cada semana de trabajo, según el cronograma acordado.
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN 7: PRÓXIMOS PASOS -->
+      <section id="next-steps" class="text-center">
+        <h3 class="text-2xl font-bold text-slate-800 mb-4">
+          Próximo Paso Recomendado
+        </h3>
+        <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+          Validar las dependencias y aprobar el modelo de trabajo y presupuesto
+          antes de iniciar el proyecto.
+        </p>
+      </section>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400 mt-24">
+      <div class="container mx-auto px-6 py-6 text-center text-sm">
+        <p>Wweefeel. Preparado para una transición exitosa.</p>
+      </div>
+    </footer>
+  </body>
+</html>
