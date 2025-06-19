@@ -22,14 +22,13 @@
         background-color: #f8fafc; /* slate-50 */
         color: #1e293b; /* slate-800 */
       }
-      .section-title {
-        @apply text-3xl font-extrabold text-slate-800 text-center;
-      }
-      .section-subtitle {
-        @apply mt-2 text-lg text-slate-600 text-center max-w-2xl mx-auto;
-      }
+
       .card {
-        @apply bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden;
+        /* bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden; */
+        background-color: #ffffff; /* white */
+        border-radius: 0.75rem; /* rounded-xl */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+        transition: box-shadow 0.3s ease-in-out;
       }
       .flow-step-details {
         max-height: 0;
@@ -180,8 +179,10 @@
       <!-- Vision y Valor -->
       <section id="vision" class="py-16 md:py-24">
         <div class="container mx-auto px-6">
-          <h2 class="section-title">Visión y Propuesta de Valor</h2>
-          <p class="section-subtitle">
+          <h2 class="text-3xl font-extrabold text-slate-800 text-center">
+            Visión y Propuesta de Valor
+          </h2>
+          <p class="mt-2 text-lg text-slate-600 text-center max-w-2xl mx-auto">
             Fomentar un ecosistema de información fiable, fortaleciendo la
             confianza del público y la integridad periodística.
           </p>
@@ -226,8 +227,10 @@
       <!-- Metodología -->
       <section id="metodologia" class="py-16 md:py-24 bg-white">
         <div class="container mx-auto px-6">
-          <h2 class="section-title">Metodología del Sistema</h2>
-          <p class="section-subtitle">
+          <h2 class="text-3xl font-extrabold text-slate-800 text-center">
+            Metodología del Sistema
+          </h2>
+          <p class="mt-2 text-lg text-slate-600 text-center max-w-2xl mx-auto">
             Un flujo de trabajo automatizado y continuo, desde la captura de la
             noticia hasta su publicación analizada en el portal interactivo.
           </p>
@@ -445,8 +448,10 @@
       <!-- MVP -->
       <section id="mvp" class="py-16 md:py-24">
         <div class="container mx-auto px-6">
-          <h2 class="section-title">Producto Mínimo Viable (MVP)</h2>
-          <p class="section-subtitle">
+          <h2 class="text-3xl font-extrabold text-slate-800 text-center">
+            Producto Mínimo Viable (MVP)
+          </h2>
+          <p class="mt-2 text-lg text-slate-600 text-center max-w-2xl mx-auto">
             Un lanzamiento enfocado y rápido (1-2 meses) para validar el
             concepto central y obtener retroalimentación temprana.
           </p>
@@ -459,36 +464,37 @@
                 <li class="flex items-start">
                   <span class="text-green-500 mr-3 mt-1">✓</span
                   ><span
-                    >Ingesta de **1-2 fuentes** de noticias
+                    >Ingesta de <strong>1-2 fuentes</strong> de noticias
                     pre-seleccionadas.</span
                   >
                 </li>
                 <li class="flex items-start">
                   <span class="text-green-500 mr-3 mt-1">✓</span
                   ><span
-                    >Análisis de **3-4 categorías principales** (ej.
+                    >Análisis de
+                    <strong>3-4 categorías principales</strong> (ej.
                     Tendencioso, Correcto).</span
                   >
                 </li>
                 <li class="flex items-start">
                   <span class="text-green-500 mr-3 mt-1">✓</span
                   ><span
-                    >Uso de LLM vía API para clasificación y **justificación
-                    básica**.</span
+                    >Uso de LLM vía API para clasificación y
+                    <strong>justificación básica</strong>.</span
                   >
                 </li>
                 <li class="flex items-start">
                   <span class="text-green-500 mr-3 mt-1">✓</span
                   ><span
-                    >Portal web funcional con **feed de noticias y filtros
-                    básicos**.</span
+                    >Portal web funcional con
+                    <strong>feed de noticias y filtros básicos</strong>.</span
                   >
                 </li>
                 <li class="flex items-start">
                   <span class="text-green-500 mr-3 mt-1">✓</span
                   ><span
-                    >Proceso de **validación humana manual** por el equipo
-                    interno.</span
+                    >Proceso de <strong>validación humana manual</strong> por el
+                    equipo interno.</span
                   >
                 </li>
               </ul>
@@ -538,8 +544,10 @@
       <!-- Planificación y Costos -->
       <section id="costos" class="py-16 md:py-24 bg-white">
         <div class="container mx-auto px-6">
-          <h2 class="section-title">Planificación y Costos del MVP</h2>
-          <p class="section-subtitle">
+          <h2 class="text-3xl font-extrabold text-slate-800 text-center">
+            Planificación y Costos del MVP
+          </h2>
+          <p class="mt-2 text-lg text-slate-600 text-center max-w-2xl mx-auto">
             Un plan de ejecución ágil de 1 a 2 meses con una estructura de
             costos transparente, ajustada a la realidad chilena.
           </p>
@@ -699,7 +707,7 @@
                   <h4 class="font-semibold mt-1">Consultoría y Auditorías</h4>
                 </div>
                 <div class="bg-white p-4 rounded-lg shadow-sm text-center">
-                  🤝
+                  �
                   <h4 class="font-semibold mt-1">Patrocinios y Subvenciones</h4>
                 </div>
               </div>
