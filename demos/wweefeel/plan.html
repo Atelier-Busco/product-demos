@@ -3,568 +3,779 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Chosen Palette: Corporate Clarity (Slate background, Blue accent) -->
-    <!-- Application Structure Plan: A single-page dashboard design is used to present the project proposal. The structure consists of a top navigation bar for quick access to key sections, a high-level summary dashboard with project metrics, an interactive grid of expandable cards for detailed task exploration, and a dynamic Gantt chart to visualize the timeline. This architecture was chosen to convert a dense, text-based document into an easily digestible and engaging format, allowing stakeholders to quickly grasp the project's scope, timeline, and financials, and then drill down into specifics as needed. -->
-    <!-- Visualization & Content Choices: 
-        - Project Summary -> Inform -> Key Metric Cards (HTML/CSS) -> Provides an immediate, high-level overview of the project's core parameters (duration, cost, start date).
-        - Detailed Tasks -> Organize/Inform -> Interactive Accordion Cards (HTML/CSS/JS) -> Each card represents a major task. Clicking expands it to reveal the technical description and dependencies, preventing information overload and promoting focused exploration.
-        - Project Timeline -> Change/Time -> Interactive Gantt Chart (Chart.js/Canvas) -> This is the centerpiece, visually representing the 14-week schedule. It's more intuitive than a static table for understanding task sequencing and overlaps. Tooltips on hover provide quick details.
-        - Risks & Dependencies -> Inform -> Styled Callout Sections (HTML/CSS) -> Uses distinct visual styling to draw attention to critical information requiring client action and awareness, separating it from the main project plan.
-        - Financials -> Inform -> Structured Table (HTML/CSS) -> A clear, well-formatted table presents the final budget, breaking down costs into development and support retainers for full transparency.
-    -->
+    <title>Panel del Proyecto: Observatorio de Prensa Redactor 24h</title>
+    <!-- Chosen Palette: Slate & Indigo Serenity -->
+    <!-- Application Structure Plan: He diseñado la aplicación como un panel de control de una sola página, dividido en secciones temáticas lógicas para una navegación intuitiva. La estructura fluye desde una visión general de alto nivel (Misión, Valor), hacia los detalles técnicos (Metodología, Categorías), luego al plan de ejecución (Alcance del MVP, Planificación y Costos) y finalmente a la estrategia a largo plazo (Monetización, Ética). Esta arquitectura, en lugar de imitar la de un informe, permite al usuario asimilar la información compleja de manera progresiva y controlada. Las interacciones clave incluyen elementos expandibles para la metodología, tarjetas interactivas para las categorías y un gráfico dinámico para los costos, diseñados para fomentar la exploración y facilitar la comprensión. -->
+    <!-- Visualization & Content Choices:
+        - Misión y Valor: Meta -> Informar. Presentación -> Tarjetas de alto impacto con texto conciso. Interacción -> Estática. Justificación -> Captar la atención y comunicar rápidamente el propósito central del proyecto.
+        - Metodología del Sistema: Meta -> Organizar/Explicar. Presentación -> Diagrama de flujo horizontal interactivo (HTML/CSS). Interacción -> Clic en cada paso para expandir y revelar detalles técnicos. Justificación -> Visualiza un proceso complejo de forma clara y permite la profundización opcional, evitando la sobrecarga de información.
+        - Categorías de Análisis: Meta -> Informar/Comparar. Presentación -> Grid de tarjetas interactivas. Interacción -> Clic para voltear la tarjeta y ver los indicadores lingüísticos. Justificación -> Presenta las 8 categorías de forma atractiva y memorable, facilitando el aprendizaje.
+        - Costos del MVP: Meta -> Comparar/Informar. Presentación -> Gráfico de Donut (Chart.js) y tarjetas de datos. Interacción -> Hover sobre el gráfico para ver detalles. Justificación -> Desglosa el presupuesto de forma visual e inmediata, haciendo los datos financieros más accesibles.
+        - Modelo de Monetización: Meta -> Organizar. Presentación -> Grid de tarjetas con iconos. Interacción -> Estática. Justificación -> Muestra las diversas vías de ingresos de forma clara y escaneable. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-    <title>Plan de Proyecto Interactivo: Wweefeel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
       body {
         font-family: "Inter", sans-serif;
         background-color: #f8fafc; /* slate-50 */
-        color: #334155; /* slate-700 */
+        color: #1e293b; /* slate-800 */
       }
-      .task-card {
-        transition: all 0.3s ease-in-out;
-        cursor: pointer;
+
+      .card {
+        /* bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden; */
+        background-color: #ffffff; /* white */
+        border-radius: 0.75rem; /* rounded-xl */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+        transition: box-shadow 0.3s ease-in-out;
       }
-      .task-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
-          0 4px 6px -4px rgb(0 0 0 / 0.1);
-      }
-      .task-details {
+      .flow-step-details {
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.5s ease-in-out;
+        transition: max-height 0.6s ease-in-out, padding-top 0.6s ease-in-out,
+          margin-top 0.6s ease-in-out, opacity 0.5s ease-in-out;
+        opacity: 0;
       }
-      .task-card.open .task-details {
-        max-height: 1000px; /* Large enough to fit content */
+      .flow-step.active .flow-step-details {
+        max-height: 500px;
+        opacity: 1;
       }
-      .chart-container {
+      .flip-card {
+        perspective: 1000px;
+      }
+      .flip-card-inner {
         position: relative;
         width: 100%;
-        max-width: 1200px;
-        margin-left: auto;
-        margin-right: auto;
-        height: 500px;
-        max-height: 70vh;
+        height: 100%;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+      }
+      .flip-card:hover .flip-card-inner {
+        transform: rotateY(180deg);
+      }
+      .flip-card-front,
+      .flip-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 1.5rem;
+      }
+      .flip-card-back {
+        transform: rotateY(180deg);
+      }
+
+      .tag-Tendencioso {
+        background-color: #fee2e2;
+        color: #b91c1c;
+        border-color: #fca5a5;
+      }
+      .tag-Correcto {
+        background-color: #d1fae5;
+        color: #065f46;
+        border-color: #6ee7b7;
+      }
+      .tag-Impreciso {
+        background-color: #fef3c7;
+        color: #92400e;
+        border-color: #fcd34d;
+      }
+      .tag-Emocional {
+        background-color: #e0e7ff;
+        color: #3730a3;
+        border-color: #a5b4fc;
+      }
+      .tag-Sensacionalista {
+        background-color: #fce7f3;
+        color: #9d174d;
+        border-color: #f9a8d4;
+      }
+      .tag-Opinativo {
+        background-color: #e0f2fe;
+        color: #075985;
+        border-color: #7dd3fc;
+      }
+      .tag-Verificable {
+        background-color: #f0fdf4;
+        color: #166534;
+        border-color: #86efac;
+      }
+      .tag-Propagandistico {
+        background-color: #ede9fe;
+        color: #5b21b6;
+        border-color: #c4b5fd;
       }
     </style>
   </head>
   <body class="antialiased">
     <header
-      class="bg-white/90 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200"
+      class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200"
     >
       <nav
         class="container mx-auto px-6 py-4 flex justify-between items-center"
       >
-        <h1 class="text-2xl font-extrabold text-blue-600">Wweefeel</h1>
-        <ul
-          class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600"
-        >
-          <li>
-            <a href="#resumen" class="hover:text-blue-600 transition-colors"
-              >Resumen</a
-            >
-          </li>
-          <li>
-            <a href="#tareas" class="hover:text-blue-600 transition-colors"
-              >Plan de Trabajo</a
-            >
-          </li>
-          <li>
-            <a href="#cronograma" class="hover:text-blue-600 transition-colors"
-              >Cronograma</a
-            >
-          </li>
-          <li>
-            <a href="#costos" class="hover:text-blue-600 transition-colors"
-              >Presupuesto</a
-            >
-          </li>
-        </ul>
+        <a href="#" class="text-xl font-bold text-slate-800">
+          <span class="text-indigo-600">O</span>bservatorio de Prensa
+        </a>
+        <div class="hidden md:flex space-x-8 text-sm font-semibold">
+          <a
+            href="#vision"
+            class="text-slate-600 hover:text-indigo-600 transition-colors"
+            >Visión</a
+          >
+          <a
+            href="#metodologia"
+            class="text-slate-600 hover:text-indigo-600 transition-colors"
+            >Metodología</a
+          >
+          <a
+            href="#mvp"
+            class="text-slate-600 hover:text-indigo-600 transition-colors"
+            >MVP</a
+          >
+          <a
+            href="#costos"
+            class="text-slate-600 hover:text-indigo-600 transition-colors"
+            >Costos</a
+          >
+          <a
+            href="#etica"
+            class="text-slate-600 hover:text-indigo-600 transition-colors"
+            >Ética</a
+          >
+        </div>
       </nav>
     </header>
 
-    <main class="container mx-auto px-6 py-12 md:py-20">
-      <!-- SECCIÓN 1: RESUMEN DEL PROYECTO -->
-      <section id="resumen" class="mb-20 md:mb-28 text-center">
-        <h2 class="text-4xl md:text-5xl font-extrabold text-slate-800 mb-4">
-          Plan de Proyecto: Evolución a Wweefeel
-        </h2>
-        <p class="text-lg text-slate-500 max-w-3xl mx-auto mb-12">
-          Una hoja de ruta interactiva que detalla el alcance, los plazos y las
-          tareas clave para la transformación de la plataforma y su lanzamiento
-          en el ecosistema Apple.
-        </p>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-          <div
-            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm"
+    <main>
+      <!-- Hero Section -->
+      <section class="py-20 bg-white">
+        <div class="container mx-auto px-6 text-center">
+          <h1
+            class="text-4xl md:text-6xl font-extrabold text-slate-900 leading-tight"
           >
-            <p class="text-sm font-medium text-slate-500">Fecha de Inicio</p>
-            <p class="text-2xl font-bold text-slate-800 mt-1">23/06/2025</p>
-          </div>
-          <div
-            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm"
+            Proyecto <span class="text-indigo-600">Observatorio de Prensa</span>
+          </h1>
+          <p class="mt-4 text-lg md:text-xl text-slate-600 max-w-3xl mx-auto">
+            Una propuesta para fortalecer la credibilidad periodística y
+            empoderar al público a través de la IA y el análisis transparente de
+            noticias.
+          </p>
+          <a
+            href="#vision"
+            class="mt-8 inline-block bg-indigo-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-indigo-700 transition-all transform hover:scale-105"
           >
-            <p class="text-sm font-medium text-slate-500">
-              Duración Estimada (Dev)
-            </p>
-            <p class="text-2xl font-bold text-slate-800 mt-1">14 Semanas</p>
-          </div>
-          <div
-            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm"
-          >
-            <p class="text-sm font-medium text-slate-500">
-              Horas Totales (Plan + Bolsa)
-            </p>
-            <p class="text-2xl font-bold text-slate-800 mt-1">378 hrs</p>
-          </div>
-          <div
-            class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm"
-          >
-            <p class="text-sm font-medium text-slate-500">
-              Costo Total Estimado
-            </p>
-            <p class="text-2xl font-bold text-slate-800 mt-1">264.6 UF</p>
-          </div>
+            Explorar el Proyecto
+          </a>
         </div>
       </section>
 
-      <!-- SECCIÓN 2: PLAN DE TRABAJO -->
-      <section id="tareas" class="mb-20 md:mb-28">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">
-            Plan de Trabajo Interactivo
+      <!-- Vision y Valor -->
+      <section id="vision" class="py-16 md:py-24">
+        <div class="container mx-auto px-6">
+          <h2 class="text-3xl font-extrabold text-slate-800 text-center">
+            Visión y Propuesta de Valor
           </h2>
-          <p class="text-lg text-slate-500 max-w-3xl mx-auto">
-            Haz clic en cada fase para explorar las tareas, descripciones
-            técnicas y dependencias.
+          <p class="mt-2 text-lg text-slate-600 text-center max-w-2xl mx-auto">
+            Fomentar un ecosistema de información fiable, fortaleciendo la
+            confianza del público y la integridad periodística.
           </p>
-        </div>
-        <div id="task-container" class="space-y-6">
-          <!-- Las tareas se generarán aquí con JavaScript -->
-        </div>
-      </section>
-
-      <!-- SECCIÓN 3: CRONOGRAMA VISUAL -->
-      <section id="cronograma" class="mb-20 md:mb-28">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">
-            Carta Gantt del Proyecto
-          </h2>
-          <p class="text-lg text-slate-500 max-w-3xl mx-auto">
-            Una visualización del cronograma de 14 semanas. Pasa el cursor sobre
-            las barras para ver los detalles de cada tarea.
-          </p>
-        </div>
-        <div
-          class="bg-white p-4 sm:p-6 md:p-8 rounded-xl border border-slate-200 shadow-lg"
-        >
-          <div class="chart-container">
-            <canvas id="ganttChart"></canvas>
-          </div>
-        </div>
-        <p
-          class="text-xs text-center text-amber-700 bg-amber-100 p-3 rounded-md mt-8 max-w-3xl mx-auto"
-        >
-          <strong>Nota Importante:</strong> El cronograma de desarrollo finaliza
-          en la semana 14 con el envío a Apple. La fase de "Soporte de Revisión"
-          es un período de espera y trabajo variable de 30 a 60 días que
-          comienza después de esta fecha.
-        </p>
-      </section>
-
-      <!-- SECCIÓN 4: COSTOS Y PRESUPUESTO -->
-      <section id="costos" class="mb-20 md:mb-28">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">
-            Estimación Financiera Definitiva
-          </h2>
-          <p class="text-lg text-slate-500 max-w-3xl mx-auto">
-            Un resumen cuantitativo del presupuesto, el modelo de pagos y los
-            costos asociados al proyecto.
-          </p>
-        </div>
-        <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
-          <div
-            class="bg-white p-8 rounded-xl border border-slate-200 shadow-lg"
-          >
-            <h3 class="font-bold text-lg text-slate-800 mb-4">
-              Presupuesto del Proyecto
-            </h3>
-            <div class="text-center mb-6">
-              <p class="text-sm text-slate-500">
-                Tarifa: <strong>0.7 UF por Hora</strong> (UF = $39,000 CLP)
-              </p>
-              <p class="text-sm text-slate-500">
-                Valor Hora: <strong>$27,300 CLP</strong>
+          <div class="mt-12 grid md:grid-cols-3 gap-8">
+            <div class="card p-8 text-center">
+              <div class="text-4xl text-indigo-500 mb-4">🎯</div>
+              <h3 class="text-xl font-bold text-slate-800 mb-2">
+                Para Redactor 24h
+              </h3>
+              <p class="text-slate-600 text-sm">
+                Fortalecer la credibilidad y posicionarse como líder en
+                innovación y transparencia mediática, optimizando el monitoreo
+                del panorama de medios.
               </p>
             </div>
-            <div class="space-y-4">
-              <div class="bg-slate-50 p-4 rounded-lg">
-                <h5 class="font-semibold text-slate-700">
-                  Costo Desarrollo Planificado (278h)
-                </h5>
-                <p class="text-lg font-bold text-blue-600 mt-1">194.6 UF</p>
-                <p class="text-sm text-slate-500">(aprox. $7.590.000 CLP)</p>
-              </div>
-              <div class="bg-slate-50 p-4 rounded-lg">
-                <h5 class="font-semibold text-slate-700">
-                  Bolsa de Horas de Soporte (100h)
-                </h5>
-                <p class="text-lg font-bold text-blue-600 mt-1">70 UF</p>
-                <p class="text-sm text-slate-500">(aprox. $2.730.000 CLP)</p>
-              </div>
+            <div class="card p-8 text-center">
+              <div class="text-4xl text-indigo-500 mb-4">👥</div>
+              <h3 class="text-xl font-bold text-slate-800 mb-2">
+                Para el Público
+              </h3>
+              <p class="text-slate-600 text-sm">
+                Empoderar a la audiencia con herramientas para discernir la
+                calidad y el sesgo de la información, fomentando la
+                alfabetización mediática.
+              </p>
+            </div>
+            <div class="card p-8 text-center">
+              <div class="text-4xl text-indigo-500 mb-4">🌐</div>
+              <h3 class="text-xl font-bold text-slate-800 mb-2">
+                Para el Ecosistema
+              </h3>
+              <p class="text-slate-600 text-sm">
+                Contribuir a un entorno informativo más ético y confiable,
+                promoviendo estándares internacionales de probidad y combatiendo
+                la desinformación.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Metodología -->
+      <section id="metodologia" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-6">
+          <h2 class="text-3xl font-extrabold text-slate-800 text-center">
+            Metodología del Sistema
+          </h2>
+          <p class="mt-2 text-lg text-slate-600 text-center max-w-2xl mx-auto">
+            Un flujo de trabajo automatizado y continuo, desde la captura de la
+            noticia hasta su publicación analizada en el portal interactivo.
+          </p>
+          <div class="mt-12">
+            <div class="relative">
+              <!-- Connecting line -->
               <div
-                class="bg-blue-100 p-4 rounded-lg border-t-4 border-blue-500"
-              >
-                <h5 class="font-bold text-slate-800">Costo Total Estimado</h5>
-                <p class="text-xl font-extrabold text-blue-700 mt-1">
-                  264.6 UF
-                </p>
-                <p class="text-sm text-slate-600">(aprox. $10.320.000 CLP)</p>
+                class="absolute top-1/2 left-0 w-full h-0.5 bg-slate-200 -translate-y-1/2"
+              ></div>
+              <!-- Steps -->
+              <div class="relative grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="flow-step text-center cursor-pointer" data-step="1">
+                  <div class="relative flex flex-col items-center">
+                    <div
+                      class="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold border-4 border-white shadow-lg"
+                    >
+                      1
+                    </div>
+                    <h4 class="mt-4 font-bold text-slate-700">
+                      Ingesta de Datos
+                    </h4>
+                  </div>
+                  <div class="flow-step-details pt-4 mt-4">
+                    <div class="bg-indigo-50 p-4 rounded-lg text-left">
+                      <h5 class="font-bold text-indigo-800">Funcionalidad:</h5>
+                      <p class="text-xs text-slate-600 mt-1">
+                        Extracción continua y automática de noticias desde
+                        múltiples fuentes web (web scraping) y APIs.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="flow-step text-center cursor-pointer" data-step="2">
+                  <div class="relative flex flex-col items-center">
+                    <div
+                      class="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold border-4 border-white shadow-lg"
+                    >
+                      2
+                    </div>
+                    <h4 class="mt-4 font-bold text-slate-700">
+                      Motor de Análisis IA
+                    </h4>
+                  </div>
+                  <div class="flow-step-details pt-4 mt-4">
+                    <div class="bg-indigo-50 p-4 rounded-lg text-left">
+                      <h5 class="font-bold text-indigo-800">Funcionalidad:</h5>
+                      <p class="text-xs text-slate-600 mt-1">
+                        Uso de LLMs (GPT-4o, Gemini) para clasificar sesgo,
+                        tono, sentimiento y generar justificaciones explicables
+                        (XAI).
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="flow-step text-center cursor-pointer" data-step="3">
+                  <div class="relative flex flex-col items-center">
+                    <div
+                      class="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold border-4 border-white shadow-lg"
+                    >
+                      3
+                    </div>
+                    <h4 class="mt-4 font-bold text-slate-700">Base de Datos</h4>
+                  </div>
+                  <div class="flow-step-details pt-4 mt-4">
+                    <div class="bg-indigo-50 p-4 rounded-lg text-left">
+                      <h5 class="font-bold text-indigo-800">Funcionalidad:</h5>
+                      <p class="text-xs text-slate-600 mt-1">
+                        Almacenamiento centralizado y optimizado de noticias,
+                        metadatos y resultados del análisis para consultas
+                        rápidas.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="flow-step text-center cursor-pointer" data-step="4">
+                  <div class="relative flex flex-col items-center">
+                    <div
+                      class="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold border-4 border-white shadow-lg"
+                    >
+                      4
+                    </div>
+                    <h4 class="mt-4 font-bold text-slate-700">
+                      Portal Interactivo
+                    </h4>
+                  </div>
+                  <div class="flow-step-details pt-4 mt-4">
+                    <div class="bg-indigo-50 p-4 rounded-lg text-left">
+                      <h5 class="font-bold text-indigo-800">Funcionalidad:</h5>
+                      <p class="text-xs text-slate-600 mt-1">
+                        Interfaz pública que muestra los análisis,
+                        clasificaciones y justificaciones con filtros y vistas
+                        detalladas.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div
-            class="bg-white p-8 rounded-xl border border-slate-200 shadow-lg"
-          >
-            <h3 class="font-bold text-lg text-slate-800 mb-4">
-              Acuerdos de Trabajo y Pagos
+
+          <div class="mt-16">
+            <h3 class="text-2xl font-bold text-slate-800 text-center mb-8">
+              Categorías de Análisis
             </h3>
-            <ul class="space-y-4">
-              <li class="flex items-start">
-                <span class="text-green-500 mr-4 mt-1 text-xl">&#9658;</span>
-                <div>
-                  <h4 class="font-semibold text-slate-700">Metodología Ágil</h4>
-                  <p class="text-sm text-slate-600">
-                    Trabajo en ciclos semanales con entregables y seguimiento
-                    continuo para asegurar la alineación y flexibilidad.
-                  </p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+              <div class="flip-card h-48 md:h-56">
+                <div class="flip-card-inner card">
+                  <div class="flip-card-front tag-Tendencioso border-2">
+                    <h4 class="text-lg font-bold">Tendencioso</h4>
+                  </div>
+                  <div class="flip-card-back tag-Tendencioso">
+                    <p class="text-xs text-center font-semibold">
+                      Uso de lenguaje cargado, selección de hechos, omisión de
+                      perspectivas.
+                    </p>
+                  </div>
                 </div>
-              </li>
-              <li class="flex items-start">
-                <span class="text-green-500 mr-4 mt-1 text-xl">&#9658;</span>
+              </div>
+              <div class="flip-card h-48 md:h-56">
+                <div class="flip-card-inner card">
+                  <div class="flip-card-front tag-Correcto border-2">
+                    <h4 class="text-lg font-bold">Correcto</h4>
+                  </div>
+                  <div class="flip-card-back tag-Correcto">
+                    <p class="text-xs text-center font-semibold">
+                      Lenguaje neutral, basado en hechos, con fuentes
+                      verificables y tono imparcial.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="flip-card h-48 md:h-56">
+                <div class="flip-card-inner card">
+                  <div class="flip-card-front tag-Impreciso border-2">
+                    <h4 class="text-lg font-bold">Impreciso</h4>
+                  </div>
+                  <div class="flip-card-back tag-Impreciso">
+                    <p class="text-xs text-center font-semibold">
+                      Uso de ambigüedades, exageraciones, falta de detalles o
+                      fuentes no verificables.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="flip-card h-48 md:h-56">
+                <div class="flip-card-inner card">
+                  <div class="flip-card-front tag-Emocional border-2">
+                    <h4 class="text-lg font-bold">Emocional</h4>
+                  </div>
+                  <div class="flip-card-back tag-Emocional">
+                    <p class="text-xs text-center font-semibold">
+                      Diseñado para evocar respuestas fuertes con lenguaje
+                      afectivo y sensacionalista.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="flip-card h-48 md:h-56">
+                <div class="flip-card-inner card">
+                  <div class="flip-card-front tag-Sensacionalista border-2">
+                    <h4 class="text-lg font-bold">Sensacionalista</h4>
+                  </div>
+                  <div class="flip-card-back tag-Sensacionalista">
+                    <p class="text-xs text-center font-semibold">
+                      Hipérbole, descripciones dramáticas y titulares llamativos
+                      para captar la atención.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="flip-card h-48 md:h-56">
+                <div class="flip-card-inner card">
+                  <div class="flip-card-front tag-Opinativo border-2">
+                    <h4 class="text-lg font-bold">Opinativo</h4>
+                  </div>
+                  <div class="flip-card-back tag-Opinativo">
+                    <p class="text-xs text-center font-semibold">
+                      Expresa un punto de vista subjetivo en lugar de informar
+                      hechos de forma neutral.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="flip-card h-48 md:h-56">
+                <div class="flip-card-inner card">
+                  <div class="flip-card-front tag-Verificable border-2">
+                    <h4 class="text-lg font-bold">Verificable</h4>
+                  </div>
+                  <div class="flip-card-back tag-Verificable">
+                    <p class="text-xs text-center font-semibold">
+                      Contiene información corroborable con fuentes creíbles y
+                      rastreables.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="flip-card h-48 md:h-56">
+                <div class="flip-card-inner card">
+                  <div class="flip-card-front tag-Propagandistico border-2">
+                    <h4 class="text-lg font-bold">Propagandístico</h4>
+                  </div>
+                  <div class="flip-card-back tag-Propagandistico">
+                    <p class="text-xs text-center font-semibold">
+                      Intención deliberada de manipular la opinión con mensajes
+                      sesgados o emocionales.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MVP -->
+      <section id="mvp" class="py-16 md:py-24">
+        <div class="container mx-auto px-6">
+          <h2 class="text-3xl font-extrabold text-slate-800 text-center">
+            Producto Mínimo Viable (MVP)
+          </h2>
+          <p class="mt-2 text-lg text-slate-600 text-center max-w-2xl mx-auto">
+            Un lanzamiento enfocado y rápido (1-2 meses) para validar el
+            concepto central y obtener retroalimentación temprana.
+          </p>
+          <div class="mt-12 grid md:grid-cols-2 gap-8">
+            <div class="card p-8 border-t-4 border-green-500">
+              <h3 class="text-2xl font-bold text-slate-800 mb-4">
+                ✅ En el MVP
+              </h3>
+              <ul class="space-y-3 text-slate-600">
+                <li class="flex items-start">
+                  <span class="text-green-500 mr-3 mt-1">✓</span
+                  ><span
+                    >Ingesta de <strong>1-2 fuentes</strong> de noticias
+                    pre-seleccionadas.</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <span class="text-green-500 mr-3 mt-1">✓</span
+                  ><span
+                    >Análisis de
+                    <strong>3-4 categorías principales</strong> (ej.
+                    Tendencioso, Correcto).</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <span class="text-green-500 mr-3 mt-1">✓</span
+                  ><span
+                    >Uso de LLM vía API para clasificación y
+                    <strong>justificación básica</strong>.</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <span class="text-green-500 mr-3 mt-1">✓</span
+                  ><span
+                    >Portal web funcional con
+                    <strong>feed de noticias y filtros básicos</strong>.</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <span class="text-green-500 mr-3 mt-1">✓</span
+                  ><span
+                    >Proceso de <strong>validación humana manual</strong> por el
+                    equipo interno.</span
+                  >
+                </li>
+              </ul>
+            </div>
+            <div class="card p-8 border-t-4 border-red-500">
+              <h3 class="text-2xl font-bold text-slate-800 mb-4">
+                ❌ Fuera del MVP
+              </h3>
+              <ul class="space-y-3 text-slate-600">
+                <li class="flex items-start">
+                  <span class="text-red-500 mr-3 mt-1">✗</span
+                  ><span
+                    >Visualizaciones avanzadas (gráficos de tendencias, nubes de
+                    palabras).</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <span class="text-red-500 mr-3 mt-1">✗</span
+                  ><span>Buscador de texto completo en el portal.</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="text-red-500 mr-3 mt-1">✗</span
+                  ><span
+                    >Integración con redes sociales o análisis de
+                    comentarios.</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <span class="text-red-500 mr-3 mt-1">✗</span
+                  ><span
+                    >Implementación de todas las categorías granulares.</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <span class="text-red-500 mr-3 mt-1">✗</span
+                  ><span
+                    >Ajuste fino de modelos de IA o herramientas de anotación
+                    dedicadas.</span
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Planificación y Costos -->
+      <section id="costos" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-6">
+          <h2 class="text-3xl font-extrabold text-slate-800 text-center">
+            Planificación y Costos del MVP
+          </h2>
+          <p class="mt-2 text-lg text-slate-600 text-center max-w-2xl mx-auto">
+            Un plan de ejecución ágil de 1 a 2 meses con una estructura de
+            costos transparente, ajustada a la realidad chilena.
+          </p>
+          <div class="mt-12 grid lg:grid-cols-5 gap-8 items-center">
+            <div class="lg:col-span-2 card p-8">
+              <h3 class="text-2xl font-bold text-slate-800 mb-4">
+                Plan de Desarrollo (1-2 Meses)
+              </h3>
+              <div class="space-y-4">
                 <div>
-                  <h4 class="font-semibold text-slate-700">
-                    Entregables Semanales
+                  <h4 class="font-semibold text-indigo-700">
+                    Mes 1: Core y Datos
                   </h4>
                   <p class="text-sm text-slate-600">
-                    Informe de avance y planificación cada
-                    <strong>lunes a las 12:00 PM (hora de Chile)</strong>.
+                    Configuración, diseño de prompts, desarrollo de ingesta de
+                    datos y lógica de IA.
                   </p>
                 </div>
-              </li>
-              <li class="flex items-start">
-                <span class="text-green-500 mr-4 mt-1 text-xl">&#9658;</span>
-                <div>
-                  <h4 class="font-semibold text-slate-700">Modelo de Pagos</h4>
+                <div class="pt-4 border-t border-slate-200">
+                  <h4 class="font-semibold text-indigo-700">
+                    Mes 2: Portal y Lanzamiento
+                  </h4>
                   <p class="text-sm text-slate-600">
-                    Pagos semanales correspondientes a 20 horas de trabajo.
-                    <br /><strong>Costo Semanal: 14 UF</strong> (aprox. $546,000
-                    CLP).
+                    Desarrollo del frontend, pruebas de integración, ajustes y
+                    despliegue del MVP.
                   </p>
                 </div>
-              </li>
-              <li class="flex items-start">
-                <span class="text-green-500 mr-4 mt-1 text-xl">&#9658;</span>
+              </div>
+            </div>
+            <div class="lg:col-span-3 card p-8">
+              <h3 class="text-2xl font-bold text-slate-800 mb-4 text-center">
+                Costos de Desarrollo del MVP
+              </h3>
+              <div class="grid md:grid-cols-2 gap-6 items-center">
+                <div class="chart-container relative h-64 md:h-auto">
+                  <canvas id="costChart"></canvas>
+                </div>
                 <div>
-                  <h4 class="font-semibold text-slate-700">Costos Externos</h4>
-                  <p class="text-sm text-slate-600">
-                    La membresía de
-                    <strong>Apple Developer ($99 USD/año)</strong> es un costo
-                    directo a cargo del cliente.
+                  <p
+                    class="text-center font-bold text-3xl text-indigo-600 mb-2"
+                  >
+                    $7.9M - $10.6M
                   </p>
+                  <p class="text-center text-sm text-slate-500 mb-4">
+                    Rango de costo total estimado (CLP)
+                  </p>
+                  <div id="chart-legend" class="text-xs space-y-1"></div>
                 </div>
-              </li>
-            </ul>
+              </div>
+            </div>
+          </div>
+          <div class="mt-8">
+            <h3 class="text-2xl font-bold text-slate-800 text-center mb-8">
+              Costos Operativos Mensuales (Post-MVP)
+            </h3>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div class="bg-slate-100 p-6 rounded-lg text-center">
+                <h4 class="font-bold text-slate-700">Inferencia IA</h4>
+                <p class="text-3xl font-extrabold text-indigo-600 mt-2">~$19</p>
+                <p class="text-xs text-slate-500">USD/mes (15,000 noticias)</p>
+              </div>
+              <div class="bg-slate-100 p-6 rounded-lg text-center">
+                <h4 class="font-bold text-slate-700">Infraestructura</h4>
+                <p class="text-3xl font-extrabold text-indigo-600 mt-2">
+                  $170-530
+                </p>
+                <p class="text-xs text-slate-500">USD/mes (Cloud Hosting)</p>
+              </div>
+              <div class="bg-slate-100 p-6 rounded-lg text-center">
+                <h4 class="font-bold text-slate-700">Anotación Humana</h4>
+                <p class="text-3xl font-extrabold text-indigo-600 mt-2">
+                  $200-600
+                </p>
+                <p class="text-xs text-slate-500">
+                  USD/mes (Validación Externa)
+                </p>
+              </div>
+              <div class="bg-slate-100 p-6 rounded-lg text-center">
+                <h4 class="font-bold text-slate-700">Mantenimiento</h4>
+                <p class="text-3xl font-extrabold text-indigo-600 mt-2">
+                  $100-300
+                </p>
+                <p class="text-xs text-slate-500">
+                  USD/mes (Soporte y Parches)
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- SECCIÓN 5: RIESGOS Y DEPENDENCIAS -->
-      <section id="riesgos" class="mb-16">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-4">
-            Riesgos y Dependencias
-          </h2>
-          <p class="text-lg text-slate-500 max-w-3xl mx-auto">
-            Identificación de factores críticos para el éxito del proyecto.
-          </p>
-        </div>
-        <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
-          <div class="bg-amber-50 border-l-4 border-amber-400 p-8 rounded-r-lg">
-            <h3 class="font-bold text-lg text-amber-800 mb-4">
-              Gestión de Riesgos: Revisión de Apple
-            </h3>
-            <p class="text-sm text-slate-600 mb-4">
-              Esta es la fase más impredecible. La estrategia es mitigar los
-              riesgos mediante una preparación exhaustiva y un plan de acción
-              claro.
-            </p>
-            <h4 class="font-semibold text-slate-700 mb-2 text-sm">
-              Puntos de Foco de Apple:
-            </h4>
-            <ul
-              class="text-sm space-y-2 text-slate-600 list-disc list-inside mb-4"
-            >
-              <li>
-                <span class="font-bold">Privacidad (Guideline 5.1):</span> Uso
-                de cámara, ubicación, etc.
-              </li>
-              <li>
-                <span class="font-bold">Contenido de Usuario (UGC):</span>
-                Sistemas de moderación.
-              </li>
-              <li>
-                <span class="font-bold">Diseño y Rendimiento:</span> Calidad de
-                la UX/UI.
-              </li>
-            </ul>
-            <h4 class="font-semibold text-slate-700 mb-2 text-sm">
-              Nuestro Plan de Acción:
-            </h4>
-            <ul class="text-sm space-y-2 text-slate-600 list-disc list-inside">
-              <li>
-                <span class="font-bold">Bolsa de Horas de Soporte (100h):</span>
-                Amplio margen para implementar correcciones de forma ágil.
-              </li>
-              <li>
-                <span class="font-bold">Comunicación Transparente:</span>
-                Informes constantes sobre el estado de la revisión.
-              </li>
-            </ul>
-          </div>
-          <div class="bg-blue-50 border-l-4 border-blue-500 p-8 rounded-r-lg">
-            <h3 class="font-bold text-lg text-blue-800 mb-4">
-              Dependencias Críticas del Cliente
-            </h3>
-            <p class="text-sm text-slate-600 mb-4">
-              El cumplimiento del cronograma depende de la provisión oportuna de
-              los siguientes elementos:
-            </p>
-            <ul class="text-sm space-y-2 text-slate-600 list-disc list-inside">
-              <li>Manual de Marca "Wweefeel" aprobado.</li>
-              <li>Textos legales y de marketing finalizados.</li>
-              <li>Accesos a consolas de App Store y Google Play.</li>
-              <li>Definición de políticas de datos y moderación.</li>
-            </ul>
+      <!-- Ética y Monetización -->
+      <section id="etica" class="py-16 md:py-24">
+        <div class="container mx-auto px-6">
+          <div class="grid lg:grid-cols-2 gap-16">
+            <div>
+              <h2 class="text-3xl font-extrabold text-slate-800 mb-4">
+                Ética y Transparencia
+              </h2>
+              <p class="text-slate-600 mb-6">
+                El compromiso con la ética es el pilar del Observatorio. Se
+                implementarán salvaguardas rigurosas para asegurar la equidad y
+                la confianza.
+              </p>
+              <div class="space-y-4">
+                <div class="bg-white p-4 rounded-lg shadow-sm">
+                  <h4 class="font-semibold text-indigo-700">
+                    Mitigación de Sesgo Algorítmico
+                  </h4>
+                  <p class="text-sm text-slate-600 mt-1">
+                    Uso de datasets diversos, auditorías periódicas y
+                    herramientas como AI Fairness 360 para identificar y
+                    corregir sesgos en los modelos de IA.
+                  </p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm">
+                  <h4 class="font-semibold text-indigo-700">
+                    Supervisión "Human-in-the-Loop"
+                  </h4>
+                  <p class="text-sm text-slate-600 mt-1">
+                    Periodistas y expertos revisarán y corregirán continuamente
+                    las clasificaciones de la IA, asegurando la precisión y
+                    refinando los modelos.
+                  </p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm">
+                  <h4 class="font-semibold text-indigo-700">
+                    IA Explicable (XAI)
+                  </h4>
+                  <p class="text-sm text-slate-600 mt-1">
+                    Todas las clasificaciones irán acompañadas de una
+                    justificación clara y comprensible, haciendo el proceso de
+                    análisis totalmente transparente para el usuario.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h2 class="text-3xl font-extrabold text-slate-800 mb-4">
+                Modelo de Monetización
+              </h2>
+              <p class="text-slate-600 mb-6">
+                Se proponen múltiples vías de ingreso para asegurar la
+                sostenibilidad y crecimiento del proyecto a largo plazo.
+              </p>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white p-4 rounded-lg shadow-sm text-center">
+                  🛡️
+                  <h4 class="font-semibold mt-1">Suscripciones Premium</h4>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm text-center">
+                  ⚙️
+                  <h4 class="font-semibold mt-1">Licenciamiento API/Datos</h4>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm text-center">
+                  📈
+                  <h4 class="font-semibold mt-1">Consultoría y Auditorías</h4>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm text-center">
+                  �
+                  <h4 class="font-semibold mt-1">Patrocinios y Subvenciones</h4>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
     </main>
 
-    <footer class="bg-slate-800 text-slate-400 mt-16">
+    <footer class="bg-slate-800 text-slate-400">
       <div class="container mx-auto px-6 py-8 text-center text-sm">
-        <p>Plan de Proyecto Interactivo para Wweefeel &copy; 2025</p>
+        <p>
+          &copy; 2025 Observatorio de Prensa Redactor 24h. Un proyecto para un
+          futuro informativo más fiable.
+        </p>
       </div>
     </footer>
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        // --- DATA ---
-        const projectStartDate = new Date("2025-06-23T00:00:00");
-        const tasks = [
-          {
-            phase: "Fase 1: Rebranding y Diseño (Semanas 1-7)",
-            color: "rgba(59, 130, 246, 0.7)", // blue-500
-            items: [
-              {
-                name: "1.1 Cambio de Nombre (24h)",
-                weeks: [1, 2],
-                description:
-                  'Refactorización transversal del código y la documentación para reflejar el nuevo nombre "Wweefeel".',
-                dependency: "Confirmación final del nombre.",
-              },
-              {
-                name: "1.2 Diseño Gráfico (40h)",
-                weeks: [1, 2],
-                description:
-                  "Creación de logo, iconos, screenshots y banners promocionales para la nueva marca.",
-                dependency: "Aprobación del manual de marca.",
-              },
-              {
-                name: "1.3 Aplicación Nuevo Diseño (90h)",
-                weeks: [3, 7],
-                description:
-                  "Refactorización profunda de la UI/UX en Flutter para alinear la app con la nueva identidad visual.",
-                dependency: "Entrega del diseño completo (ej. en Figma).",
-              },
-            ],
-          },
-          {
-            phase:
-              "Fase 2: Desarrollo de Requisitos y Moderación (Semanas 4-11)",
-            color: "rgba(234, 88, 12, 0.7)", // orange-600
-            items: [
-              {
-                name: "2.1 Sign in with Apple (32h)",
-                weeks: [4, 6],
-                description:
-                  "Desarrollo full-stack de la funcionalidad de login con Apple, un requisito obligatorio de la App Store.",
-                dependency: "Cuenta de Apple Developer activa.",
-              },
-              {
-                name: "2.2 Eliminación de Cuenta (45h)",
-                weeks: [6, 8],
-                description:
-                  "Implementación de un flujo seguro para que los usuarios puedan eliminar su cuenta y datos personales.",
-                dependency:
-                  "Aprobación de la política de eliminación de datos.",
-              },
-              {
-                name: "2.3 Sistema de Moderación (77h)",
-                weeks: [8, 11],
-                description:
-                  "Creación de herramientas para que los usuarios denuncien contenido y los administradores lo gestionen.",
-                dependency: "Definición de políticas de moderación.",
-              },
-            ],
-          },
-          {
-            phase: "Fase 3: Configuración y Publicación (Semanas 12-14)",
-            color: "rgba(22, 163, 74, 0.7)", // green-600
-            items: [
-              {
-                name: "3.1 Configuración Tiendas (12h)",
-                weeks: [12, 12],
-                description:
-                  "Llenado de metadatos (textos, imágenes, políticas) en App Store Connect y Google Play Console.",
-                dependency: "Textos y políticas de privacidad finalizados.",
-              },
-              {
-                name: "3.2 Permisos (iOS) (6h)",
-                weeks: [12, 12],
-                description:
-                  "Declaración y justificación de todos los permisos que la app requiere en el archivo info.plist.",
-                dependency: "Listado final de permisos de la app.",
-              },
-              {
-                name: "3.3 QA y Pruebas Finales (40h)",
-                weeks: [13, 14],
-                description:
-                  "Pruebas de regresión completas para asegurar la estabilidad y calidad de la versión final.",
-                dependency: "Finalización del desarrollo.",
-              },
-              {
-                name: "Envío a Apple (2h)",
-                weeks: [14.5, 14.5],
-                description:
-                  "Compilación y envío formal de la app al equipo de revisión de Apple.",
-                dependency: "Aprobación final del cliente.",
-              },
-            ],
-          },
-        ];
-
-        // --- RENDER TASKS ---
-        const taskContainer = document.getElementById("task-container");
-        tasks.forEach((phase) => {
-          const phaseElement = document.createElement("div");
-          phaseElement.className =
-            "task-card bg-white p-6 rounded-xl border border-slate-200 shadow-md";
-
-          let itemsHtml = phase.items
-            .map(
-              (item) => `
-            <div class="py-4 border-b border-slate-100 last:border-b-0">
-                <h4 class="font-semibold text-slate-800">${item.name}</h4>
-                <div class="task-details">
-                    <p class="text-sm text-slate-600 mt-2">${item.description}</p>
-                    <p class="text-xs text-blue-600 bg-blue-50 p-2 rounded-md mt-3"><strong>Dependencia:</strong> ${item.dependency}</p>
-                </div>
-            </div>
-        `
-            )
-            .join("");
-
-          phaseElement.innerHTML = `
-            <div class="flex justify-between items-center">
-                <h3 class="text-xl font-bold text-slate-900">${phase.phase}</h3>
-                <span class="transform transition-transform duration-300 text-2xl text-slate-400">&#9662;</span>
-            </div>
-            <div class="task-details-wrapper mt-4">${itemsHtml}</div>
-        `;
-
-          taskContainer.appendChild(phaseElement);
-        });
-
-        // --- INTERACTIVITY ---
-        document.querySelectorAll(".task-card").forEach((card) => {
-          card.addEventListener("click", () => {
-            const wrapper = card.querySelector(".task-details-wrapper");
-            const items = wrapper.querySelectorAll(".task-details");
-            const arrow = card.querySelector("span");
-
-            card.classList.toggle("open");
-            if (card.classList.contains("open")) {
-              items.forEach(
-                (item) => (item.style.maxHeight = item.scrollHeight + "px")
-              );
-              arrow.style.transform = "rotate(180deg)";
-            } else {
-              items.forEach((item) => (item.style.maxHeight = "0"));
-              arrow.style.transform = "rotate(0deg)";
+        // Flow step interaction
+        const flowSteps = document.querySelectorAll(".flow-step");
+        flowSteps.forEach((step) => {
+          step.addEventListener("click", () => {
+            const alreadyActive = step.classList.contains("active");
+            flowSteps.forEach((s) => s.classList.remove("active"));
+            if (!alreadyActive) {
+              step.classList.add("active");
             }
           });
         });
 
-        // --- GANTT CHART ---
-        const ganttCtx = document.getElementById("ganttChart").getContext("2d");
-
-        const addDays = (date, days) => {
-          const result = new Date(date);
-          result.setDate(result.getDate() + days);
-          return result;
-        };
-
-        const chartData = {
-          labels: tasks.flatMap((phase) =>
-            phase.items.map((item) => item.name)
-          ),
+        // Cost Chart
+        const ctx = document.getElementById("costChart").getContext("2d");
+        const legendContainer = document.getElementById("chart-legend");
+        const data = {
+          labels: [
+            "Frontend",
+            "Backend",
+            "Ingesta de Datos",
+            "Ingeniería IA/PLN",
+            "QA y Pruebas",
+          ],
           datasets: [
             {
-              data: tasks.flatMap((phase) =>
-                phase.items.map((item) => {
-                  const startWeek = item.weeks[0];
-                  const endWeek = item.weeks[1];
-                  const startDate = addDays(
-                    projectStartDate,
-                    (startWeek - 1) * 7
-                  );
-                  const endDate = addDays(projectStartDate, endWeek * 7);
-                  return [startDate, endDate];
-                })
-              ),
-              backgroundColor: tasks.flatMap((phase) =>
-                Array(phase.items.length).fill(phase.color)
-              ),
-              borderColor: tasks.flatMap((phase) =>
-                Array(phase.items.length).fill(phase.color.replace("0.7", "1"))
-              ),
-              borderWidth: 1,
-              barPercentage: 0.6,
-              categoryPercentage: 0.8,
-              borderSkipped: false,
-              borderRadius: 4,
+              label: "Costo Estimado (CLP)",
+              data: [2730000, 1092000, 1365000, 2730000, 1365000], // Using mid-point of ranges
+              backgroundColor: [
+                "#4f46e5", // Indigo 600
+                "#6366f1", // Indigo 500
+                "#818cf8", // Indigo 400
+                "#a5b4fc", // Indigo 300
+                "#c7d2fe", // Indigo 200
+              ],
+              borderColor: "#f8fafc",
+              borderWidth: 2,
+              hoverOffset: 8,
             },
           ],
         };
 
-        new Chart(ganttCtx, {
-          type: "bar",
-          data: chartData,
+        const costChart = new Chart(ctx, {
+          type: "doughnut",
+          data: data,
           options: {
-            indexAxis: "y",
             responsive: true,
             maintainAspectRatio: false,
+            cutout: "65%",
             plugins: {
               legend: {
                 display: false,
@@ -572,47 +783,39 @@
               tooltip: {
                 callbacks: {
                   label: function (context) {
-                    const item = tasks.flatMap((p) => p.items)[
-                      context.dataIndex
-                    ];
-                    const start = item.weeks[0];
-                    const end = item.weeks[1];
-                    if (start >= end) {
-                      return `Semana ${Math.floor(start)}`;
+                    let label = context.label || "";
+                    if (label) {
+                      label += ": ";
                     }
-                    return `Semanas ${start} a ${end}`;
+                    if (context.parsed !== null) {
+                      label += new Intl.NumberFormat("es-CL", {
+                        style: "currency",
+                        currency: "CLP",
+                      }).format(context.parsed);
+                    }
+                    return label;
                   },
-                },
-              },
-            },
-            scales: {
-              x: {
-                type: "time",
-                time: {
-                  unit: "week",
-                  tooltipFormat: "MMM d, yyyy",
-                  displayFormats: {
-                    week: "MMM d",
-                  },
-                },
-                min: projectStartDate,
-                max: addDays(projectStartDate, 14 * 7),
-                position: "top",
-                title: {
-                  display: true,
-                  text: "Cronograma del Proyecto (Semanas)",
-                },
-                grid: {
-                  color: "rgba(203, 213, 225, 0.5)",
-                },
-              },
-              y: {
-                grid: {
-                  display: false,
                 },
               },
             },
           },
+        });
+
+        // Custom Legend
+        data.labels.forEach((label, i) => {
+          const color = data.datasets[0].backgroundColor[i];
+          const value = data.datasets[0].data[i];
+          const legendItem = document.createElement("div");
+          legendItem.className = "flex items-center";
+          legendItem.innerHTML = `
+                    <div class="w-3 h-3 rounded-full mr-2" style="background-color: ${color}"></div>
+                    <span>${label}: ${new Intl.NumberFormat("es-CL", {
+            style: "currency",
+            currency: "CLP",
+            maximumFractionDigits: 0,
+          }).format(value)}</span>
+                `;
+          legendContainer.appendChild(legendItem);
         });
       });
     </script>
