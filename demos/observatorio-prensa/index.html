@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portal del Observatorio de Prensa</title>
+    <!-- Chosen Palette: Slate & Indigo Serenity -->
+    <!-- Application Structure Plan: He diseñado el portal como un feed de noticias central, permitiendo al usuario una exploración lineal, pero con potentes filtros para la navegación temática. La estructura incluye un encabezado fijo con el logo y un buscador simple, seguido de una barra de filtros de categorías. El contenido principal es un grid responsivo de tarjetas de noticias. Cada tarjeta es interactiva, expandiéndose para revelar detalles adicionales de la clasificación. Esta estructura facilita la exploración rápida y la inmersión en los detalles según el interés del usuario. -->
+    <!-- Visualization & Content Choices: 
+        - Noticias: Meta -> Informar/Explorar. Presentación -> Tarjetas compactas en un grid. Interacción -> Clic para expandir y ver la justificación de la IA y el link original. Justificación -> Permite una visión general rápida y la profundización selectiva, optimizando el espacio.
+        - Filtrado de Categorías: Meta -> Organizar/Comparar. Presentación -> Botones de filtro. Interacción -> Cambia las noticias mostradas en el feed. Justificación -> Facilita la segmentación del contenido según el interés del usuario en un tipo de sesgo o probidad específico.
+        - Etiquetas de Categoría: Meta -> Informar rápidamente. Presentación -> Chips de color distintivo en cada tarjeta. Interacción -> Visual. Justificación -> Permite una identificación instantánea del tipo de clasificación de la noticia.
+        - Gráficos: No se incluyen gráficos en esta maqueta de portal para mantener el enfoque en la navegación y el consumo de noticias individuales, priorizando la claridad y la accesibilidad directa al contenido noticioso. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8fafc; /* slate-50 */
+        color: #1e293b; /* slate-800 */
+      }
+      .tag {
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        white-space: nowrap;
+      }
+      .tag-Tendencioso {
+        background-color: #fee2e2;
+        color: #b91c1c;
+      } /* Red-200 / Red-700 */
+      .tag-Correcto {
+        background-color: #d1fae5;
+        color: #065f46;
+      } /* Green-200 / Green-700 */
+      .tag-Impreciso {
+        background-color: #fef3c7;
+        color: #92400e;
+      } /* Amber-200 / Amber-700 */
+      .tag-Emocional {
+        background-color: #e0e7ff;
+        color: #3730a3;
+      } /* Indigo-200 / Indigo-700 */
+      .tag-Sensacionalista {
+        background-color: #fce7f3;
+        color: #9d174d;
+      } /* Pink-200 / Pink-700 */
+      .tag-Opinativo {
+        background-color: #e0f2fe;
+        color: #075985;
+      } /* Cyan-200 / Cyan-700 */
+      .tag-Verificable {
+        background-color: #f0fdf4;
+        color: #166534;
+      } /* Lime-200 / Lime-700 */
+      .tag-Propagandistico {
+        background-color: #ede9fe;
+        color: #5b21b6;
+      } /* Violet-200 / Violet-700 */
+
+      .news-card .details {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.6s ease-out, padding-top 0.6s ease-out,
+          margin-top 0.6s ease-out, opacity 0.5s ease-out;
+        opacity: 0;
+      }
+      .news-card.active .details {
+        max-height: 1000px; /* Suficientemente grande para cualquier contenido */
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <header
+      class="bg-white/90 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200 shadow-sm"
+    >
+      <div
+        class="container mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4"
+      >
+        <a href="#" class="text-2xl font-bold text-slate-800 flex-shrink-0">
+          <span class="text-indigo-600">O</span>bservatorio de Prensa
+        </a>
+        <div class="relative w-full md:w-auto md:flex-grow max-w-xl">
+          <input
+            type="text"
+            placeholder="Buscar noticias..."
+            class="w-full pl-10 pr-4 py-2 rounded-full border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
+          />
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+            >&#128269;</span
+          >
+          <!-- Magnifying glass icon -->
+        </div>
+        <nav class="hidden md:flex space-x-6 text-sm font-medium">
+          <a
+            href="#"
+            class="text-slate-600 hover:text-indigo-600 transition-colors"
+            >Inicio</a
+          >
+          <a
+            href="#"
+            class="text-slate-600 hover:text-indigo-600 transition-colors"
+            >Acerca de</a
+          >
+          <a
+            href="#"
+            class="text-slate-600 hover:text-indigo-600 transition-colors"
+            >Contacto</a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 md:py-12">
+      <section id="filters" class="mb-8 md:mb-12">
+        <h2
+          class="text-xl md:text-2xl font-bold text-slate-800 mb-4 text-center"
+        >
+          Filtrar por Clasificación
+        </h2>
+        <div
+          id="filter-buttons"
+          class="flex flex-wrap justify-center gap-2 md:gap-3"
+        >
+          <button
+            data-filter="all"
+            class="filter-btn bg-indigo-600 text-white font-semibold py-2 px-4 rounded-full shadow-md transition-all hover:bg-indigo-700 active:scale-95"
+          >
+            Todas
+          </button>
+        </div>
+      </section>
+
+      <section
+        id="news-grid"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+      >
+        <!-- News cards will be rendered here by JavaScript -->
+      </section>
+
+      <section id="no-results" class="hidden text-center py-16">
+        <p class="text-slate-500 text-lg">
+          No se encontraron noticias con la clasificación seleccionada.
+        </p>
+      </section>
+    </main>
+
+    <footer class="bg-slate-800 text-white py-10 mt-16">
+      <div class="container mx-auto px-6 text-center text-slate-400 text-sm">
+        <p>
+          &copy; 2025 Observatorio de Prensa Redactor 24h. Todos los derechos
+          reservados.
+        </p>
+        <p class="mt-2">
+          Fomentando la transparencia y la alfabetización mediática.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const categories = [
+          { id: "Tendencioso", name: "Tendencioso", class: "tag-Tendencioso" },
+          { id: "Correcto", name: "Correcto", class: "tag-Correcto" },
+          { id: "Impreciso", name: "Impreciso", class: "tag-Impreciso" },
+          { id: "Emocional", name: "Emocional", class: "tag-Emocional" },
+          {
+            id: "Sensacionalista",
+            name: "Sensacionalista",
+            class: "tag-Sensacionalista",
+          },
+          { id: "Opinativo", name: "Opinativo", class: "tag-Opinativo" },
+          { id: "Verificable", name: "Verificable", class: "tag-Verificable" },
+          {
+            id: "Propagandistico",
+            name: "Propagandístico",
+            class: "tag-Propagandistico",
+          },
+        ];
+
+        const newsData = [
+          {
+            id: 1,
+            title:
+              "Gobierno anuncia paquete de medidas para impulsar la economía local",
+            extract:
+              "El Ministerio de Economía presentó un plan de incentivos fiscales y subsidios para pequeñas empresas, buscando reactivar el mercado interno en el próximo trimestre.",
+            category: "Correcto",
+            classificationReason:
+              "El anuncio se basa en un comunicado oficial y los detalles son verificables. El tono es informativo y neutral.",
+            originalLink: "#",
+            date: "2025-06-18",
+            tags: ["economía", "gobierno", "fiscal"],
+          },
+          {
+            id: 2,
+            title:
+              "¡Crisis sin precedentes! La nueva política de tráfico paraliza la ciudad",
+            extract:
+              'Cientos de conductores expresan su indignación ante las nuevas regulaciones de tráfico, calificándolas de "arbitrarias" y "abusivas", generando un caos vial en las principales arterias.',
+            category: "Emocional",
+            classificationReason:
+              'Uso de lenguaje hiperbólico y palabras como "crisis", "indignación", "caos" para provocar una reacción emocional, en lugar de un análisis objetivo.',
+            originalLink: "#",
+            date: "2025-06-17",
+            tags: ["tráfico", "polémica", "ciudad"],
+          },
+          {
+            id: 3,
+            title:
+              "Fuentes cercanas sugieren cambios drásticos en la cúpula ministerial",
+            extract:
+              "Rumores en los pasillos del poder apuntan a una inminente reestructuración del gabinete. Aunque no hay confirmación oficial, se especula con la salida de al menos tres ministros clave.",
+            category: "Impreciso",
+            classificationReason:
+              'Basado en "fuentes cercanas" y "rumores", sin datos verificables o citas directas que respalden las afirmaciones. Uso de lenguaje vago como "podrían" o "se especula".',
+            originalLink: "#",
+            date: "2025-06-16",
+            tags: ["política", "gobierno", "rumores"],
+          },
+          {
+            id: 4,
+            title:
+              "El plan de desarrollo urbano: una catástrofe social orquestada por las élites",
+            extract:
+              "El proyecto urbanístico propuesto no es más que una excusa para el desalojo de familias y el enriquecimiento de los poderosos. Ignora las necesidades de los ciudadanos y destruye el tejido social.",
+            category: "Tendencioso",
+            classificationReason:
+              'Presenta el plan desde una perspectiva negativa y predeterminada, utilizando lenguaje cargado como "catástrofe", "orquestada", y "élite", y omitiendo posibles beneficios o puntos de vista alternativos.',
+            originalLink: "#",
+            date: "2025-06-15",
+            tags: ["urbanismo", "crítica", "social"],
+          },
+          {
+            id: 5,
+            title:
+              "Impactante revelación científica: el secreto del universo al alcance de la humanidad",
+            extract:
+              "Un equipo de investigación ha descubierto algo tan sorprendente que podría revolucionar nuestra comprensión de la física. Las implicaciones son inmensas, desde nuevas fuentes de energía hasta viajes estelares.",
+            category: "Sensacionalista",
+            classificationReason:
+              'Titular y extracto con palabras grandilocuentes y promesas exageradas ("Impactante", "secreto del universo", "revolucionar") que buscan impactar más que informar con precisión.',
+            originalLink: "#",
+            date: "2025-06-14",
+            tags: ["ciencia", "descubrimiento", "futuro"],
+          },
+          {
+            id: 6,
+            title:
+              "Mi visión sobre la necesidad de una reforma educativa integral en nuestro país",
+            extract:
+              "En mi opinión, es imperativo que el sistema educativo se adapte a los desafíos del siglo XXI. Considero que las actuales metodologías son obsoletas y es hora de un cambio profundo y audaz.",
+            category: "Opinativo",
+            classificationReason:
+              'Claramente expresa un punto de vista subjetivo ("Mi visión", "En mi opinión", "Considero que") en lugar de presentar hechos de forma neutral. Típico de una columna de opinión.',
+            originalLink: "#",
+            date: "2025-06-13",
+            tags: ["educación", "opinión", "reforma"],
+          },
+          {
+            id: 7,
+            title:
+              "Informe del INE revela crecimiento del PIB del 2.3% en el primer trimestre de 2025",
+            extract:
+              'Según el informe "Perspectivas Económicas" del Instituto Nacional de Estadística, la economía nacional experimentó un crecimiento del 2.3% en el primer trimestre, impulsado por el sector servicios.',
+            category: "Verificable",
+            classificationReason:
+              "Proporciona datos específicos de una fuente oficial (INE) y el informe es públicamente accesible, permitiendo la verificación de los hechos presentados.",
+            originalLink: "#",
+            date: "2025-06-12",
+            tags: ["economía", "estadísticas", "INE"],
+          },
+          {
+            id: 8,
+            title:
+              "La única vía para la prosperidad: el plan de nuestro partido es la salvación nacional",
+            extract:
+              "Nuestro líder ha presentado la hoja de ruta definitiva para sacar al país de la crisis. Cualquier otra propuesta es un camino hacia el desastre, impulsado por fuerzas oscuras que buscan el caos.",
+            category: "Propagandistico",
+            classificationReason:
+              'Mensaje con un tono excesivamente persuasivo y excluyente ("la única vía", "salvación", "fuerzas oscuras"). Busca manipular la opinión y desacreditar alternativas sin base factual.',
+            originalLink: "#",
+            date: "2025-06-11",
+            tags: ["política", "partido", "propaganda"],
+          },
+          {
+            id: 9,
+            title:
+              "Ministro de Salud presenta plan para fortalecer la atención primaria en zonas rurales",
+            extract:
+              "El Ministro de Salud anunció hoy una inversión de 50 millones de dólares para mejorar infraestructuras y personal médico en centros de atención primaria, beneficiando a 200 comunidades rurales.",
+            category: "Correcto",
+            classificationReason:
+              "Anuncio basado en cifras y hechos concretos presentados por una autoridad oficial, con detalles específicos del plan y sus beneficiarios. Tono informativo.",
+            originalLink: "#",
+            date: "2025-06-10",
+            tags: ["salud", "gobierno", "rural"],
+          },
+          {
+            id: 10,
+            title:
+              "¡Alerta máxima! Nuevo virus amenaza con devastar la población mundial",
+            extract:
+              "Expertos advierten sobre una cepa viral emergente que podría tener consecuencias catastróficas. La humanidad se enfrenta a su mayor desafío. ¡Prepárense para lo peor!",
+            category: "Sensacionalista",
+            classificationReason:
+              'Usa lenguaje alarmista y apocalíptico ("Alerta máxima", "devastar", "catastróficas", "lo peor") para generar pánico y clics, sin proporcionar información matizada o verificada.',
+            originalLink: "#",
+            date: "2025-06-09",
+            tags: ["salud", "virus", "pandemia"],
+          },
+          {
+            id: 11,
+            title:
+              "Se dice que un famoso empresario podría estar involucrado en un escándalo financiero",
+            extract:
+              "Rumores persistentes en los círculos financieros sugieren que un prominente empresario está bajo investigación por presuntas irregularidades, aunque no hay confirmación ni detalles oficiales.",
+            category: "Impreciso",
+            classificationReason:
+              'Se basa en "rumores persistentes" y "se dice", careciendo de fuentes claras o evidencia sólida. Utiliza el condicional ("podría") para especular sin afirmar directamente.',
+            originalLink: "#",
+            date: "2025-06-08",
+            tags: ["negocios", "escándalo", "finanzas"],
+          },
+          {
+            id: 12,
+            title:
+              "El verdadero rostro de la oposición: sabotaje y desesperación ante el progreso",
+            extract:
+              "La agenda de la oposición es clara: obstaculizar cualquier avance y sembrar el caos para su beneficio político. Sus tácticas son una muestra de desesperación ante el éxito del actual gobierno.",
+            category: "Tendencioso",
+            classificationReason:
+              'Ataca directamente a la oposición con acusaciones no fundamentadas ("sabotaje", "desesperación", "sembrar el caos") y un claro sesgo político a favor del partido o ideología del medio.',
+            originalLink: "#",
+            date: "2025-06-07",
+            tags: ["política", "oposición", "sesgo"],
+          },
+          {
+            id: 13,
+            title:
+              "Por qué la inversión en energías renovables es el futuro que necesitamos",
+            extract:
+              "Argumento que el momento para una transición energética masiva es ahora. Creo que los beneficios ambientales y económicos superan con creces los desafíos iniciales.",
+            category: "Opinativo",
+            classificationReason:
+              'Claramente un artículo de opinión que defiende una postura específica ("Argumento que", "Creo que"). No pretende ser un informe neutral de hechos, sino un análisis con una conclusión predeterminada.',
+            originalLink: "#",
+            date: "2025-06-06",
+            tags: ["energía", "medioambiente", "futuro"],
+          },
+          {
+            id: 14,
+            title:
+              "Desmentidos oficiales sobre la escasez de alimentos en la capital",
+            extract:
+              "El Ministerio de Agricultura ha emitido un comunicado desmintiendo los rumores de desabastecimiento, asegurando que los mercados están abastecidos y la distribución es normal. Cifras oficiales respaldan esta declaración.",
+            category: "Verificable",
+            classificationReason:
+              "La información se contrasta directamente con declaraciones y cifras de una fuente oficial, desmintiendo rumores infundados y proporcionando un contraste directo entre la desinformación y los hechos verificados.",
+            originalLink: "#",
+            date: "2025-06-05",
+            tags: ["alimentos", "gobierno", "desmentido"],
+          },
+          {
+            id: 15,
+            title:
+              "La manipulación mediática detrás de las protestas estudiantiles",
+            extract:
+              "Detrás de las supuestas protestas espontáneas hay una operación de desestabilización orquestada por intereses ocultos, buscando sembrar el desorden y desacreditar a las autoridades universitarias.",
+            category: "Propagandistico",
+            classificationReason:
+              'Presenta una teoría conspirativa sin pruebas ("manipulación mediática", "intereses ocultos", "operación de desestabilización"). Intenta moldear la percepción del lector sobre un evento para favorecer una narrativa.',
+            originalLink: "#",
+            date: "2025-06-04",
+            tags: ["protesta", "universidad", "conspiración"],
+          },
+          {
+            id: 16,
+            title:
+              "El descubrimiento arqueológico que cambiará la historia antigua para siempre",
+            extract:
+              "Un equipo de arqueólogos ha desenterrado hallazgos enigmáticos que reescribirán la historia de una antigua civilización. Se espera que la revelación oficial cause un impacto mundial.",
+            category: "Sensacionalista",
+            classificationReason:
+              'Utiliza términos como "cambiará la historia para siempre" y "enigmáticos" para crear expectación y dramatismo, con un enfoque en el impacto "mundial" más que en los detalles académicos verificables.',
+            originalLink: "#",
+            date: "2025-06-03",
+            tags: ["arqueología", "historia", "misterio"],
+          },
+        ];
+
+        const newsGrid = document.getElementById("news-grid");
+        const filterButtonsContainer =
+          document.getElementById("filter-buttons");
+        const noResultsMessage = document.getElementById("no-results");
+
+        function renderFilterButtons() {
+          categories.forEach((cat) => {
+            const button = document.createElement("button");
+            button.dataset.filter = cat.id;
+            button.textContent = cat.name;
+            button.className = `filter-btn bg-white text-slate-700 border border-slate-300 font-semibold py-2 px-4 rounded-full shadow-sm transition-all hover:bg-slate-100 active:scale-95`;
+            filterButtonsContainer.appendChild(button);
+          });
+        }
+
+        function renderNews(filter = "all") {
+          newsGrid.innerHTML = "";
+          const filteredNews =
+            filter === "all"
+              ? newsData
+              : newsData.filter((item) => item.category === filter);
+
+          if (filteredNews.length === 0) {
+            noResultsMessage.classList.remove("hidden");
+            return;
+          } else {
+            noResultsMessage.classList.add("hidden");
+          }
+
+          filteredNews.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date descending
+
+          filteredNews.forEach((item) => {
+            const categoryInfo = categories.find((c) => c.id === item.category);
+            const card = document.createElement("div");
+            card.className =
+              "news-card bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden";
+            card.innerHTML = `
+                        <div class="p-5">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="tag ${categoryInfo.class}">${
+              categoryInfo.name
+            }</span>
+                                <span class="text-xs text-slate-500">${
+                                  item.date
+                                }</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-2">${
+                              item.title
+                            }</h3>
+                            <p class="text-slate-600 text-sm">${
+                              item.extract
+                            }</p>
+                            <div class="details pt-4 mt-4 border-t border-slate-200">
+                                <h4 class="font-semibold text-slate-800 text-sm mb-2">Razón de la Clasificación (IA):</h4>
+                                <p class="text-slate-700 text-sm">${
+                                  item.classificationReason
+                                }</p>
+                                <div class="flex flex-wrap gap-2 mt-4">
+                                    ${item.tags
+                                      .map(
+                                        (tag) =>
+                                          `<span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded">#${tag}</span>`
+                                      )
+                                      .join("")}
+                                </div>
+                                <a href="${
+                                  item.originalLink
+                                }" target="_blank" rel="noopener noreferrer" class="inline-block mt-4 text-indigo-600 hover:underline text-sm font-medium">Leer noticia original &rarr;</a>
+                            </div>
+                        </div>
+                    `;
+            card.addEventListener("click", () =>
+              card.classList.toggle("active")
+            );
+            newsGrid.appendChild(card);
+          });
+        }
+
+        function handleFilterClick(event) {
+          if (event.target.classList.contains("filter-btn")) {
+            const filter = event.target.dataset.filter;
+
+            document.querySelectorAll(".filter-btn").forEach((btn) => {
+              btn.classList.remove("bg-indigo-600", "text-white");
+              btn.classList.add(
+                "bg-white",
+                "text-slate-700",
+                "border-slate-300"
+              );
+            });
+            event.target.classList.add("bg-indigo-600", "text-white");
+            event.target.classList.remove(
+              "bg-white",
+              "text-slate-700",
+              "border-slate-300"
+            );
+
+            renderNews(filter);
+          }
+        }
+
+        filterButtonsContainer.addEventListener("click", handleFilterClick);
+
+        renderFilterButtons();
+        renderNews(); // Initial render of all news
+      });
+    </script>
+  </body>
+</html>

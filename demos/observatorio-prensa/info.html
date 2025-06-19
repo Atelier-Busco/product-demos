@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Observatorio de Prensa Redactor 24h</title>
+    <!-- Chosen Palette: Neutral Harmony -->
+    <!-- Application Structure Plan: He diseñado esta SPA como un panel de control narrativo. En lugar de seguir la estructura lineal del informe, la aplicación guía al usuario a través de un flujo lógico: comienza con la visión (el 'porqué'), pasa a la metodología y las categorías (el 'qué'), muestra una maqueta interactiva del portal (el 'cómo'), y concluye con la ética y el impacto. Esta estructura transforma una propuesta técnica en una historia explorable, haciendo que la información compleja sea más digerible y atractiva. Las interacciones clave, como las tarjetas expandibles y el filtrado de noticias, están diseñadas para fomentar la exploración activa en lugar del consumo pasivo. -->
+    <!-- Visualization & Content Choices: 
+        - Informe -> Visión General: Meta -> Informar. Presentación -> Sección de Héroe con texto conciso. Interacción -> Ninguna. Justificación -> Establecer el contexto de forma rápida y clara.
+        - Informe -> Sistema de Clasificación: Meta -> Organizar/Comparar. Presentación -> Tarjetas interactivas para cada categoría y un gráfico de barras principal (Chart.js). Interacción -> Clic en las tarjetas para expandir detalles; el gráfico de barras se actualiza con los filtros. Justificación -> Permite a los usuarios centrarse en una categoría a la vez mientras ven su lugar en el panorama general.
+        - Informe -> Portal Interactivo: Meta -> Explorar/Sintetizar. Presentación -> Una lista de noticias simuladas filtrable con vista de detalles. Interacción -> Filtrar por categoría, hacer clic para ver la justificación de la IA. Justificación -> Es la demostración más poderosa del producto final; simula la experiencia del usuario real.
+        - Informe -> Consideraciones Éticas: Meta -> Informar. Presentación -> Sección de acordeón. Interacción -> Clic para expandir. Justificación -> Presenta información densa de una manera no abrumadora.
+        - Librerías -> Chart.js para el gráfico de barras, ya que es basado en Canvas y altamente personalizable. El resto de las interacciones se manejan con Vanilla JS para mantener la ligereza y cumplir con las restricciones. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f5f5f4; /* stone-100 */
+        color: #292524; /* stone-800 */
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 300px;
+        max-height: 350px;
+      }
+      @media (min-width: 768px) {
+        .chart-container {
+          height: 350px;
+          max-height: 400px;
+        }
+      }
+      .tag {
+        background-color: #e7e5e4; /* stone-200 */
+        color: #57534e; /* stone-600 */
+      }
+      .tag.Tendencioso {
+        background-color: #fee2e2;
+        color: #991b1b;
+      } /* red */
+      .tag.Correcto {
+        background-color: #d1fae5;
+        color: #065f46;
+      } /* green */
+      .tag.Impreciso {
+        background-color: #fef3c7;
+        color: #92400e;
+      } /* amber */
+      .tag.Emocional {
+        background-color: #e0e7ff;
+        color: #3730a3;
+      } /* indigo */
+      .tag.Sensacionalista {
+        background-color: #fce7f3;
+        color: #9d174d;
+      } /* pink */
+      .tag.Opinativo {
+        background-color: #e0f2fe;
+        color: #075985;
+      } /* cyan */
+      .tag.Verificable {
+        background-color: #f0fdf4;
+        color: #166534;
+      } /* light green */
+      .tag.Propagandístico {
+        background-color: #fae8ff;
+        color: #701a75;
+      } /* fuchsia */
+
+      .category-card {
+        transition: all 0.3s ease-in-out;
+      }
+      .category-card .details {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+      }
+      .category-card.active .details {
+        max-height: 500px;
+      }
+      .news-item-details {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-out, padding 0.5s ease-out,
+          opacity 0.5s ease-out;
+        opacity: 0;
+      }
+      .news-item.active .news-item-details {
+        max-height: 1000px;
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+      <nav
+        class="container mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <h1 class="text-xl md:text-2xl font-bold text-stone-800">
+          <span class="text-blue-600">O</span>bservatorio de Prensa
+        </h1>
+        <div class="hidden md:flex space-x-6 text-sm font-medium">
+          <a
+            href="#vision"
+            class="text-stone-600 hover:text-blue-600 transition-colors"
+            >Visión</a
+          >
+          <a
+            href="#categorias"
+            class="text-stone-600 hover:text-blue-600 transition-colors"
+            >Categorías</a
+          >
+          <a
+            href="#portal"
+            class="text-stone-600 hover:text-blue-600 transition-colors"
+            >Portal Interactivo</a
+          >
+          <a
+            href="#etica"
+            class="text-stone-600 hover:text-blue-600 transition-colors"
+            >Ética</a
+          >
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section id="vision" class="py-16 md:py-24 text-center bg-white">
+        <div class="container mx-auto px-6">
+          <h2
+            class="text-3xl md:text-5xl font-bold tracking-tight text-stone-900"
+          >
+            Construyendo un Ecosistema de Información Transparente
+          </h2>
+          <p class="mt-6 max-w-3xl mx-auto text-lg md:text-xl text-stone-600">
+            El Observatorio de Prensa Redactor 24h es una iniciativa para
+            fortalecer la confianza pública en los medios. Usamos Inteligencia
+            Artificial para analizar la probidad de las noticias, empoderando a
+            la audiencia con herramientas para evaluar críticamente la
+            información y combatir la desinformación en el complejo panorama
+            mediático actual.
+          </p>
+        </div>
+      </section>
+
+      <section id="categorias" class="py-16 md:py-24">
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12">
+            <h3 class="text-3xl md:text-4xl font-bold text-stone-900">
+              El Sistema de Clasificación
+            </h3>
+            <p class="mt-4 max-w-2xl mx-auto text-lg text-stone-600">
+              Analizamos cada noticia a través de un sistema de categorías
+              multifacético que va más allá de la simple verificación de hechos.
+              Haz clic en cada categoría para entender sus matices y cómo la
+              identificamos.
+            </p>
+          </div>
+          <div
+            id="category-cards-container"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          ></div>
+        </div>
+      </section>
+
+      <section id="portal" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12">
+            <h3 class="text-3xl md:text-4xl font-bold text-stone-900">
+              El Portal Interactivo en Acción
+            </h3>
+            <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-600">
+              Así es como presentamos nuestros hallazgos. Esta maqueta
+              interactiva te permite explorar noticias simuladas, filtrarlas por
+              categoría y profundizar en la justificación detallada de nuestra
+              IA para cada clasificación.
+            </p>
+          </div>
+
+          <div class="mb-8">
+            <div class="chart-container">
+              <canvas id="newsDistributionChart"></canvas>
+            </div>
+          </div>
+
+          <div class="mb-8">
+            <div
+              id="filters-container"
+              class="flex flex-wrap justify-center gap-2"
+            >
+              <button
+                data-filter="all"
+                class="filter-btn bg-blue-600 text-white font-semibold py-2 px-4 rounded-full shadow-md transition-transform transform hover:scale-105"
+              >
+                Todas
+              </button>
+            </div>
+          </div>
+
+          <div id="news-feed" class="space-y-4 max-w-4xl mx-auto"></div>
+        </div>
+      </section>
+
+      <section id="etica" class="py-16 md:py-24">
+        <div class="container mx-auto px-6">
+          <div class="text-center mb-12">
+            <h3 class="text-3xl md:text-4xl font-bold text-stone-900">
+              Tecnología, Ética y Supervisión Humana
+            </h3>
+            <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-600">
+              Nuestro compromiso con la probidad se extiende a nuestras propias
+              herramientas. La IA es poderosa, pero la ética y el juicio humano
+              son irremplazables. A continuación, se detallan nuestros pilares
+              para un uso responsable de la tecnología.
+            </p>
+          </div>
+          <div class="max-w-3xl mx-auto space-y-4" id="ethics-container"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-stone-800 text-white py-8">
+      <div class="container mx-auto px-6 text-center text-stone-400 text-sm">
+        <p>
+          &copy; 2025 Observatorio de Prensa Redactor 24h. Un proyecto para
+          fomentar la transparencia y la alfabetización mediática.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const categoryData = [
+          {
+            id: "Tendencioso",
+            name: "Tendencioso",
+            color: "#991B1B",
+            bgColor: "#FEE2E2",
+            description:
+              "Presenta información sesgada hacia una perspectiva o agenda particular, usando lenguaje cargado o seleccionando hechos de forma parcial.",
+            indicators: [
+              "Lenguaje cargado",
+              "Encuadre específico",
+              "Omisión de hechos",
+              "Tono partidista",
+            ],
+          },
+          {
+            id: "Correcto",
+            name: "Correcto",
+            color: "#065F46",
+            bgColor: "#D1FAE5",
+            description:
+              "Información precisa, neutral y objetiva, basada en hechos rigurosamente verificables y presentada de forma justa.",
+            indicators: [
+              "Lenguaje neutral",
+              "Ausencia de subjetividad",
+              "Citas claras",
+              "Tono imparcial",
+            ],
+          },
+          {
+            id: "Impreciso",
+            name: "Impreciso",
+            color: "#92400E",
+            bgColor: "#FEF3C7",
+            description:
+              "Contenido que carece de exactitud, usa lenguaje vago o contiene información no verificada, aunque no sea completamente falso.",
+            indicators: [
+              "Terminología ambigua",
+              "Exageraciones",
+              "Falta de citas directas",
+              "Fuentes no verificables",
+            ],
+          },
+          {
+            id: "Emocional",
+            name: "Emocional",
+            color: "#3730A3",
+            bgColor: "#E0E7FF",
+            description:
+              "Contenido diseñado intencionadamente para evocar respuestas emocionales fuertes como miedo, indignación o alegría.",
+            indicators: [
+              "Lenguaje emotivo",
+              "Adjetivos sensacionalistas",
+              "Tono afectivo fuerte",
+              "Uso de exclamaciones",
+            ],
+          },
+          {
+            id: "Sensacionalista",
+            name: "Sensacionalista",
+            color: "#9D174D",
+            bgColor: "#FCE7F3",
+            description:
+              "Uso de lenguaje exagerado, dramático o imágenes vívidas para captar la atención, a menudo vinculado al clickbait.",
+            indicators: [
+              "Hipérbole",
+              "Descripciones vívidas",
+              "Vocabulario provocador",
+              "Titulares llamativos",
+            ],
+          },
+          {
+            id: "Opinativo",
+            name: "Opinativo",
+            color: "#075985",
+            bgColor: "#E0F2FE",
+            description:
+              "Expresa un punto de vista subjetivo en lugar de información puramente factual, como columnas de opinión o editoriales.",
+            indicators: [
+              'Marcadores de opinión (ej. "creo")',
+              "Lenguaje evaluativo",
+              "Encuadre subjetivo",
+              "Pronombres en primera persona",
+            ],
+          },
+          {
+            id: "Verificable",
+            name: "Verificable",
+            color: "#166534",
+            bgColor: "#F0FDF4",
+            description:
+              "Contiene información que puede ser corroborada a través de fuentes creíbles y rastreables.",
+            indicators: [
+              "Citas explícitas de fuentes",
+              "Nombres/organizaciones identificables",
+              "Enlaces externos válidos",
+              "Datos contrastables",
+            ],
+          },
+          {
+            id: "Propagandístico",
+            name: "Propagandístico",
+            color: "#701A75",
+            bgColor: "#FAE8FF",
+            description:
+              "Intención deliberada y sistemática de manipular la opinión pública para promover una agenda específica.",
+            indicators: [
+              "Mensajes repetitivos",
+              "Apelaciones a miedos/prejuicios",
+              "Demonización de oponentes",
+              "Omisión selectiva",
+            ],
+          },
+        ];
+
+        const newsData = [
+          {
+            id: 1,
+            title:
+              "Gobierno anuncia nuevo paquete de medidas económicas para el próximo trimestre",
+            category: "Correcto",
+            extract:
+              "El Ministerio de Economía detalló hoy un conjunto de 15 medidas fiscales y monetarias que entrarán en vigor a partir de julio, con el objetivo de controlar la inflación y estimular el empleo. Se incluyen ajustes en las tasas de interés y subsidios para pymes.",
+            tags: ["economía", "gobierno", "política fiscal"],
+          },
+          {
+            id: 2,
+            title:
+              "¡Caos total! La nueva ley de tráfico desata la furia de los conductores y paraliza la ciudad",
+            category: "Emocional",
+            extract:
+              'Una ola de indignación recorre la ciudad tras la implementación de la nueva ley de tráfico. Cientos de conductores, furiosos y frustrados, reportan multas "absurdas" y un sistema "punitivo" que solo busca recaudar. ¿Es este el fin de la conducción en la metrópolis?',
+            tags: ["tráfico", "polémica", "ciudad", "protesta"],
+          },
+          {
+            id: 3,
+            title:
+              "Fuentes cercanas sugieren que podría haber cambios importantes en el gabinete ministerial",
+            category: "Impreciso",
+            extract:
+              "Rumores en los pasillos del poder apuntan a una posible reorganización del gabinete. Aunque no hay confirmación oficial, se especula que al menos tres ministerios podrían cambiar de titular en las próximas semanas, según fuentes que pidieron no ser identificadas.",
+            tags: ["política", "rumores", "gobierno"],
+          },
+          {
+            id: 4,
+            title:
+              "El plan de desarrollo urbano es una amenaza directa a nuestros barrios y nuestro estilo de vida",
+            category: "Tendencioso",
+            extract:
+              'El llamado "plan de progreso" no es más que una estrategia para desplazar a las familias trabajadoras y beneficiar a las grandes constructoras. Este proyecto ignora las necesidades reales de los ciudadanos y prioriza el lucro sobre la comunidad, destruyendo el tejido social que hemos construido por décadas.',
+            tags: ["urbanismo", "crítica", "comunidad"],
+          },
+          {
+            id: 5,
+            title:
+              "El descubrimiento científico que podría cambiarlo TODO para siempre (y nadie te lo está contando)",
+            category: "Sensacionalista",
+            extract:
+              "Un equipo de científicos en un laboratorio remoto ha hecho un hallazgo tan revolucionario que podría reescribir los libros de historia. Las implicaciones son enormes, desde la energía infinita hasta la cura de enfermedades. ¿Por qué los grandes medios guardan silencio?",
+            tags: ["ciencia", "descubrimiento", "misterio"],
+          },
+          {
+            id: 6,
+            title:
+              "Por qué la nueva política cultural es un paso en la dirección correcta para el país",
+            category: "Opinativo",
+            extract:
+              "Desde mi perspectiva, la reciente inversión en cultura es una de las decisiones más acertadas de la última década. Fomentar el arte y la creatividad no es un gasto, sino una inversión en el alma de nuestra nación. Creo firmemente que veremos los frutos de esta política en los años venideros.",
+            tags: ["cultura", "opinión", "sociedad"],
+          },
+          {
+            id: 7,
+            title:
+              "Informe del Instituto Nacional de Estadística revela un aumento del 2.5% en el empleo formal",
+            category: "Verificable",
+            extract:
+              "Según el informe mensual publicado hoy por el Instituto Nacional de Estadística (INE), el empleo formal registró un crecimiento del 2.5% en el último trimestre. El documento, disponible en el sitio web del INE (informe N° 2025-06), detalla que los sectores de servicios y tecnología lideraron la creación de puestos.",
+            tags: ["empleo", "estadísticas", "INE"],
+          },
+          {
+            id: 8,
+            title:
+              "La única solución es nuestra propuesta: cualquier otra alternativa conduce al desastre nacional",
+            category: "Propagandístico",
+            extract:
+              "Durante semanas, hemos presentado nuestro plan como la única vía viable para la recuperación. Ignorar nuestra solución es ser cómplice del inminente colapso. Los ciudadanos deben entender que las fuerzas opositoras solo buscan sembrar el caos y la ruina para su propio beneficio.",
+            tags: ["política", "campaña", "discurso"],
+          },
+        ];
+
+        const ethicsData = [
+          {
+            title: 'Supervisión Humana "In-the-Loop"',
+            content:
+              "La IA es un asistente, no un reemplazo. Periodistas y expertos humanos supervisan, corrigen y retroalimentan constantemente los resultados de la IA, asegurando un sistema que aprende y mejora, manteniendo el juicio ético y la creatividad en el centro de nuestro trabajo.",
+          },
+          {
+            title: "Mitigación Activa del Sesgo Algorítmico",
+            content:
+              "Los modelos de IA pueden heredar sesgos de los datos con los que se entrenan. Para combatir esto, utilizamos conjuntos de datos diversos y equilibrados, realizamos auditorías periódicas y empleamos técnicas de IA Explicable (XAI) para diagnosticar y corregir sesgos, garantizando un análisis justo.",
+          },
+          {
+            title: "Transparencia y Rendición de Cuentas",
+            content:
+              "Revelamos de forma clara y abierta cuándo y cómo se utiliza la IA. Establecemos mecanismos de responsabilidad para cualquier error o sesgo, asegurando que nuestro proceso sea tan transparente como los resultados que publicamos.",
+          },
+        ];
+
+        const categoryCardsContainer = document.getElementById(
+          "category-cards-container"
+        );
+        const filtersContainer = document.getElementById("filters-container");
+        const newsFeed = document.getElementById("news-feed");
+        const ethicsContainer = document.getElementById("ethics-container");
+        let newsDistributionChart;
+
+        function renderCategories() {
+          categoryData.forEach((cat) => {
+            const card = document.createElement("div");
+            card.className = `category-card bg-white p-6 rounded-lg shadow-sm border-l-4 cursor-pointer`;
+            card.style.borderColor = cat.color;
+            card.innerHTML = `
+                        <h4 class="text-xl font-bold" style="color: ${
+                          cat.color
+                        };">${cat.name}</h4>
+                        <p class="text-stone-600 mt-2 text-sm">${
+                          cat.description
+                        }</p>
+                        <div class="details pt-4">
+                            <p class="font-semibold text-sm text-stone-700 mb-2">Indicadores Lingüísticos:</p>
+                            <ul class="list-disc list-inside text-sm text-stone-500 space-y-1">
+                                ${cat.indicators
+                                  .map((i) => `<li>${i}</li>`)
+                                  .join("")}
+                            </ul>
+                        </div>
+                    `;
+            card.addEventListener("click", () => {
+              const wasActive = card.classList.contains("active");
+              document
+                .querySelectorAll(".category-card")
+                .forEach((c) => c.classList.remove("active"));
+              if (!wasActive) {
+                card.classList.add("active");
+              }
+            });
+            categoryCardsContainer.appendChild(card);
+          });
+        }
+
+        function renderFilters() {
+          categoryData.forEach((cat) => {
+            const button = document.createElement("button");
+            button.dataset.filter = cat.id;
+            button.textContent = cat.name;
+            button.className =
+              "filter-btn bg-white font-semibold py-2 px-4 rounded-full shadow-sm transition-transform transform hover:scale-105 border";
+            filtersContainer.appendChild(button);
+          });
+        }
+
+        function renderNews(filter = "all") {
+          newsFeed.innerHTML = "";
+          const filteredNews =
+            filter === "all"
+              ? newsData
+              : newsData.filter((item) => item.category === filter);
+
+          if (filteredNews.length === 0) {
+            newsFeed.innerHTML = `<p class="text-center text-stone-500">No hay noticias para esta categoría.</p>`;
+            return;
+          }
+
+          filteredNews.forEach((item) => {
+            const catInfo = categoryData.find((c) => c.id === item.category);
+            const article = document.createElement("div");
+            article.className =
+              "news-item bg-white p-6 rounded-lg shadow-sm cursor-pointer transition-all duration-300";
+            article.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <h5 class="text-lg font-bold text-stone-800 flex-1 pr-4">${
+                              item.title
+                            }</h5>
+                            <span class="tag ${
+                              item.category
+                            } text-xs font-bold px-2 py-1 rounded-full whitespace-nowrap">${
+              item.category
+            }</span>
+                        </div>
+                        <p class="text-stone-600 mt-2 text-sm">${
+                          item.extract
+                        }</p>
+                        <div class="news-item-details pt-4 mt-4 border-t border-stone-200">
+                            <h6 class="font-bold text-sm text-stone-900">Justificación del Análisis (IA Explicable):</h6>
+                            <p class="text-sm text-stone-600 mt-2">La clasificación como <strong style="color:${
+                              catInfo.color
+                            };">${
+              item.category
+            }</strong> se basa en la identificación de varios indicadores clave. El sistema detectó un uso prominente de <strong>"${catInfo.indicators[0].toLowerCase()}"</strong> y <strong>"${catInfo.indicators[1].toLowerCase()}"</strong>. Además, se observó la presencia de <strong>"${catInfo.indicators[2].toLowerCase()}"</strong>, lo cual refuerza la clasificación. El tono general del artículo se alinea con las características de esta categoría, como se evidencia por <strong>"${catInfo.indicators[3].toLowerCase()}"</strong>.</p>
+                             <div class="mt-4 flex flex-wrap gap-2">
+                                ${item.tags
+                                  .map(
+                                    (t) =>
+                                      `<span class="text-xs font-medium bg-stone-100 text-stone-600 px-2 py-1 rounded">${t}</span>`
+                                  )
+                                  .join("")}
+                            </div>
+                            <a href="#" class="text-blue-600 text-sm font-semibold mt-4 inline-block hover:underline">Leer noticia original &rarr;</a>
+                        </div>
+                    `;
+
+            article.addEventListener("click", () => {
+              article.classList.toggle("active");
+            });
+            newsFeed.appendChild(article);
+          });
+        }
+
+        function renderEthics() {
+          ethicsData.forEach((item, index) => {
+            const div = document.createElement("div");
+            div.className = "bg-white rounded-lg shadow-sm overflow-hidden";
+            div.innerHTML = `
+                        <button class="w-full text-left p-4 flex justify-between items-center font-semibold text-stone-700 hover:bg-stone-50 transition-colors">
+                            <span>${item.title}</span>
+                            <span class="transform transition-transform duration-300">&#9662;</span>
+                        </button>
+                        <div class="details px-4 text-stone-600">
+                            <p class="pb-4">${item.content}</p>
+                        </div>
+                    `;
+            div.querySelector("button").addEventListener("click", (e) => {
+              const btn = e.currentTarget;
+              const parent = btn.parentElement;
+              parent.classList.toggle("active");
+              const icon = btn.querySelector("span:last-child");
+              icon.style.transform = parent.classList.contains("active")
+                ? "rotate(180deg)"
+                : "rotate(0deg)";
+            });
+            ethicsContainer.appendChild(div);
+          });
+        }
+
+        function updateChart(filter = "all") {
+          const categoryCounts = newsData.reduce((acc, item) => {
+            acc[item.category] = (acc[item.category] || 0) + 1;
+            return acc;
+          }, {});
+
+          const sortedCategories = Object.entries(categoryCounts)
+            .sort(([, a], [, b]) => b - a)
+            .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+
+          const labels = Object.keys(sortedCategories);
+          const data = Object.values(sortedCategories);
+
+          const backgroundColors = labels.map((label) => {
+            const cat = categoryData.find((c) => c.id === label);
+            const baseColor = cat ? cat.bgColor : "#E5E7EB";
+            return filter === "all" || filter === label ? baseColor : "#F3F4F6";
+          });
+
+          const borderColors = labels.map((label) => {
+            const cat = categoryData.find((c) => c.id === label);
+            const baseColor = cat ? cat.color : "#6B7280";
+            return filter === "all" || filter === label ? baseColor : "#D1D5DB";
+          });
+
+          if (newsDistributionChart) {
+            newsDistributionChart.data.datasets[0].backgroundColor =
+              backgroundColors;
+            newsDistributionChart.data.datasets[0].borderColor = borderColors;
+            newsDistributionChart.update();
+          } else {
+            const ctx = document
+              .getElementById("newsDistributionChart")
+              .getContext("2d");
+            newsDistributionChart = new Chart(ctx, {
+              type: "bar",
+              data: {
+                labels: labels.map((l) =>
+                  l.length > 16 ? l.substring(0, 15) + "..." : l
+                ),
+                datasets: [
+                  {
+                    label: "Distribución de Noticias (Simulado)",
+                    data: data,
+                    backgroundColor: backgroundColors,
+                    borderColor: borderColors,
+                    borderWidth: 2,
+                    borderRadius: 4,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: "y",
+                scales: {
+                  x: {
+                    beginAtZero: true,
+                    grid: {
+                      display: false,
+                    },
+                    ticks: {
+                      stepSize: 1,
+                    },
+                  },
+                  y: {
+                    grid: {
+                      display: false,
+                    },
+                  },
+                },
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                  tooltip: {
+                    enabled: true,
+                    backgroundColor: "#1F2937",
+                    titleFont: { size: 14, weight: "bold" },
+                    bodyFont: { size: 12 },
+                    callbacks: {
+                      title: function (context) {
+                        return labels[context[0].dataIndex];
+                      },
+                    },
+                  },
+                },
+              },
+            });
+          }
+        }
+
+        function handleFilterClick(e) {
+          if (e.target.classList.contains("filter-btn")) {
+            const filter = e.target.dataset.filter;
+
+            document.querySelectorAll(".filter-btn").forEach((btn) => {
+              btn.classList.remove("bg-blue-600", "text-white");
+              btn.classList.add("bg-white");
+            });
+
+            e.target.classList.add("bg-blue-600", "text-white");
+            e.target.classList.remove("bg-white");
+
+            renderNews(filter);
+            updateChart(filter);
+          }
+        }
+
+        filtersContainer.addEventListener("click", handleFilterClick);
+
+        renderCategories();
+        renderFilters();
+        renderNews();
+        renderEthics();
+        updateChart();
+      });
+    </script>
+  </body>
+</html>
