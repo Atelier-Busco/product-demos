@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      SeguimientoLegislativo.cl - Plataforma de Inteligencia Parlamentaria
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .gradient-bg {
+        background: linear-gradient(120deg, #1e3a8a 0%, #3b82f6 100%);
+      }
+      .section-title {
+        font-weight: 900;
+        font-size: 2.25rem; /* 36px */
+        line-height: 2.5rem; /* 40px */
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #111827;
+      }
+      .section-subtitle {
+        text-align: center;
+        font-size: 1.125rem; /* 18px */
+        color: #4b5563;
+        max-width: 48rem; /* 768px */
+        margin: 0 auto 4rem auto;
+      }
+      .cta-button {
+        display: inline-block;
+        padding: 0.75rem 2rem;
+        font-weight: 700;
+        color: white;
+        background-color: #2563eb;
+        border-radius: 0.5rem;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+      }
+      .cta-button:hover {
+        background-color: #1d4ed8;
+        transform: translateY(-2px);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Hero Section -->
+    <header class="gradient-bg text-white">
+      <div class="container mx-auto px-6 py-20 md:py-32 text-center">
+        <h1 class="text-4xl md:text-6xl font-black leading-tight mb-4">
+          SeguimientoLegislativo.cl
+        </h1>
+        <p class="text-lg md:text-2xl font-light mb-8 max-w-3xl mx-auto">
+          Anticipe riesgos regulatorios y detecte oportunidades con la
+          plataforma líder de inteligencia parlamentaria para Chile.
+        </p>
+        <a href="#preinscripcion" class="cta-button text-lg"
+          >Reserva tu prueba gratuita de 15 días</a
+        >
+      </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-16">
+      <!-- Qué es y Problema que resuelve -->
+      <section id="problema" class="mb-24">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+          <div class="prose prose-lg max-w-none">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">
+              ¿Qué es SeguimientoLegislativo.cl?
+            </h2>
+            <p class="text-gray-600">
+              Una plataforma en línea que concentra, organiza y presenta de
+              forma clara la actividad del Congreso chileno, desde la entrada de
+              un proyecto de ley hasta su aprobación o archivo, para que equipos
+              de Asuntos Públicos, Compliance, ONGs, estudios jurídicos y
+              periodistas puedan tomar decisiones más rápidas y mejor
+              fundamentadas.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">
+              El fin de la sobrecarga informativa
+            </h3>
+            <ul class="space-y-4">
+              <li class="flex items-start">
+                <svg
+                  class="w-6 h-6 text-blue-600 mr-3 mt-1 flex-shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+                <span class="text-gray-600"
+                  ><strong>Combate la sobrecarga:</strong> Sintetiza cientos de
+                  iniciativas y miles de documentos, ahorrando tiempo y recursos
+                  valiosos.</span
+                >
+              </li>
+              <li class="flex items-start">
+                <svg
+                  class="w-6 h-6 text-blue-600 mr-3 mt-1 flex-shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+                <span class="text-gray-600"
+                  ><strong>Centraliza fuentes dispersas:</strong> Unifica la
+                  información de distintos portales para una trazabilidad
+                  completa y sencilla.</span
+                >
+              </li>
+              <li class="flex items-start">
+                <svg
+                  class="w-6 h-6 text-blue-600 mr-3 mt-1 flex-shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+                <span class="text-gray-600"
+                  ><strong>Ofrece visión estratégica:</strong> Pasa de “saber
+                  qué pasó” a “entender qué podría pasar” para decidir antes que
+                  la competencia.</span
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Beneficios -->
+      <section id="beneficios" class="mb-24">
+        <h2 class="section-title">Beneficios Principales</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h3 class="font-bold text-xl mb-2 text-blue-700">
+              Ahorro de tiempo
+            </h3>
+            <p class="text-gray-600">
+              Reduce el monitoreo manual y libera horas para análisis de fondo.
+            </p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h3 class="font-bold text-xl mb-2 text-blue-700">
+              Visión completa
+            </h3>
+            <p class="text-gray-600">
+              Cobertura del ciclo legislativo de inicio a fin, con histórico y
+              estado actual.
+            </p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h3 class="font-bold text-xl mb-2 text-blue-700">
+              Decisión informada
+            </h3>
+            <p class="text-gray-600">
+              Reportes comparables para sustentar estrategias con datos duros.
+            </p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h3 class="font-bold text-xl mb-2 text-blue-700">
+              Colaboración sencilla
+            </h3>
+            <p class="text-gray-600">
+              Planes pensados para individuos, equipos medianos y grandes
+              organizaciones.
+            </p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h3 class="font-bold text-xl mb-2 text-blue-700">Transparencia</h3>
+            <p class="text-gray-600">
+              Cada dato proviene de fuentes oficiales y se muestra con su enlace
+              correspondiente.
+            </p>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h3 class="font-bold text-xl mb-2 text-blue-700">
+              Alertas Estratégicas
+            </h3>
+            <p class="text-gray-600">
+              Configura notificaciones en tiempo real sobre los temas y
+              proyectos que te importan para actuar antes que nadie.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Planes de Suscripción -->
+      <section id="planes" class="mb-24">
+        <h2 class="section-title">Planes Flexibles para cada Necesidad</h2>
+        <p class="section-subtitle">
+          Todos los planes incluyen un descuento de 2 meses gratis con el pago
+          anual.
+        </p>
+        <div class="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <!-- Plan Observador -->
+          <div
+            class="border border-gray-200 rounded-lg p-8 flex flex-col bg-white"
+          >
+            <h3 class="text-2xl font-bold mb-2">Observador</h3>
+            <p class="text-gray-500 mb-6">Ideal para seguimiento puntual.</p>
+            <p class="text-5xl font-black mb-6">
+              $99.990
+              <span class="text-lg font-semibold text-gray-500">/ mes</span>
+            </p>
+            <ul class="space-y-4 text-gray-600 mb-8 flex-grow">
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path></svg
+                >1 Usuario
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path></svg
+                >6 reportes esenciales
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path></svg
+                >Seguimiento de 5 proyectos/temas
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path></svg
+                >Notificaciones por email
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path></svg
+                >Soporte por email (24h)
+              </li>
+            </ul>
+            <a
+              href="#preinscripcion"
+              class="w-full text-center mt-auto py-3 px-6 rounded-lg border border-blue-600 text-blue-600 font-semibold hover:bg-blue-50 transition-colors"
+              >Elegir Plan</a
+            >
+          </div>
+          <!-- Plan Analista (Recomendado) -->
+          <div
+            class="border-2 border-blue-600 rounded-lg p-8 flex flex-col bg-white shadow-2xl relative"
+          >
+            <span
+              class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full absolute -top-4 left-1/2 -translate-x-1/2"
+              >MÁS POPULAR</span
+            >
+            <h3 class="text-2xl font-bold mb-2 text-blue-800">Analista</h3>
+            <p class="text-gray-500 mb-6">
+              Perfecto para equipos y análisis profundo.
+            </p>
+            <p class="text-5xl font-black mb-6 text-blue-800">
+              $299.990
+              <span class="text-lg font-semibold text-gray-500">/ mes</span>
+            </p>
+            <ul class="space-y-4 text-gray-600 mb-8 flex-grow">
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path></svg
+                >Hasta 5 usuarios
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path></svg
+                >12 reportes completos
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path></svg
+                >Seguimiento de 20 proyectos/temas
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path></svg
+                >1 reporte automático semanal
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path></svg
+                >Notificaciones personalizadas
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path></svg
+                >Soporte por email + chat (12h)
+              </li>
+            </ul>
+            <a
+              href="#preinscripcion"
+              class="cta-button w-full text-center mt-auto"
+              >Elegir Plan</a
+            >
+          </div>
+          <!-- Plan Estratega -->
+          <div
+            class="border border-gray-200 rounded-lg p-8 flex flex-col bg-white"
+          >
+            <h3 class="text-2xl font-bold mb-2">Estratega</h3>
+            <p class="text-gray-500 mb-6">
+              Solución completa para grandes organizaciones.
+            </p>
+            <p class="text-5xl font-black mb-6">
+              $799.990
+              <span class="text-lg font-semibold text-gray-500">/ mes</span>
+            </p>
+            <ul class="space-y-4 text-gray-600 mb-8 flex-grow">
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path></svg
+                >Usuarios ilimitados
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path></svg
+                >14 reportes + paneles personalizados
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path></svg
+                >Seguimiento de 50 proyectos/temas
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path></svg
+                >10 reportes automáticos semanales
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path></svg
+                >Notificaciones avanzadas + API
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path></svg
+                >Soporte 24x7 y ejecutivo dedicado
+              </li>
+            </ul>
+            <a
+              href="#preinscripcion"
+              class="w-full text-center mt-auto py-3 px-6 rounded-lg border border-blue-600 text-blue-600 font-semibold hover:bg-blue-50 transition-colors"
+              >Elegir Plan</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- Matriz de Reportes por Plan -->
+      <section id="reportes" class="mb-24">
+        <h2 class="section-title">Compare Nuestros Reportes</h2>
+        <div
+          class="max-w-6xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden"
+        >
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-gray-600">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                <tr>
+                  <th scope="col" class="px-6 py-3">Reporte</th>
+                  <th scope="col" class="px-6 py-3 text-center">Observador</th>
+                  <th scope="col" class="px-6 py-3 text-center">Analista</th>
+                  <th scope="col" class="px-6 py-3 text-center">Estratega</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="bg-white border-b">
+                  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <span class="font-medium text-gray-900"
+                        >Avance de Proyecto</span
+                      >
+                      <p class="text-xs text-gray-500 font-normal">
+                        Estado actual y próximos hitos de una iniciativa.
+                      </p>
+                    </div>
+                  </th>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                </tr>
+                <tr class="bg-gray-50 border-b">
+                  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <span class="font-medium text-gray-900"
+                        >Reporte Analítico</span
+                      >
+                      <p class="text-xs text-gray-500 font-normal">
+                        Panorama global de actividad legislativa por materia y
+                        cámara.
+                      </p>
+                    </div>
+                  </th>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                </tr>
+                <tr class="bg-white border-b">
+                  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <span class="font-medium text-gray-900"
+                        >Eficiencia Legislativa</span
+                      >
+                      <p class="text-xs text-gray-500 font-normal">
+                        Productividad y tiempos promedio de tramitación del
+                        Congreso.
+                      </p>
+                    </div>
+                  </th>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                </tr>
+                <tr class="bg-gray-50 border-b">
+                  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <span class="font-medium text-gray-900"
+                        >Actividad Parlamentaria</span
+                      >
+                      <p class="text-xs text-gray-500 font-normal">
+                        Ranking de participación, mociones y asistencia por
+                        legislador.
+                      </p>
+                    </div>
+                  </th>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                </tr>
+                <tr class="bg-white border-b">
+                  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <span class="font-medium text-gray-900"
+                        >Proyectos Controversiales</span
+                      >
+                      <p class="text-xs text-gray-500 font-normal">
+                        Iniciativas con mayor debate o polarización en
+                        votaciones.
+                      </p>
+                    </div>
+                  </th>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                </tr>
+                <tr class="bg-gray-50 border-b">
+                  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <span class="font-medium text-gray-900"
+                        >Sesiones Productivas</span
+                      >
+                      <p class="text-xs text-gray-500 font-normal">
+                        Qué proyectos se trataron y cuánto se avanzó en cada
+                        sesión.
+                      </p>
+                    </div>
+                  </th>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                </tr>
+                <tr class="bg-white border-b">
+                  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <span class="font-medium text-gray-900"
+                        >Proyectos Dormidos</span
+                      >
+                      <p class="text-xs text-gray-500 font-normal">
+                        Listado de iniciativas sin movimiento reciente y riesgo
+                        de caducar.
+                      </p>
+                    </div>
+                  </th>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-gray-400 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                </tr>
+                <tr class="bg-gray-50 border-b">
+                  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <span class="font-medium text-gray-900"
+                        >Proyectos Express</span
+                      >
+                      <p class="text-xs text-gray-500 font-normal">
+                        Proyectos tramitados y aprobados en un plazo
+                        inusualmente breve.
+                      </p>
+                    </div>
+                  </th>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-gray-400 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                </tr>
+                <tr class="bg-white border-b">
+                  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <span class="font-medium text-gray-900"
+                        >Análisis Inteligente de Boletín</span
+                      >
+                      <p class="text-xs text-gray-500 font-normal">
+                        Resumen clave y puntos críticos de un boletín
+                        específico.
+                      </p>
+                    </div>
+                  </th>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-gray-400 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                </tr>
+                <tr class="bg-gray-50 border-b">
+                  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <span class="font-medium text-gray-900"
+                        >Perfil Parlamentario</span
+                      >
+                      <p class="text-xs text-gray-500 font-normal">
+                        Ficha temática y patrón de voto de cada legislador.
+                      </p>
+                    </div>
+                  </th>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-gray-400 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-green-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      ></path>
+                    </svg>
+                  </td>
+                </tr>
+                <tr class="bg-white border-b">
+                  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <span class="font-medium text-gray-900"
+                        >Temas Emergentes</span
+                      >
+                      <p class="text-xs text-gray-500 font-normal">
+                        Tendencias nuevas que empiezan a ganar espacio en la
+                        agenda.
+                      </p>
+                    </div>
+                  </th>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-gray-400 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-blue-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-blue-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      ></path>
+                    </svg>
+                  </td>
+                </tr>
+                <tr class="bg-gray-50 border-b">
+                  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <span class="font-medium text-gray-900"
+                        >Consistencia de Voto</span
+                      >
+                      <p class="text-xs text-gray-500 font-normal">
+                        Nivel de alineamiento de cada parlamentario con su
+                        bancada.
+                      </p>
+                    </div>
+                  </th>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-gray-400 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-blue-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-blue-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      ></path>
+                    </svg>
+                  </td>
+                </tr>
+                <tr class="bg-white border-b">
+                  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <span class="font-medium text-gray-900"
+                        >Coautoría & Redes Parlamentarias</span
+                      >
+                      <p class="text-xs text-gray-500 font-normal">
+                        Mapa de alianzas y colaboración entre legisladores.
+                      </p>
+                    </div>
+                  </th>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-gray-400 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-gray-400 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-blue-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      ></path>
+                    </svg>
+                  </td>
+                </tr>
+                <tr class="bg-gray-50">
+                  <th scope="row" class="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <span class="font-medium text-gray-900"
+                        >Discurso Legislativo</span
+                      >
+                      <p class="text-xs text-gray-500 font-normal">
+                        Análisis de tono y palabras clave en intervenciones en
+                        sala.
+                      </p>
+                    </div>
+                  </th>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-gray-400 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-gray-400 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      ></path>
+                    </svg>
+                  </td>
+                  <td class="px-6 py-4 text-center align-middle">
+                    <svg
+                      class="w-6 h-6 text-blue-500 mx-auto"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      ></path>
+                    </svg>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pre-inscripción -->
+      <section
+        id="preinscripcion"
+        class="bg-blue-800 text-white rounded-lg p-12 text-center"
+      >
+        <h2 class="text-4xl font-black mb-4">Prueba Gratuita por 15 Días</h2>
+        <p class="text-blue-200 text-lg mb-6 max-w-2xl mx-auto">
+          Pre-inscríbete y a partir del 15 de julio de 2025 disfruta de acceso
+          gratuito a cualquier plan, sin obligación de pago ni tarjeta de
+          crédito.
+        </p>
+        <div
+          class="bg-white text-gray-800 rounded-lg p-6 max-w-3xl mx-auto mb-8 shadow-xl"
+        >
+          <h3 class="font-bold text-xl mb-3">¿Cómo participar?</h3>
+          <ol class="text-left space-y-3 list-decimal list-inside">
+            <li>Escríbenos a nuestro WhatsApp.</li>
+            <li>Elige el plan de tu interés para la prueba.</li>
+            <li>
+              Recibirás tu enlace de activación el 15 de julio a las 09:00 CLT.
+            </li>
+          </ol>
+          <p class="mt-4 text-md font-bold text-red-600">
+            ¡Cupos limitados a los primeros 100 equipos registrados!
+          </p>
+        </div>
+        <a
+          href="https://wa.me/393293020789?text=Hola,%20quiero%20pre-inscribirme%20para%20la%20prueba%20gratuita%20de%20SeguimientoLegislativo.cl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="cta-button bg-white text-blue-700 hover:bg-gray-100"
+          >Pre-inscribirme ahora</a
+        >
+      </section>
+    </main>
+
+    <!-- Footer / Próximo Paso -->
+    <footer class="bg-gray-800 text-white">
+      <div class="container mx-auto px-6 py-12 text-center">
+        <h2 class="text-2xl font-bold mb-2">
+          ¿Quieres saber más de SeguimientoLegislativo.cl?
+        </h2>
+        <a
+          href="https://wa.me/393293020789?text=Hola,%20estoy%20interesado%20en%20SeguimientoLegislativo.cl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="cta-button"
+          >Escríbenos por WhatsApp</a
+        >
+        <p class="mt-10 text-gray-400 text-sm">
+          &copy; 2025 SeguimientoLegislativo.cl. Todos los derechos reservados.
+        </p>
+        <p class="mt-0 text-gray-400 text-sm">
+          Este proyecto es parte de
+          <a
+            href="https://atelierbusco.com?ref=SeguimientoLegislativo.cl"
+            target="_blank"
+            class="underline hover:text-white"
+            >AtelierBusco</a
+          >
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
