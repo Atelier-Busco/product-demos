@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Desafío Mediometro: ¿Eres un Detector de Probidad?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8fafc; /* slate-50 */
+        color: #1e293b; /* slate-800 */
+      }
+      .tag-Tendencioso {
+        background-color: #fee2e2;
+        color: #b91c1c;
+      }
+      .tag-Correcto {
+        background-color: #d1fae5;
+        color: #065f46;
+      }
+      .tag-Impreciso {
+        background-color: #fef3c7;
+        color: #92400e;
+      }
+      .tag-Emocional {
+        background-color: #e0e7ff;
+        color: #3730a3;
+      }
+      .tag-Sensacionalista {
+        background-color: #fce7f3;
+        color: #9d174d;
+      }
+      .tag-Opinativo {
+        background-color: #e0f2fe;
+        color: #075985;
+      }
+      .tag-Verificable {
+        background-color: #f0fdf4;
+        color: #166534;
+      }
+      .tag-Propagandistico {
+        background-color: #ede9fe;
+        color: #5b21b6;
+      }
+
+      .btn-category {
+        @apply flex-1 py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:scale-95;
+        background-color: #e2e8f0; /* slate-200 */
+        color: #334155; /* slate-700 */
+        border: 1px solid #cbd5e1; /* slate-300 */
+      }
+      .btn-category.selected {
+        @apply ring-2 ring-offset-2;
+      }
+      .btn-category.correct {
+        @apply bg-green-500 text-white ring-green-500;
+      }
+      .btn-category.incorrect {
+        @apply bg-red-500 text-white ring-red-500;
+      }
+      .feedback-box {
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: opacity 0.5s ease-out, max-height 0.5s ease-out;
+      }
+      .feedback-box.show {
+        opacity: 1;
+        max-height: 200px; /* Adjust as needed */
+      }
+    </style>
+  </head>
+  <body class="flex flex-col min-h-screen">
+    <header
+      class="bg-white/90 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200 shadow-sm"
+    >
+      <div
+        class="container mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <h1 class="text-2xl font-bold text-slate-800">
+          <span class="text-indigo-600">M</span>ediometro.cl
+        </h1>
+        <div class="flex items-center space-x-4">
+          <span class="text-lg font-semibold text-slate-700"
+            >Puntaje: <span id="score">0</span></span
+          >
+          <span class="text-lg font-semibold text-slate-700"
+            >Noticia: <span id="current-news-index">1</span>/<span
+              id="total-news-count"
+              >10</span
+            ></span
+          >
+        </div>
+      </div>
+    </header>
+
+    <main
+      class="flex-grow container mx-auto px-6 py-8 md:py-12 flex flex-col items-center justify-center"
+    >
+      <section
+        id="game-intro"
+        class="bg-white p-8 rounded-xl shadow-lg max-w-2xl text-center"
+      >
+        <h2 class="text-3xl font-bold text-slate-900 mb-4">
+          Desafío Mediometro: ¿Eres un Detector de Probidad?
+        </h2>
+        <p class="text-slate-700 mb-6">
+          ¡Ponte a prueba! Te presentaremos extractos de noticias y tu misión
+          será clasificarlas según su probidad y seriedad. ¿Coincidirás con el
+          análisis de nuestra IA?
+        </p>
+        <button
+          id="start-game-btn"
+          class="bg-indigo-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-indigo-700 transition-all transform hover:scale-105"
+        >
+          ¡Empezar a Jugar!
+        </button>
+      </section>
+
+      <section
+        id="game-area"
+        class="hidden bg-white p-8 rounded-xl shadow-lg max-w-3xl w-full"
+      >
+        <h3
+          id="news-title"
+          class="text-xl md:text-2xl font-bold text-slate-900 mb-4"
+        ></h3>
+        <p id="news-extract" class="text-slate-700 mb-6"></p>
+
+        <div class="mb-6">
+          <h4 class="font-semibold text-slate-800 mb-3">
+            Clasifica esta noticia:
+          </h4>
+          <div
+            id="category-buttons"
+            class="grid grid-cols-2 md:grid-cols-4 gap-3"
+          >
+            <!-- Category buttons will be rendered here by JS -->
+          </div>
+        </div>
+
+        <button
+          id="submit-answer-btn"
+          class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg shadow-md hover:bg-indigo-700 transition-colors active:scale-95 mt-4"
+        >
+          Enviar Respuesta
+        </button>
+
+        <div id="feedback-area" class="feedback-box mt-6 p-4 rounded-lg border">
+          <h4 id="feedback-title" class="font-bold text-lg mb-2"></h4>
+          <p id="ai-classification" class="text-slate-700 text-sm mb-2"></p>
+          <p id="ai-reason" class="text-slate-600 text-xs"></p>
+          <button
+            id="next-news-btn"
+            class="bg-slate-200 text-slate-700 font-semibold py-2 px-4 rounded-lg shadow-sm hover:bg-slate-300 transition-colors active:scale-95 mt-4 hidden"
+          >
+            Siguiente Noticia
+          </button>
+          <button
+            id="restart-game-btn"
+            class="bg-slate-200 text-slate-700 font-semibold py-2 px-4 rounded-lg shadow-sm hover:bg-slate-300 transition-colors active:scale-95 mt-4 hidden"
+          >
+            Volver a Jugar
+          </button>
+        </div>
+      </section>
+
+      <section
+        id="game-over-screen"
+        class="hidden bg-white p-8 rounded-xl shadow-lg max-w-2xl text-center"
+      >
+        <h2 class="text-3xl font-bold text-slate-900 mb-4">
+          ¡Juego Terminado!
+        </h2>
+        <p class="text-slate-700 text-lg mb-6">
+          Tu puntaje final es:
+          <span id="final-score" class="text-indigo-600 font-bold text-4xl"
+            >0</span
+          >/<span id="final-total-news">0</span>
+        </p>
+        <p id="game-over-message" class="text-slate-600 mb-8"></p>
+        <button
+          id="play-again-btn"
+          class="bg-indigo-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-indigo-700 transition-all transform hover:scale-105"
+        >
+          Jugar de Nuevo
+        </button>
+      </section>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400 py-6 text-center text-sm">
+      <p>&copy; 2025 Mediometro.cl - Un proyecto de Redactor 24h.</p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const gameIntro = document.getElementById("game-intro");
+        const gameArea = document.getElementById("game-area");
+        const gameOverScreen = document.getElementById("game-over-screen");
+        const startGameBtn = document.getElementById("start-game-btn");
+        const newsTitle = document.getElementById("news-title");
+        const newsExtract = document.getElementById("news-extract");
+        const categoryButtonsContainer =
+          document.getElementById("category-buttons");
+        const submitAnswerBtn = document.getElementById("submit-answer-btn");
+        const feedbackArea = document.getElementById("feedback-area");
+        const feedbackTitle = document.getElementById("feedback-title");
+        const aiClassification = document.getElementById("ai-classification");
+        const aiReason = document.getElementById("ai-reason");
+        const nextNewsBtn = document.getElementById("next-news-btn");
+        const restartGameBtn = document.getElementById("restart-game-btn");
+        const scoreDisplay = document.getElementById("score");
+        const currentNewsIndexDisplay =
+          document.getElementById("current-news-index");
+        const totalNewsCountDisplay =
+          document.getElementById("total-news-count");
+        const finalScoreDisplay = document.getElementById("final-score");
+        const finalTotalNewsDisplay =
+          document.getElementById("final-total-news");
+        const gameOverMessage = document.getElementById("game-over-message");
+        const playAgainBtn = document.getElementById("play-again-btn");
+
+        let currentNewsIndex = 0;
+        let score = 0;
+        let selectedCategory = null;
+
+        const categories = [
+          { id: "Tendencioso", name: "Tendencioso" },
+          { id: "Correcto", name: "Correcto" },
+          { id: "Impreciso", name: "Impreciso" },
+          { id: "Emocional", name: "Emocional" },
+          { id: "Sensacionalista", name: "Sensacionalista" },
+          { id: "Opinativo", name: "De Opinión" } /* Ajustado */,
+          { id: "Verificable", name: "Verificable" },
+          { id: "Propagandistico", name: "Propagandístico" },
+        ];
+
+        const newsData = [
+          {
+            title:
+              "Gobierno anuncia paquete de medidas para impulsar la economía local",
+            extract:
+              "El Ministerio de Economía presentó un plan de incentivos fiscales y subsidios para pequeñas empresas, buscando reactivar el mercado interno en el próximo trimestre.",
+            ai_category: "Correcto",
+            ai_reason:
+              "Información precisa y neutral, basada en un comunicado oficial del Ministerio de Economía. Presenta hechos verificables sin sesgos evidentes.",
+          },
+          {
+            title:
+              "¡Crisis sin precedentes! La nueva política de tráfico paraliza la ciudad",
+            extract:
+              'Cientos de conductores expresan su indignación ante las nuevas regulaciones de tráfico, calificándolas de "arbitrarias" y "abusivas", generando un caos vial en las principales arterias.',
+            ai_category: "Emocional",
+            ai_reason:
+              'Utiliza lenguaje hiperbólico y palabras como "crisis", "indignación", "caos" para provocar una reacción emocional, en lugar de un análisis objetivo de la situación.',
+          },
+          {
+            title:
+              "Fuentes cercanas sugieren cambios drásticos en la cúpula ministerial",
+            extract:
+              "Rumores en los pasillos del poder apuntan a una inminente reestructuración del gabinete. Aunque no hay confirmación oficial, se especula con la salida de al menos tres ministros clave.",
+            ai_category: "Impreciso",
+            ai_reason:
+              'Se basa en "fuentes cercanas" y "rumores", sin datos verificables o citas directas que respalden las afirmaciones. El lenguaje es vago y especulativo.',
+          },
+          {
+            title:
+              "El plan de desarrollo urbano: una catástrofe social orquestada por las élites",
+            extract:
+              'El mal llamado "plan de progreso" no es más que una excusa para el desalojo de familias y el enriquecimiento de los poderosos. Ignora las necesidades de los ciudadanos y destruye el tejido social.',
+            ai_category: "Tendencioso",
+            ai_reason:
+              'Presenta el plan desde una perspectiva negativa y predeterminada, utilizando lenguaje cargado como "catástrofe", "orquestada", y "élites", omitiendo posibles beneficios.',
+          },
+          {
+            title:
+              "Impactante revelación científica: el secreto del universo al alcance de la humanidad",
+            extract:
+              "Un equipo de investigación ha descubierto algo tan sorprendente que podría revolucionar nuestra comprensión de la física. Las implicaciones son inmensas, desde la energía infinita hasta viajes estelares.",
+            ai_category: "Sensacionalista",
+            ai_reason:
+              'El titular y el extracto usan palabras grandilocuentes y promesas exageradas ("Impactante", "secreto del universo", "revolucionar") que buscan impactar más que informar con precisión.',
+          },
+          {
+            title:
+              "Mi visión sobre la necesidad de una reforma educativa integral en nuestro país",
+            extract:
+              "En mi opinión, es imperativo que el sistema educativo se adapte a los desafíos del siglo XXI. Considero que las actuales metodologías son obsoletas y es hora de un cambio profundo y audaz.",
+            ai_category: "De Opinión",
+            ai_reason:
+              'Claramente expresa un punto de vista subjetivo ("En mi opinión", "Considero que") en lugar de presentar hechos de forma neutral. Típico de una columna de opinión o editorial.',
+          },
+          {
+            title:
+              "Informe del INE revela crecimiento del PIB del 2.3% en el primer trimestre de 2025",
+            extract:
+              'Según el informe "Perspectivas Económicas" del Instituto Nacional de Estadística, la economía nacional experimentó un crecimiento del 2.3% en el primer trimestre, impulsado por el sector servicios.',
+            ai_category: "Verificable",
+            ai_reason:
+              "Proporciona datos específicos de una fuente oficial y pública (INE) y el informe es accesible, permitiendo la verificación de los hechos presentados.",
+          },
+          {
+            title:
+              "La única vía para la prosperidad: el plan de nuestro partido es la salvación nacional",
+            extract:
+              "Nuestro líder ha presentado la hoja de ruta definitiva para sacar al país de la crisis. Cualquier otra propuesta es un camino hacia el desastre, impulsado por fuerzas oscuras que buscan el caos.",
+            ai_category: "Propagandistico",
+            ai_reason:
+              'Mensaje con un tono excesivamente persuasivo y excluyente ("la única vía", "salvación", "fuerzas oscuras"). Busca manipular la opinión y desacreditar alternativas sin base factual.',
+          },
+          {
+            title:
+              "Descubrimiento arqueológico en el norte de Chile reescribe la historia precolombina",
+            extract:
+              "Un equipo de arqueólogos ha desenterrado vestigios que sugieren una civilización avanzada en el desierto de Atacama, anterior a lo que se creía. Los hallazgos prometen cambiar los libros de historia.",
+            ai_category: "Sensacionalista",
+            ai_reason:
+              'Utiliza frases como "reescribe la historia" y "cambiar los libros de historia" para exagerar el impacto, buscando generar asombro más que una descripción mesurada de los hallazgos.',
+          },
+          {
+            title:
+              "Análisis: Por qué la inflación en Chile sigue siendo un desafío para el Banco Central",
+            extract:
+              "Expertos económicos debaten las causas persistentes de la inflación y las posibles estrategias del Banco Central. Se analizan factores internos y externos que complican la estabilización de precios.",
+            ai_category: "De Opinión",
+            ai_reason:
+              "Aunque presenta un análisis, el título y el contenido sugieren una interpretación y debate de expertos, lo que lo clasifica como un análisis subjetivo o de opinión, no una noticia puramente factual.",
+          },
+        ];
+
+        let shuffledNews = [];
+
+        function initializeGame() {
+          shuffledNews = [...newsData].sort(() => 0.5 - Math.random()); // Shuffle news
+          currentNewsIndex = 0;
+          score = 0;
+          updateScoreDisplay();
+          updateNewsCounter();
+          gameIntro.classList.remove("hidden");
+          gameArea.classList.add("hidden");
+          gameOverScreen.classList.add("hidden");
+          feedbackArea.classList.remove("show");
+          nextNewsBtn.classList.add("hidden");
+          restartGameBtn.classList.add("hidden");
+          submitAnswerBtn.classList.remove("hidden");
+        }
+
+        function updateScoreDisplay() {
+          scoreDisplay.textContent = score;
+        }
+
+        function updateNewsCounter() {
+          currentNewsIndexDisplay.textContent = currentNewsIndex + 1;
+          totalNewsCountDisplay.textContent = shuffledNews.length;
+        }
+
+        function renderCategoryButtons() {
+          categoryButtonsContainer.innerHTML = "";
+          categories.forEach((cat) => {
+            const button = document.createElement("button");
+            button.textContent = cat.name;
+            button.dataset.categoryId = cat.id;
+            button.className = "btn-category";
+            button.addEventListener("click", () => {
+              document
+                .querySelectorAll(".btn-category")
+                .forEach((btn) =>
+                  btn.classList.remove("selected", "ring-indigo-500")
+                );
+              button.classList.add("selected", "ring-indigo-500");
+              selectedCategory = cat.id;
+            });
+            categoryButtonsContainer.appendChild(button);
+          });
+        }
+
+        function loadNextNews() {
+          if (currentNewsIndex < shuffledNews.length) {
+            const news = shuffledNews[currentNewsIndex];
+            newsTitle.textContent = news.title;
+            newsExtract.textContent = news.extract;
+
+            // Reset UI for new news
+            document.querySelectorAll(".btn-category").forEach((btn) => {
+              btn.classList.remove(
+                "selected",
+                "ring-indigo-500",
+                "correct",
+                "incorrect",
+                "ring-green-500",
+                "ring-red-500"
+              );
+            });
+            selectedCategory = null;
+            submitAnswerBtn.classList.remove("hidden");
+            feedbackArea.classList.remove("show");
+            nextNewsBtn.classList.add("hidden");
+            restartGameBtn.classList.add("hidden");
+            updateNewsCounter();
+          } else {
+            endGame();
+          }
+        }
+
+        function handleSubmitAnswer() {
+          if (!selectedCategory) {
+            alert("Por favor, selecciona una categoría antes de enviar.");
+            return;
+          }
+
+          const news = shuffledNews[currentNewsIndex];
+          const isCorrect = selectedCategory === news.ai_category;
+
+          if (isCorrect) {
+            score++;
+            feedbackTitle.textContent = "¡Correcto!";
+            feedbackTitle.className = "font-bold text-lg text-green-700 mb-2";
+            feedbackArea.classList.add("border-green-300", "bg-green-50");
+          } else {
+            feedbackTitle.textContent = "Incorrecto.";
+            feedbackTitle.className = "font-bold text-lg text-red-700 mb-2";
+            feedbackArea.classList.add("border-red-300", "bg-red-50");
+          }
+
+          // Highlight user's choice
+          document.querySelectorAll(".btn-category").forEach((btn) => {
+            if (btn.dataset.categoryId === selectedCategory) {
+              btn.classList.add(isCorrect ? "correct" : "incorrect");
+            }
+            btn.disabled = true; // Disable all buttons after answer
+          });
+
+          // Show AI's classification and reason
+          aiClassification.innerHTML = `La IA lo clasificó como: <span class="tag tag-${
+            news.ai_category
+          }">${categories.find((c) => c.id === news.ai_category).name}</span>`;
+          aiReason.textContent = news.ai_reason;
+
+          updateScoreDisplay();
+          submitAnswerBtn.classList.add("hidden");
+          feedbackArea.classList.add("show");
+
+          if (currentNewsIndex < shuffledNews.length - 1) {
+            nextNewsBtn.classList.remove("hidden");
+          } else {
+            restartGameBtn.classList.remove("hidden");
+          }
+        }
+
+        function handleNextNews() {
+          currentNewsIndex++;
+          feedbackArea.classList.remove(
+            "border-green-300",
+            "bg-green-50",
+            "border-red-300",
+            "bg-red-50"
+          );
+          document
+            .querySelectorAll(".btn-category")
+            .forEach((btn) => (btn.disabled = false)); // Re-enable buttons
+          loadNextNews();
+        }
+
+        function endGame() {
+          gameArea.classList.add("hidden");
+          gameOverScreen.classList.remove("hidden");
+          finalScoreDisplay.textContent = score;
+          finalTotalNewsDisplay.textContent = shuffledNews.length;
+
+          if (score === shuffledNews.length) {
+            gameOverMessage.textContent =
+              "¡Felicidades! Eres un experto en detección de probidad. ¡Tu ojo crítico es excepcional!";
+          } else if (score >= shuffledNews.length / 2) {
+            gameOverMessage.textContent =
+              "¡Buen trabajo! Tienes un buen ojo para la probidad. Sigue practicando para ser un maestro.";
+          } else {
+            gameOverMessage.textContent =
+              "¡Sigue practicando! La probidad mediática es un desafío, pero con Mediometro.cl puedes mejorar tu ojo crítico.";
+          }
+        }
+
+        startGameBtn.addEventListener("click", () => {
+          gameIntro.classList.add("hidden");
+          gameArea.classList.remove("hidden");
+          renderCategoryButtons();
+          loadNextNews();
+        });
+
+        submitAnswerBtn.addEventListener("click", handleSubmitAnswer);
+        nextNewsBtn.addEventListener("click", handleNextNews);
+        restartGameBtn.addEventListener("click", initializeGame);
+        playAgainBtn.addEventListener("click", initializeGame);
+
+        initializeGame(); // Setup the game on load
+      });
+    </script>
+  </body>
+</html>

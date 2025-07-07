@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mediometro.cl - El Observatorio de Prensa Interactivo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Sober Slate & Indigo -->
+    <!-- Application Structure Plan: Se ha diseñado una estructura de SPA (Single-Page Application) con un flujo narrativo descendente. El objetivo es guiar al usuario desde el "porqué" (el desafío mediático) hasta el "cómo" (la metodología) y el "qué" (el portal interactivo). Esta estructura fue elegida para transformar un reporte denso en una historia comprensible, donde cada sección construye sobre la anterior, culminando en una demostración interactiva que muestra el producto final en acción. Las interacciones clave son los filtros del portal y el gráfico dinámico, que permiten al usuario explorar los datos de forma tangible. -->
+    <!-- Visualization & Content Choices: La información del reporte se presenta a través de una combinación de texto conciso, iconografía (HTML/CSS) y visualizaciones interactivas. Objetivo: Explicar la metodología -> Presentación: Diagrama de 3 pasos (HTML/CSS) -> Interacción: Estático, para claridad. Objetivo: Demostrar el producto -> Presentación: Feed de noticias filtrable y gráfico de barras dinámico -> Interacción: El usuario puede filtrar noticias por categoría, lo que actualiza dinámicamente tanto el feed como el gráfico. Se eligió un gráfico de barras (Chart.js) por su claridad para mostrar distribuciones. La justificación es hacer tangible el análisis de datos. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8fafc;
+        color: #1e293b;
+      }
+      .tag-Tendencioso {
+        background-color: #fee2e2;
+        color: #b91c1c;
+      }
+      .tag-Correcto {
+        background-color: #dcfce7;
+        color: #166534;
+      }
+      .tag-Impreciso {
+        background-color: #fef3c7;
+        color: #92400e;
+      }
+      .tag-Emocional {
+        background-color: #e0e7ff;
+        color: #3730a3;
+      }
+      .tag-Sensacionalista {
+        background-color: #fce7f3;
+        color: #9d174d;
+      }
+      .tag-De-Opinión {
+        background-color: #e0f2fe;
+        color: #075985;
+      }
+      .tag-Verificable {
+        background-color: #f0fdf4;
+        color: #15803d;
+      }
+      .tag-Propagandístico {
+        background-color: #ede9fe;
+        color: #5b21b6;
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 350px;
+        max-height: 400px;
+      }
+      @media (min-width: 768px) {
+        .chart-container {
+          height: 400px;
+        }
+      }
+      [x-cloak] {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-800" x-data="mediometroApp()">
+    <header
+      class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200"
+    >
+      <nav
+        class="container mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <a href="#" class="text-2xl font-bold text-slate-900">
+          <span class="text-indigo-600">M</span>ediometro.cl
+        </a>
+        <ul
+          class="hidden md:flex space-x-8 text-sm font-semibold text-slate-600"
+        >
+          <li>
+            <a href="#desafio" class="hover:text-indigo-600 transition-colors"
+              >El Desafío</a
+            >
+          </li>
+          <li>
+            <a
+              href="#metodologia"
+              class="hover:text-indigo-600 transition-colors"
+              >Metodología</a
+            >
+          </li>
+          <li>
+            <a href="#portal" class="hover:text-indigo-600 transition-colors"
+              >Portal Interactivo</a
+            >
+          </li>
+          <li>
+            <a
+              href="#compromiso"
+              class="hover:text-indigo-600 transition-colors"
+              >Compromiso Ético</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section id="hero" class="py-20 md:py-32 bg-white">
+        <div class="container mx-auto px-6 text-center">
+          <h1
+            class="text-4xl md:text-6xl font-extrabold text-slate-900 leading-tight"
+          >
+            El Observatorio de Prensa para una Información Transparente.
+          </h1>
+          <p class="mt-6 max-w-3xl mx-auto text-lg text-slate-600">
+            Mediometro.cl utiliza Inteligencia Artificial para analizar la
+            probidad y seriedad de las noticias, empoderando a la sociedad con
+            un ojo más crítico para navegar el complejo panorama mediático
+            actual.
+          </p>
+          <a
+            href="#portal"
+            class="mt-10 inline-block bg-indigo-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-indigo-700 transition-all transform hover:scale-105"
+          >
+            Explora el Portal Interactivo
+          </a>
+        </div>
+      </section>
+
+      <section id="desafio" class="py-20">
+        <div class="container mx-auto px-6">
+          <div class="text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-slate-900">El Desafío Actual</h2>
+            <p class="mt-4 text-slate-600">
+              En la era digital, la sobrecarga de información y la proliferación
+              de narrativas diversas han hecho que discernir la calidad, el
+              sesgo y la probidad de las noticias sea un desafío creciente. Más
+              allá de la simple detección de "noticias falsas", existe una
+              necesidad crítica de comprender el tono, la intención y la
+              seriedad con la que se presenta la información. Mediometro.cl
+              surge como una respuesta innovadora a este desafío.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="metodologia" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+          <div class="text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-slate-900">
+              Metodología de Análisis: El "Ojo Crítico" de la IA
+            </h2>
+            <p class="mt-4 text-slate-600">
+              Nuestra Inteligencia Artificial no solo lee, sino que "analiza"
+              cada noticia a través de un proceso estructurado que considera
+              múltiples dimensiones de la calidad periodística, desde la
+              veracidad hasta el balance narrativo.
+            </p>
+          </div>
+          <div class="mt-16 grid md:grid-cols-3 gap-8 text-center">
+            <div class="bg-slate-50 p-8 rounded-xl shadow-sm">
+              <div
+                class="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-indigo-100 text-indigo-600"
+              >
+                <!-- Icon Placeholder -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                  />
+                </svg>
+              </div>
+              <h3 class="mt-6 text-xl font-semibold text-slate-800">
+                1. Ingesta y Análisis Básico
+              </h3>
+              <p class="mt-2 text-slate-600 text-sm">
+                El sistema recopila artículos 24/7 y realiza un análisis
+                editorial fundamental, evaluando veracidad, sentimiento y sesgo
+                político.
+              </p>
+            </div>
+            <div class="bg-slate-50 p-8 rounded-xl shadow-sm">
+              <div
+                class="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-indigo-100 text-indigo-600"
+              >
+                <!-- Icon Placeholder -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <h3 class="mt-6 text-xl font-semibold text-slate-800">
+                2. Análisis Profundo de Probidad
+              </h3>
+              <p class="mt-2 text-slate-600 text-sm">
+                Considerando el género del artículo (noticia, opinión, etc.), la
+                IA asigna una categoría de probidad y genera una justificación
+                explicable.
+              </p>
+            </div>
+            <div class="bg-slate-50 p-8 rounded-xl shadow-sm">
+              <div
+                class="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-indigo-100 text-indigo-600"
+              >
+                <!-- Icon Placeholder -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
+                </svg>
+              </div>
+              <h3 class="mt-6 text-xl font-semibold text-slate-800">
+                3. Puntuación y Agregación
+              </h3>
+              <p class="mt-2 text-slate-600 text-sm">
+                Se asigna un "Score de Probidad" del 0 al 100 y los datos se
+                agregan para poder calcular la probidad global de cada medio.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="portal" class="py-20">
+        <div class="container mx-auto px-6">
+          <div class="text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-slate-900">
+              Portal Interactivo
+            </h2>
+            <p class="mt-4 text-slate-600">
+              Este es el corazón visible de Mediometro.cl. Aquí puedes explorar,
+              filtrar y analizar las noticias clasificadas por nuestra IA.
+              Interactúa con los filtros para ver cómo cambia la distribución en
+              el gráfico y en el feed de noticias. Haz clic en una noticia para
+              ver su análisis detallado.
+            </p>
+          </div>
+
+          <div class="mt-12">
+            <div class="flex flex-wrap justify-center gap-2 mb-8">
+              <button
+                @click="setFilter('Todos')"
+                :class="{'bg-indigo-600 text-white': activeFilter === 'Todos', 'bg-white text-slate-700': activeFilter !== 'Todos'}"
+                class="px-4 py-2 text-sm font-semibold rounded-full shadow-sm hover:bg-indigo-500 hover:text-white transition-colors"
+              >
+                Todos
+              </button>
+              <template x-for="category in categories" :key="category.id">
+                <button
+                  @click="setFilter(category.id)"
+                  :class="{'bg-indigo-600 text-white': activeFilter === category.id, 'bg-white text-slate-700': activeFilter !== category.id}"
+                  class="px-4 py-2 text-sm font-semibold rounded-full shadow-sm hover:bg-indigo-500 hover:text-white transition-colors"
+                  x-text="category.name"
+                ></button>
+              </template>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+              <h3 class="text-xl font-semibold mb-4 text-slate-800">
+                Distribución de Noticias por Categoría
+              </h3>
+              <div class="chart-container">
+                <canvas id="probityChart"></canvas>
+              </div>
+            </div>
+
+            <div class="mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <template x-for="news in filteredNews" :key="news.id">
+                <div
+                  @click="selectNews(news)"
+                  class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer"
+                >
+                  <span
+                    class="text-xs font-semibold uppercase px-2 py-1 rounded-full"
+                    :class="`tag-${news.category.replace(' ', '-')}`"
+                    x-text="categories.find(c => c.id === news.category).name"
+                  ></span>
+                  <h4
+                    class="mt-4 font-bold text-lg text-slate-900"
+                    x-text="news.title"
+                  ></h4>
+                  <p
+                    class="mt-2 text-sm text-slate-600"
+                    x-text="news.extract"
+                  ></p>
+                  <div
+                    class="mt-4 flex justify-between items-center text-xs text-slate-500"
+                  >
+                    <span x-text="news.source"></span>
+                    <span x-text="`Score: ${news.score}`"></span>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="compromiso" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+          <div class="text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-slate-900">
+              Nuestro Compromiso Ético
+            </h2>
+            <p class="mt-4 text-slate-600">
+              La probidad no solo es lo que analizamos, sino cómo operamos. Nos
+              comprometemos con la mitigación de sesgo algorítmico, la
+              supervisión humana continua ("Human-in-the-Loop") y una IA
+              Explicable (XAI) que asegura que todas nuestras clasificaciones
+              sean transparentes y comprensibles.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal -->
+    <div
+      x-show="selectedNews"
+      x-cloak
+      @click.away="selectedNews = null"
+      @keydown.escape.window="selectedNews = null"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+    >
+      <div
+        class="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-8"
+        @click.stop
+      >
+        <div class="flex justify-between items-start">
+          <div>
+            <h3
+              class="text-2xl font-bold text-slate-900"
+              x-text="selectedNews?.title"
+            ></h3>
+            <p
+              class="text-sm text-slate-500 mt-1"
+              x-text="selectedNews?.source"
+            ></p>
+          </div>
+          <button
+            @click="selectedNews = null"
+            class="text-slate-400 hover:text-slate-600"
+          >
+            &times;
+          </button>
+        </div>
+        <div class="mt-6 border-t pt-6">
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">
+                Clasificación de Probidad
+              </h4>
+              <div class="flex items-center gap-4">
+                <span
+                  class="text-sm font-semibold uppercase px-3 py-1.5 rounded-full"
+                  :class="`tag-${selectedNews?.category.replace(' ', '-')}`"
+                  x-text="categories.find(c => c.id === selectedNews?.category)?.name"
+                ></span>
+                <div
+                  class="text-3xl font-bold text-slate-800"
+                  x-text="selectedNews?.score"
+                ></div>
+                <div class="text-sm text-slate-500">/ 100</div>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">
+                Razón del Análisis (IA)
+              </h4>
+              <p
+                class="text-sm text-slate-600"
+                x-text="selectedNews?.reason"
+              ></p>
+            </div>
+          </div>
+          <div class="mt-6 border-t pt-4">
+            <h4 class="font-semibold text-slate-800 mb-3">Otros Indicadores</h4>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
+              <div
+                x-show="selectedNews?.bias"
+                class="bg-slate-50 p-3 rounded-lg"
+              >
+                <div class="font-semibold text-slate-500">Sesgo</div>
+                <div
+                  class="text-slate-800"
+                  x-text="`${selectedNews?.bias.level} (${selectedNews?.bias.orientation})`"
+                ></div>
+              </div>
+              <div
+                x-show="selectedNews?.sentiment"
+                class="bg-slate-50 p-3 rounded-lg"
+              >
+                <div class="font-semibold text-slate-500">Sentimiento</div>
+                <div
+                  class="text-slate-800 capitalize"
+                  x-text="selectedNews?.sentiment"
+                ></div>
+              </div>
+              <div
+                x-show="selectedNews?.balance"
+                class="bg-slate-50 p-3 rounded-lg"
+              >
+                <div class="font-semibold text-slate-500">
+                  Balance Narrativo
+                </div>
+                <div
+                  class="text-slate-800"
+                  x-text="selectedNews?.balance"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="bg-slate-900 text-slate-400 py-8">
+      <div class="container mx-auto px-6 text-center">
+        <p>&copy; 2025 Mediometro.cl - Un proyecto de Redactor 24h.</p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("alpine:init", () => {
+        Alpine.data("mediometroApp", () => ({
+          activeFilter: "Todos",
+          newsData: [
+            {
+              id: 1,
+              title:
+                "Gobierno anuncia paquete de medidas para impulsar la economía local",
+              extract:
+                "El Ministerio de Economía presentó un plan de incentivos fiscales y subsidios para pequeñas empresas...",
+              category: "Correcto",
+              source: "Diario Financiero",
+              score: 92,
+              reason:
+                "Información precisa y neutral, basada en un comunicado oficial del Ministerio de Economía. Presenta hechos verificables sin sesgos evidentes.",
+              bias: { level: "Neutral", orientation: "Centro" },
+              sentiment: "Neutral",
+              balance: "Equilibrado (varias perspectivas)",
+            },
+            {
+              id: 2,
+              title:
+                "¡Crisis sin precedentes! La nueva política de tráfico paraliza la ciudad",
+              extract:
+                'Cientos de conductores expresan su indignación ante las nuevas regulaciones, calificándolas de "arbitrarias"...',
+              category: "Emocional",
+              source: "La Crónica Roja",
+              score: 45,
+              reason:
+                'Utiliza lenguaje hiperbólico ("crisis", "indignación") para provocar una reacción emocional, en lugar de un análisis objetivo.',
+              bias: { level: "Leve", orientation: "No Determinado" },
+              sentiment: "Negativo",
+              balance: "Mayoría de una perspectiva",
+            },
+            {
+              id: 3,
+              title:
+                "Fuentes cercanas sugieren cambios drásticos en la cúpula ministerial",
+              extract:
+                "Rumores en los pasillos del poder apuntan a una inminente reestructuración del gabinete. No hay confirmación oficial...",
+              category: "Impreciso",
+              source: "El Rumor Político",
+              score: 35,
+              reason:
+                'Se basa en "fuentes cercanas" y "rumores", sin datos verificables o citas directas. El lenguaje es vago y especulativo.',
+              bias: { level: "Leve", orientation: "No Determinado" },
+              sentiment: "Mixto",
+              balance: "Solo una perspectiva",
+            },
+            {
+              id: 4,
+              title:
+                "El plan urbano: una catástrofe social orquestada por las élites",
+              extract:
+                'El mal llamado "plan de progreso" no es más que una excusa para el desalojo y el enriquecimiento de los poderosos...',
+              category: "Tendencioso",
+              source: "Voz del Pueblo",
+              score: 18,
+              reason:
+                'Presenta el plan desde una perspectiva negativa y predeterminada, utilizando lenguaje cargado ("catástrofe", "élites"), omitiendo posibles beneficios.',
+              bias: { level: "Significativo", orientation: "Izquierda" },
+              sentiment: "Negativo",
+              balance: "Solo una perspectiva",
+            },
+            {
+              id: 5,
+              title:
+                "Impactante revelación: el secreto del universo al alcance de la humanidad",
+              extract:
+                "Un equipo ha descubierto algo tan sorprendente que podría revolucionar nuestra comprensión de la física...",
+              category: "Sensacionalista",
+              source: "Ciencia Extrema",
+              score: 25,
+              reason:
+                'El titular y el extracto usan palabras grandilocuentes y promesas exageradas ("Impactante", "secreto del universo") para impactar.',
+              bias: { level: "Leve", orientation: "No Determinado" },
+              sentiment: "Positivo",
+              balance: "Solo una perspectiva",
+            },
+            {
+              id: 6,
+              title:
+                "Mi visión sobre la necesidad de una reforma educativa integral",
+              extract:
+                "En mi opinión, es imperativo que el sistema educativo se adapte. Considero que las actuales metodologías son obsoletas...",
+              category: "De Opinión",
+              source: "Columna del Experto",
+              score: 85,
+              reason:
+                'Claramente expresa un punto de vista subjetivo ("En mi opinión"). Es un análisis apropiado para su género (Columna de Opinión).',
+              bias: { level: "Leve", orientation: "Centro" },
+              sentiment: "Mixto",
+              balance: "Solo una perspectiva",
+            },
+            {
+              id: 7,
+              title:
+                "Informe del INE revela crecimiento del PIB del 2.3% en el primer trimestre",
+              extract:
+                'Según el informe "Perspectivas Económicas" del Instituto Nacional de Estadística, la economía nacional creció un 2.3%...',
+              category: "Verificable",
+              source: "Agencia de Noticias",
+              score: 98,
+              reason:
+                "Proporciona datos específicos de una fuente oficial y pública (INE), permitiendo la verificación de los hechos presentados.",
+              bias: { level: "Neutral", orientation: "Centro" },
+              sentiment: "Neutral",
+              balance: "Equilibrado (varias perspectivas)",
+            },
+            {
+              id: 8,
+              title:
+                "La única vía para la prosperidad: el plan de nuestro partido es la salvación",
+              extract:
+                "Nuestro líder ha presentado la hoja de ruta definitiva para sacar al país de la crisis. Cualquier otra propuesta es un desastre...",
+              category: "Propagandístico",
+              source: "El Partidario",
+              score: 12,
+              reason:
+                'Mensaje con un tono excesivamente persuasivo y excluyente ("la única vía", "salvación"). Busca manipular la opinión y desacreditar alternativas.',
+              bias: { level: "Significativo", orientation: "Derecha" },
+              sentiment: "Mixto",
+              balance: "Solo una perspectiva",
+            },
+            {
+              id: 9,
+              title:
+                "Análisis: Por qué la inflación sigue siendo un desafío para el Banco Central",
+              extract:
+                "Expertos económicos debaten las causas persistentes de la inflación y las posibles estrategias del Banco Central...",
+              category: "De Opinión",
+              source: "Análisis Económico Semanal",
+              score: 88,
+              reason:
+                "Aunque presenta un análisis de expertos, el formato es interpretativo y subjetivo, lo cual es correcto para su género.",
+              bias: { level: "Neutral", orientation: "Centro" },
+              sentiment: "Mixto",
+              balance: "Equilibrado (varias perspectivas)",
+            },
+            {
+              id: 10,
+              title:
+                "Estudio de la Universidad de Chile confirma beneficios del nuevo fármaco",
+              extract:
+                'Una investigación publicada en la revista científica "Salud y Futuro" y liderada por la Universidad de Chile...',
+              category: "Correcto",
+              source: "Salud al Día",
+              score: 95,
+              reason:
+                "Información basada en un estudio científico publicado y atribuido a una institución de prestigio. Los hechos son claros y verificables.",
+              bias: { level: "Neutral", orientation: "Centro" },
+              sentiment: "Positivo",
+              balance: "Equilibrado (varias perspectivas)",
+            },
+          ],
+          categories: [
+            { id: "Tendencioso", name: "Tendencioso" },
+            { id: "Correcto", name: "Correcto" },
+            { id: "Impreciso", name: "Impreciso" },
+            { id: "Emocional", name: "Emocional" },
+            { id: "Sensacionalista", name: "Sensacionalista" },
+            { id: "De Opinión", name: "De Opinión" },
+            { id: "Verificable", name: "Verificable" },
+            { id: "Propagandístico", name: "Propagandístico" },
+          ],
+          chart: null,
+          selectedNews: null,
+
+          init() {
+            this.renderChart();
+            this.$watch("activeFilter", () => this.updateChart());
+          },
+
+          get filteredNews() {
+            if (this.activeFilter === "Todos") {
+              return this.newsData;
+            }
+            return this.newsData.filter(
+              (news) => news.category === this.activeFilter
+            );
+          },
+
+          setFilter(category) {
+            this.activeFilter = category;
+          },
+
+          selectNews(news) {
+            this.selectedNews = news;
+          },
+
+          renderChart() {
+            const ctx = document
+              .getElementById("probityChart")
+              .getContext("2d");
+            const counts = this.getCategoryCounts();
+            this.chart = new Chart(ctx, {
+              type: "bar",
+              data: {
+                labels: Object.keys(counts),
+                datasets: [
+                  {
+                    label: "# de Noticias",
+                    data: Object.values(counts),
+                    backgroundColor: [
+                      "rgba(239, 68, 68, 0.6)", // red
+                      "rgba(34, 197, 94, 0.6)", // green
+                      "rgba(245, 158, 11, 0.6)", // amber
+                      "rgba(99, 102, 241, 0.6)", // indigo
+                      "rgba(219, 39, 119, 0.6)", // pink
+                      "rgba(14, 165, 233, 0.6)", // sky
+                      "rgba(74, 222, 128, 0.6)", // light green
+                      "rgba(139, 92, 246, 0.6)", // violet
+                    ],
+                    borderColor: [
+                      "rgba(239, 68, 68, 1)",
+                      "rgba(34, 197, 94, 1)",
+                      "rgba(245, 158, 11, 1)",
+                      "rgba(99, 102, 241, 1)",
+                      "rgba(219, 39, 119, 1)",
+                      "rgba(14, 165, 233, 1)",
+                      "rgba(74, 222, 128, 1)",
+                      "rgba(139, 92, 246, 1)",
+                    ],
+                    borderWidth: 1,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  y: { beginAtZero: true, ticks: { precision: 0 } },
+                },
+                plugins: {
+                  legend: { display: false },
+                },
+              },
+            });
+          },
+
+          updateChart() {
+            if (!this.chart) return;
+            const counts = this.getCategoryCounts();
+            this.chart.data.labels = Object.keys(counts);
+            this.chart.data.datasets[0].data = Object.values(counts);
+            this.chart.update();
+          },
+
+          getCategoryCounts() {
+            const dataToCount =
+              this.activeFilter === "Todos" ? this.newsData : this.filteredNews;
+            const counts = {};
+            this.categories.forEach((cat) => {
+              const count = this.newsData.filter(
+                (news) => news.category === cat.id
+              ).length;
+              if (count > 0) counts[cat.name] = count;
+            });
+            return counts;
+          },
+        }));
+      });
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+      defer
+    ></script>
+  </body>
+</html>
