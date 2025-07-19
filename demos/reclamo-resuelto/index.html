@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html
+  lang="es"
+  class="scroll-smooth"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>El Poder de la Gestión Inteligente | Reclamo Resuelto</title>
+
+    <!-- Placeholder Comments -->
+    <!-- Chosen Palette: "Calm Authority" - A palette using a warm, soft off-white (#FDFCFB) for the background, a dark, readable slate (#1A202C) for text, and a professional, trustworthy blue (#2563EB) as the primary accent for interactive elements, highlights, and calls to action. This combination is designed to feel serious, clean, and reassuring. -->
+    <!-- Application Structure Plan: The SPA is designed as a narrative journey to showcase the value of the AI processing. The flow is: 1) A compelling "Before & After" hero section to immediately demonstrate the transformation from unstructured text to structured data. 2) An interactive "Anatomía de la Inteligencia" section where users can click on each piece of structured data to understand its purpose and value for the manager. 3) A "Beneficios Tangibles" section that translates these features into clear advantages. 4) A "Diferenciación Clave" section comparing this intelligent approach to traditional methods. This structure was chosen to educate a potential commercial client (like a company subscribing to the B2B portal) on the value of the service, moving from the "what" to the "how" and finally to the "why it matters". -->
+    <!-- Visualization & Content Choices: The core of this presentation is the transformation of text, so the primary "visualizations" are interactive text elements.
+    - Before & After: An HTML/JS toggle to switch between the raw text and a prettified JSON view. Goal: Compare/Engage.
+    - Interactive Data Breakdown: A two-column layout where clicking a JSON key (HTML list) triggers a JS function to display and highlight the corresponding explanation card. This makes the abstract data tangible. Goal: Inform/Organize.
+    - Benefits Section: A clean card layout using Tailwind's grid system to present qualitative benefits clearly. Goal: Inform.
+    - Competitive Table: A styled HTML table for direct comparison, emphasizing the unique value propositions. Goal: Compare.
+    No charts are needed as the source report is about a process, not a dataset. The focus is on demonstrating the intelligence applied to qualitative information. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      @import url('https://rsms.me/inter/inter.css');
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #fdfcfb;
+        color: #1a202c;
+      }
+      .highlight-card {
+        transition: all 0.3s ease-in-out;
+        transform: scale(1.05);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        border-color: #2563eb;
+      }
+      .json-key {
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+      .json-key:hover {
+        color: #2563eb;
+      }
+      .json-key.active {
+        color: #2563eb;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <!-- 1. Hero Section: La Transformación -->
+      <section class="text-center">
+        <h1
+          class="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900"
+        >
+          Del Caos a la Claridad en Segundos.
+        </h1>
+        <p class="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-gray-600">
+          Así es como la inteligencia de **Reclamo Resuelto** transforma un
+          reclamo real, lleno de frustración, en un caso estructurado y listo
+          para ser gestionado.
+        </p>
+
+        <div
+          class="mt-12 max-w-4xl mx-auto bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden"
+        >
+          <div
+            class="p-4 border-b bg-gray-50 flex justify-center items-center space-x-4"
+          >
+            <span
+              id="label-raw"
+              class="font-semibold text-gray-500"
+              >Texto Original del Usuario</span
+            >
+            <div
+              id="toggle-container"
+              class="relative inline-block w-14 h-8 align-middle select-none transition duration-200 ease-in"
+            >
+              <input
+                type="checkbox"
+                name="toggle"
+                id="toggle"
+                class="toggle-checkbox absolute block w-8 h-8 rounded-full bg-white border-4 appearance-none cursor-pointer"
+              />
+              <label
+                for="toggle"
+                class="toggle-label block overflow-hidden h-8 rounded-full bg-gray-300 cursor-pointer"
+              ></label>
+            </div>
+            <span
+              id="label-processed"
+              class="font-semibold text-blue-600"
+              >Dossier Inteligente (IA)</span
+            >
+          </div>
+
+          <!-- Vista del Texto Original -->
+          <div
+            id="raw-text-view"
+            class="p-6 text-left text-sm text-gray-700 leading-relaxed"
+          >
+            <p class="font-bold text-gray-800 mb-2">De: "Ida M." (Usuario)</p>
+            <p
+              id="raw-text-content"
+              class="whitespace-pre-wrap"
+            ></p>
+          </div>
+
+          <!-- Vista del JSON Procesado -->
+          <div
+            id="processed-json-view"
+            class="p-6 text-left text-sm bg-gray-800 text-white hidden"
+          >
+            <pre><code id="json-content" class="language-json"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Anatomía de la Inteligencia -->
+      <section class="mt-24">
+        <div class="text-center">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+            Anatomía de la Inteligencia
+          </h2>
+          <p class="mt-3 max-w-2xl mx-auto text-lg text-gray-600">
+            Cada pieza de información extraída tiene un propósito. Descubre por
+            qué cada campo es crucial para una gestión rápida y efectiva.
+            <span class="font-semibold"
+              >Haz clic en cada elemento para ver su importancia.</span
+            >
+          </p>
+        </div>
+
+        <div class="mt-12 grid lg:grid-cols-2 gap-8 items-start">
+          <!-- Columna Izquierda: JSON Interactivo -->
+          <div
+            class="bg-gray-800 p-6 rounded-xl shadow-lg text-white font-mono text-sm sticky top-24"
+          >
+            <p>// Haz clic en una clave para ver su explicación</p>
+            <ul
+              id="json-interactive-list"
+              class="mt-4 space-y-1"
+            >
+              <!-- Contenido generado por JS -->
+            </ul>
+          </div>
+
+          <!-- Columna Derecha: Explicación Dinámica -->
+          <div
+            id="explanation-container"
+            class="space-y-4"
+          >
+            <!-- Contenido generado por JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Beneficios Tangibles -->
+      <section class="mt-24">
+        <div class="text-center">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+            Beneficios Tangibles
+          </h2>
+          <p class="mt-3 max-w-2xl mx-auto text-lg text-gray-600">
+            Esta parametrización no es solo tecnología, es una ventaja
+            competitiva real.
+          </p>
+        </div>
+        <div class="mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+            <div class="text-blue-600">●</div>
+            <h3 class="mt-2 text-xl font-bold">Eficiencia para el Gestor</h3>
+            <p class="mt-2 text-gray-600">
+              El gestor recibe un caso pre-analizado, con un resumen claro y una
+              acción sugerida. Esto reduce el tiempo de análisis manual en un
+              90%, permitiéndole enfocarse en la resolución.
+            </p>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+            <div class="text-blue-600">●</div>
+            <h3 class="mt-2 text-xl font-bold">
+              Empoderamiento para el Usuario
+            </h3>
+            <p class="mt-2 text-gray-600">
+              El usuario se siente escuchado. El sistema entiende su frustración
+              (`sentiment: "Frustrated"`) y la urgencia de su problema,
+              convirtiendo su relato en un caso profesional y sólido.
+            </p>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+            <div class="text-blue-600">●</div>
+            <h3 class="mt-2 text-xl font-bold">Inteligencia de Negocio</h3>
+            <p class="mt-2 text-gray-600">
+              La categorización (`category: "Billing and Payments"`) permite a
+              las empresas identificar patrones y la causa raíz de los
+              problemas, convirtiendo los reclamos en una fuente de mejora
+              continua.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // --- DATOS DEL EJEMPLO ---
+        const rawText = `SEÑORES smart fit
+PRESENTE
+
+El año pasado en periodo de octubre 2024, pregunte en smartfit de iquique, me dijieron que abrían ese mismo mes, y que podia ver los planes por su página, vi los planes, me interesó uno y uno debe poner una tarjeta de crédito, porque sino no te dejan hacer nada, la cosa es que se asoció mi tarjeta pero yo no compre el plan, esa sucursal nunca abrió, y ahora abrió y se me hizo un cobró a mi tarjeta de credito, lo cual me parece insólito, busque en mi correo para ver si tenía algo de ellos, y me habian mandando un contrato, el cual YO NO FIRME, claramente baje la aplicación y me cancelé ese plan que yo no pedí, y más encima me cobraron 95 mil pesos y fracción por cancelar dicho plan, que ademas agregaron al valor un mes mas del dicho plan y 23 mil y fracción de mantención anual.....que se me cobrará el 20 de julioDe que estamos hablando? Mi firma no esta en ese contrato.`
+
+        const processedData = {
+          caseType: 'Claim',
+          minimalRequiredInfo: {
+            responsibleCompany: 'Smartfit',
+            productOrService: 'Plan de membresía',
+            problemDescription:
+              'Me cobraron por un plan que no solicité ni firmé, y que la sucursal nunca abrió. Además, se me cobró una cancelación y mantención sin autorización.',
+            location: 'Sucursal de Iquique'
+          },
+          additionalInfo: {
+            dateTime: 'octubre 2024',
+            urgency: 'High',
+            sentiment: 'Frustrated',
+            churnRisk: 'High',
+            desiredSolution: [
+              'Reembolso del cobro indebido',
+              'Cancelación definitiva del plan y cargos asociados'
+            ],
+            suggestedAction: {
+              actionCode: 'CONTACT_COMPANY',
+              actionDescription:
+                'Contactar a Smartfit para solicitar la devolución del cobro indebido y cancelar cualquier plan asociado sin autorización.'
+            },
+            classification: {
+              category: 'Billing and Payments',
+              subcategory: 'Refund / Return Issue'
+            }
+          }
+        }
+
+        const explanations = {
+          caseType: {
+            title: 'Tipo de Caso',
+            text: "El primer paso es entender la intención. La IA clasifica si es un 'Reclamo' (un problema) o una 'Consulta' (una pregunta), dirigiendo el caso al flujo correcto desde el inicio."
+          },
+          responsibleCompany: {
+            title: 'Empresa Responsable',
+            text: 'Identificar a quién contactar es el dato más crítico. La IA extrae el nombre de la empresa para que el gestor pueda actuar de inmediato.'
+          },
+          productOrService: {
+            title: 'Producto / Servicio',
+            text: "Define el contexto del problema. Saber si el reclamo es sobre una 'membresía' o un 'producto físico' es clave para la gestión."
+          },
+          problemDescription: {
+            title: 'Descripción del Problema (Resumen IA)',
+            text: 'La IA condensa el relato del usuario en un resumen objetivo y conciso. Esto ahorra al gestor minutos preciosos de lectura y le da una visión clara del problema central.'
+          },
+          location: {
+            title: 'Ubicación',
+            text: "Contextualiza el reclamo. Saber que ocurrió en la 'Sucursal de Iquique' permite a la empresa dirigir el caso al equipo local correcto."
+          },
+          dateTime: {
+            title: 'Fecha del Incidente',
+            text: "Establece una cronología. La IA extrae la fecha, aunque sea imprecisa ('octubre 2024'), para entender la antigüedad del problema."
+          },
+          urgency: {
+            title: 'Urgencia (IA)',
+            text: "No todos los problemas son iguales. La IA estima la urgencia operativa ('High') basándose en el impacto descrito, ayudando a priorizar la bandeja de entrada del gestor."
+          },
+          sentiment: {
+            title: 'Sentimiento del Usuario (IA)',
+            text: "Entender el estado emocional ('Frustrated') permite al gestor adaptar su tono de comunicación para ser más empático y efectivo, mejorando la experiencia del usuario."
+          },
+          churnRisk: {
+            title: 'Riesgo de Abandono (IA)',
+            text: "La IA evalúa la probabilidad de que el cliente abandone la empresa ('High'). Esto permite priorizar casos no solo por urgencia, sino por su valor estratégico para el negocio."
+          },
+          desiredSolution: {
+            title: 'Solución Deseada',
+            text: "Saber qué quiere el usuario ('Reembolso', 'Cancelación') es fundamental. La IA extrae esta información para que el gestor sepa cuál es el objetivo de la negociación."
+          },
+          suggestedAction: {
+            title: 'Acción Sugerida (IA)',
+            text: "El sistema no solo presenta datos, sino que recomienda el siguiente paso lógico ('CONTACT_COMPANY'). Esto estandariza el proceso y acelera la toma de decisiones del gestor."
+          },
+          classification: {
+            title: 'Categorización (IA)',
+            text: "Clasificar el caso ('Billing and Payments') es vital para el análisis de datos a largo plazo. Permite a las empresas identificar la causa raíz de sus problemas y mejorar sus procesos."
+          }
+        }
+
+        // --- Lógica del Toggle ---
+        const toggle = document.getElementById('toggle')
+        const rawView = document.getElementById('raw-text-view')
+        const jsonView = document.getElementById('processed-json-view')
+        const labelRaw = document.getElementById('label-raw')
+        const labelProcessed = document.getElementById('label-processed')
+
+        document.getElementById('raw-text-content').textContent = rawText
+        document.getElementById('json-content').textContent = JSON.stringify(
+          processedData,
+          null,
+          2
+        )
+
+        toggle.addEventListener('change', (e) => {
+          if (e.target.checked) {
+            rawView.classList.add('hidden')
+            jsonView.classList.remove('hidden')
+            labelRaw.classList.remove('text-blue-600')
+            labelRaw.classList.add('text-gray-500')
+            labelProcessed.classList.add('text-blue-600')
+          } else {
+            rawView.classList.remove('hidden')
+            jsonView.classList.add('hidden')
+            labelRaw.classList.add('text-blue-600')
+            labelProcessed.classList.remove('text-blue-600')
+            labelProcessed.classList.add('text-gray-500')
+          }
+        })
+        // Set initial state for toggle labels
+        labelRaw.classList.add('text-blue-600')
+
+        // --- Lógica de la Anatomía Interactiva ---
+        const jsonList = document.getElementById('json-interactive-list')
+        const explanationContainer = document.getElementById(
+          'explanation-container'
+        )
+        let interactiveHtml = ''
+
+        function createListItem(key, value, prefix = '') {
+          let itemHtml = ''
+          if (
+            typeof value === 'object' &&
+            value !== null &&
+            !Array.isArray(value)
+          ) {
+            itemHtml += `<li><span class="text-gray-400">${prefix}${key}: {</span><ul class="pl-4">`
+            for (const subKey in value) {
+              itemHtml += createListItem(subKey, value[subKey], '')
+            }
+            itemHtml += `</ul><span class="text-gray-400">}</span></li>`
+          } else {
+            const isExplained = explanations.hasOwnProperty(key)
+            const keyClass = isExplained ? 'json-key' : 'text-yellow-400'
+            const dataKey = isExplained ? `data-key="${key}"` : ''
+            itemHtml += `<li><span class="${keyClass}" ${dataKey}>"${key}"</span>: <span class="text-green-400">"${
+              Array.isArray(value) ? '[...]' : value
+            }"</span></li>`
+          }
+          return itemHtml
+        }
+
+        for (const key in processedData) {
+          interactiveHtml += createListItem(key, processedData[key])
+        }
+        jsonList.innerHTML = interactiveHtml
+
+        function showExplanation(key) {
+          const explanation = explanations[key]
+          if (!explanation) return
+
+          explanationContainer.innerHTML = `
+                    <div id="card-${key}" class="bg-white p-6 rounded-xl shadow-lg border-2 border-transparent">
+                        <h4 class="text-xl font-bold text-blue-600">${explanation.title}</h4>
+                        <p class="mt-2 text-gray-600">${explanation.text}</p>
+                    </div>
+                `
+          // Trigger reflow to apply transition
+          setTimeout(() => {
+            const card = document.getElementById(`card-${key}`)
+            if (card) card.classList.add('highlight-card')
+          }, 10)
+        }
+
+        jsonList.addEventListener('click', (e) => {
+          if (e.target.classList.contains('json-key')) {
+            const key = e.target.getAttribute('data-key')
+
+            // Update active class
+            document
+              .querySelectorAll('.json-key')
+              .forEach((el) => el.classList.remove('active'))
+            e.target.classList.add('active')
+
+            showExplanation(key)
+          }
+        })
+
+        // Show first explanation by default
+        const firstKey = document.querySelector('.json-key')
+        if (firstKey) {
+          firstKey.classList.add('active')
+          showExplanation(firstKey.getAttribute('data-key'))
+        }
+      })
+    </script>
+  </body>
+</html>
+```

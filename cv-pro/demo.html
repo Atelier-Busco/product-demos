@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>CV Pro - Interfaz de Adaptación</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 dark:bg-gray-900">
+    <header class="bg-white dark:bg-gray-800/50 shadow-sm">
+      <div
+        class="container mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <h1 class="text-xl font-bold text-gray-800 dark:text-white">
+          <span class="text-indigo-600 dark:text-indigo-400">CV Pro</span>
+          Adaptador IA
+        </h1>
+        <div class="w-8 h-8 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+      </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 md:p-8">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+            1. Tus Datos
+          </h2>
+
+          <div class="mb-6">
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >Sube tu CV actual</label
+            >
+            <div
+              class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md hover:border-indigo-500 dark:hover:border-indigo-400 cursor-pointer"
+            >
+              <div class="space-y-1 text-center">
+                <svg
+                  class="mx-auto h-12 w-12 text-gray-400"
+                  stroke="currentColor"
+                  fill="none"
+                  viewBox="0 0 48 48"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                  <p class="pl-1">Arrastra un archivo o haz clic para subir</p>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-500">
+                  PDF, DOCX hasta 5MB
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <label
+              for="job-description"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >Pega la descripción de la oferta</label
+            >
+            <textarea
+              id="job-description"
+              name="job-description"
+              rows="10"
+              class="w-full bg-gray-50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+              placeholder="Pega aquí el texto completo de la oferta de trabajo..."
+            ></textarea>
+          </div>
+
+          <div>
+            <button
+              type="button"
+              class="w-full flex justify-center items-center gap-2 bg-indigo-600 text-white font-bold py-3 px-4 rounded-md hover:bg-indigo-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-900 focus:ring-indigo-500"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+              </svg>
+              Adaptar y Mejorar mi CV
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="bg-white dark:bg-gray-800/80 rounded-xl shadow-lg p-6 md:p-8"
+        >
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+            2. Tu CV Optimizado
+          </h2>
+
+          <div
+            id="  initial-state"
+            class="hidden text-center flex flex-col justify-center items-center h-full"
+          >
+            <div
+              class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 dark:bg-gray-700 mb-4"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8 text-indigo-500 dark:text-indigo-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                />
+              </svg>
+            </div>
+            <p class="text-gray-600 dark:text-gray-400">
+              Aquí aparecerán las sugerencias de la IA para que tu CV sea
+              irresistible.
+            </p>
+          </div>
+
+          <div
+            id="results-state"
+            class="space-y-6"
+          >
+            <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-lg">
+              <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                Resumen Profesional Sugerido
+              </h3>
+              <p class="text-sm text-gray-700 dark:text-gray-300">
+                Profesional de Marketing Digital con más de 5 años de
+                experiencia, especializado en la gestión de campañas de SEO y
+                SEM para empresas del sector tecnológico. Busco aplicar mis
+                habilidades en análisis de datos y optimización de conversiones
+                para impulsar el crecimiento en [Nombre de la Empresa].
+              </p>
+              <button
+                class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline mt-2"
+              >
+                Copiar Texto
+              </button>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-lg">
+              <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                Experiencia Laboral Reescrita
+              </h3>
+              <div class="text-sm text-gray-700 dark:text-gray-300 space-y-2">
+                <p>
+                  <strong
+                    >Digital Marketing Manager | Tech Solutions Inc.</strong
+                  >
+                </p>
+                <ul class="list-disc list-inside pl-2">
+                  <li>
+                    Lideré la estrategia de SEO, resultando en un
+                    <strong class="text-indigo-500"
+                      >aumento del 45% en el tráfico orgánico</strong
+                    >
+                    en 12 meses.
+                  </li>
+                  <li>
+                    Gestioné un presupuesto de $200K en campañas de Google Ads,
+                    mejorando el
+                    <strong class="text-indigo-500">ROAS en un 30%</strong>
+                    interanual.
+                  </li>
+                  <li>
+                    Implementé un nuevo sistema de A/B testing para landing
+                    pages que
+                    <strong class="text-indigo-500"
+                      >incrementó la tasa de conversión en un 15%</strong
+                    >.
+                  </li>
+                </ul>
+              </div>
+              <button
+                class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline mt-2"
+              >
+                Copiar Texto
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
