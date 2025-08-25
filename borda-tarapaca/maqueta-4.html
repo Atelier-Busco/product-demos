@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Borda Tarapacá - Manifiesto Digital</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:opsz,wght@8..60,400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Custom Styles and Colors -->
+    <style>
+      body {
+        font-family: "Source Serif 4", serif; /* Fuente con serif para un look editorial/manifiesto */
+        background-color: #fdfbf5;
+        color: #3d2b27;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Playfair Display", serif;
+      }
+      .bg-custom-pink {
+        background-color: #eab8c5;
+      }
+      .text-custom-pink {
+        color: #d98da4;
+      }
+      .border-custom-pink {
+        border-color: #d98da4;
+      }
+      .bg-custom-green {
+        background-color: #a3b899;
+      }
+      .text-custom-green {
+        color: #6a8a5d;
+      }
+      .bg-custom-orange {
+        background-color: #f5b971;
+      }
+
+      /* Animación para aparición de elementos en scroll */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-in-section {
+        animation: fadeIn 1s ease-out forwards;
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <!-- Header Fijo y Minimalista -->
+    <header class="bg-[#FDFBF5]/80 backdrop-blur-sm sticky top-0 z-50">
+      <div
+        class="container mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <a href="#" class="font-bold text-xl text-[#3D2B27]">Borda Tarapacá</a>
+        <a
+          href="#manifiesto"
+          class="border-2 border-[#3D2B27] text-[#3D2B27] font-bold py-2 px-5 rounded-full hover:bg-[#3D2B27] hover:text-white transition-colors"
+          >Nuestro Manifiesto</a
+        >
+      </div>
+    </header>
+
+    <main>
+      <!-- Sección 1: La Declaración -->
+      <section
+        class="min-h-screen flex items-center container mx-auto px-6 py-20"
+      >
+        <div class="max-w-4xl">
+          <p class="text-lg text-custom-pink font-semibold">
+            Esto no es solo un taller de bordado.
+          </p>
+          <h1 class="text-6xl md:text-8xl font-black my-4 leading-tight">
+            Es un acto de resistencia.
+          </h1>
+          <p class="text-xl md:text-2xl text-gray-700 mt-6">
+            Tomamos la aguja y el hilo, herramientas históricamente relegadas al
+            silencio del hogar, para convertirlas en nuestra voz. Bordamos para
+            recordar, para sanar, para denunciar. Para tejer juntas un relato
+            que nos fue negado.
+          </p>
+        </div>
+      </section>
+
+      <!-- Sección 2: El Lienzo como Testimonio -->
+      <section class="py-20 bg-gray-100">
+        <div class="container mx-auto px-6 text-center">
+          <h2 class="text-4xl md:text-5xl font-bold">"La Poderosa Palabra"</h2>
+          <p class="mt-4 text-lg max-w-3xl mx-auto">
+            Este lienzo de 397 centímetros es nuestro testimonio. No es un
+            objeto decorativo. Es un documento político tejido por más de 55
+            mujeres de Iquique, Alto Hospicio y Pica. Cada puntada es una
+            historia. Cada color, una emoción. Cada palabra, una declaración.
+          </p>
+          <div class="mt-12">
+            <img
+              src="https://placehold.co/1200x400/F1F5F9/3D2B27?text=Lienzo+Colectivo+'La+Poderosa+Palabra'"
+              alt="Lienzo colectivo La Poderosa Palabra"
+              class="rounded-lg shadow-2xl w-full"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección 3: Nuestro Manifiesto -->
+      <section id="manifiesto" class="py-20 container mx-auto px-6">
+        <h2 class="text-5xl font-bold text-center mb-16">Nuestro Manifiesto</h2>
+        <div class="space-y-16 max-w-4xl mx-auto">
+          <!-- Punto 1 -->
+          <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="md:w-1/3 flex-shrink-0">
+              <img
+                src="https://placehold.co/500x500/EAB8C5/FFFFFF?text=Autonomía"
+                alt="Bordado sobre Autonomía"
+                class="rounded-full w-48 h-48 md:w-full md:h-auto shadow-lg"
+              />
+            </div>
+            <div>
+              <h3 class="text-3xl font-bold">1. Bordamos por la Autonomía.</h3>
+              <p class="mt-2 text-lg">
+                Reclamamos la soberanía sobre nuestros cuerpos y decisiones.
+                Bordamos para desaprender la sumisión y reapropiarnos de nuestra
+                historia física y emocional. Hablamos de salud, de placer y de
+                cuidados, temas que nos pertenecen.
+              </p>
+            </div>
+          </div>
+          <!-- Punto 2 -->
+          <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="md:w-1/3 flex-shrink-0 md:order-2">
+              <img
+                src="https://placehold.co/500x500/A3B899/FFFFFF?text=Sororidad"
+                alt="Bordado sobre Sororidad"
+                class="rounded-full w-48 h-48 md:w-full md:h-auto shadow-lg"
+              />
+            </div>
+            <div class="md:order-1">
+              <h3 class="text-3xl font-bold">
+                2. Bordamos para crear Comunidad.
+              </h3>
+              <p class="mt-2 text-lg">
+                Rompemos el aislamiento. Nuestros encuentros son espacios
+                seguros donde la experiencia de una nutre a la otra. El diálogo
+                intergeneracional es nuestra mayor fortaleza: tejemos redes de
+                apoyo, empatía y conocimiento compartido.
+              </p>
+            </div>
+          </div>
+          <!-- Punto 3 -->
+          <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="md:w-1/3 flex-shrink-0">
+              <img
+                src="https://placehold.co/500x500/F5B971/FFFFFF?text=Memoria"
+                alt="Bordado sobre Memoria"
+                class="rounded-full w-48 h-48 md:w-full md:h-auto shadow-lg"
+              />
+            </div>
+            <div>
+              <h3 class="text-3xl font-bold">
+                3. Bordamos para hacer Memoria.
+              </h3>
+              <p class="mt-2 text-lg">
+                Cada hilo traza una línea en la historia. Bordamos las palabras
+                que fueron silenciadas, las historias que no se contaron.
+                Nuestro lienzo es un archivo vivo de la resistencia femenina en
+                Tarapacá.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección 4: La Equipa y Llamado a la Acción -->
+      <section class="py-20 bg-gray-100">
+        <div class="container mx-auto px-6 text-center">
+          <h2 class="text-4xl md:text-5xl font-bold">Somos la Equipa</h2>
+          <p class="mt-4 text-lg max-w-3xl mx-auto">
+            Psicólogas, periodistas, profesoras, artistas. Mujeres que creemos
+            en el poder transformador del arte colaborativo. Somos Sofía,
+            Valentina, Gabriela y Camila.
+          </p>
+          <div class="mt-12">
+            <h3 class="text-3xl font-bold">Únete a la conversación.</h3>
+            <p class="mt-2 text-lg">
+              Este movimiento no se detiene. Síguenos, participa, apoya.
+            </p>
+            <div class="mt-8 flex justify-center items-center space-x-6">
+              <a
+                href="mailto:bordatarapaca@gmail.com"
+                class="text-lg font-semibold hover:text-custom-pink transition-colors"
+                >bordatarapaca@gmail.com</a
+              >
+              <a
+                href="#"
+                class="text-lg font-semibold hover:text-custom-pink transition-colors"
+                >@bordatarapaca</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-[#3D2B27] text-[#FDFBF5] py-8">
+      <div class="container mx-auto px-6 text-center text-sm">
+        <p>
+          &copy; 2024 Borda Tarapacá. Un proyecto financiado por el Fondo
+          Nacional de Desarrollo Cultural y las Artes. Convocatoria 2024.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Script para animaciones en scroll
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("fade-in-section");
+          }
+        });
+      });
+
+      document.querySelectorAll("section").forEach((section) => {
+        observer.observe(section);
+      });
+    </script>
+  </body>
+</html>
