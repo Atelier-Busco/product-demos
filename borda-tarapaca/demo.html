@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Borda Tarapacá - Opción 2</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Custom Styles and Colors -->
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #fdfbf5; /* Beige claro del PDF */
+        color: #422f29; /* Marrón oscuro para texto */
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Playfair Display", serif;
+      }
+      .bg-custom-pink {
+        background-color: #eab8c5;
+      }
+      .text-custom-pink {
+        color: #d98da4;
+      }
+      .border-custom-pink {
+        border-color: #d98da4;
+      }
+      .bg-custom-green {
+        background-color: #a3b899;
+      }
+      .text-custom-green {
+        color: #6a8a5d;
+      }
+      .bg-custom-orange {
+        background-color: #f5b971;
+      }
+
+      /* Efecto de textura sutil para el fondo */
+      .texture-bg {
+        background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.12' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <!-- Header y Navegación -->
+    <header
+      class="bg-[#FDFBF5]/90 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200"
+    >
+      <div
+        class="container mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <a href="#" class="text-2xl font-bold text-[#422F29]">Borda Tarapacá</a>
+        <nav class="hidden md:flex space-x-8">
+          <a
+            href="#sobre-nosotras"
+            class="hover:text-custom-pink transition-colors"
+            >Proyecto</a
+          >
+          <a href="#talleres" class="hover:text-custom-pink transition-colors"
+            >Encuentros</a
+          >
+          <a href="#galeria" class="hover:text-custom-pink transition-colors"
+            >Creaciones</a
+          >
+          <a href="#equipa" class="hover:text-custom-pink transition-colors"
+            >Equipa</a
+          >
+          <a href="#contacto" class="hover:text-custom-pink transition-colors"
+            >Contacto</a
+          >
+        </nav>
+        <button id="mobile-menu-button" class="md:hidden">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16m-7 6h7"
+            />
+          </svg>
+        </button>
+      </div>
+      <!-- Menú Móvil -->
+      <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+        <a href="#sobre-nosotras" class="block py-2 hover:text-custom-pink"
+          >Proyecto</a
+        >
+        <a href="#talleres" class="block py-2 hover:text-custom-pink"
+          >Encuentros</a
+        >
+        <a href="#galeria" class="block py-2 hover:text-custom-pink"
+          >Creaciones</a
+        >
+        <a href="#equipa" class="block py-2 hover:text-custom-pink">Equipa</a>
+        <a href="#contacto" class="block py-2 hover:text-custom-pink"
+          >Contacto</a
+        >
+      </div>
+    </header>
+
+    <main>
+      <!-- Sección Hero -->
+      <section class="container mx-auto px-6 py-24">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+          <div class="text-center md:text-left">
+            <p class="text-custom-pink font-semibold mb-2">
+              Encuentros Intergeneracionales de Bordado
+            </p>
+            <h1 class="text-5xl md:text-7xl font-bold leading-tight">
+              El arte de bordar historias juntas
+            </h1>
+            <p class="mt-6 text-lg text-gray-600">
+              Un espacio para recuperar el arte colaborativo del bordado como un
+              acto de resistencia, diálogo y creación colectiva entre mujeres.
+            </p>
+          </div>
+          <div class="relative">
+            <!-- IMAGEN SUGERIDA: Un bordado potente y vertical, como el de la pág. 24 del PDF -->
+            <img
+              src="assets/images/hero-bordado-corazon.jpg"
+              alt="Bordado de un corazón azul con un ojo en el centro"
+              class="rounded-lg shadow-2xl transform rotate-3 w-full h-auto object-cover"
+              style="max-height: 500px"
+            />
+            <div
+              class="absolute -bottom-4 -left-4 bg-custom-green text-white p-4 rounded-lg shadow-lg transform -rotate-6"
+            >
+              <p class="font-bold text-lg">Creatividad</p>
+              <p class="text-sm">& Resistencia</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección Sobre Nosotras -->
+      <section id="sobre-nosotras" class="py-20 bg-custom-green/10 texture-bg">
+        <div class="container mx-auto px-6">
+          <div class="text-center max-w-3xl mx-auto">
+            <h2 class="text-4xl font-bold mb-4">Un Hilo que Nos Une</h2>
+            <p class="text-lg text-gray-700">
+              Borda Tarapacá nace para abrir diálogos desde una perspectiva
+              intergeneracional, trabajando temáticas de género como la
+              autonomía, la salud y los cuidados. Buscamos que todas las voces
+              de mujeres sean representadas y escuchadas.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección Talleres -->
+      <section id="talleres" class="py-20">
+        <div class="container mx-auto px-6">
+          <h2 class="text-4xl font-bold text-center mb-16">
+            Nuestros Encuentros y Talleres
+          </h2>
+          <div class="space-y-20">
+            <!-- Taller 1 -->
+            <div class="grid md:grid-cols-2 gap-10 items-center">
+              <div class="order-2 md:order-1">
+                <p class="text-sm text-custom-orange font-bold">
+                  IQUIQUE - SEPT 2024
+                </p>
+                <h3 class="text-3xl font-bold my-3">
+                  Diálogos y Puntadas en la Ciudad
+                </h3>
+                <p class="text-gray-600">
+                  Nuestro primer encuentro fue un espacio gratuito para
+                  compartir, bordar y dialogar sobre experiencias y saberes. Un
+                  punto de partida lleno de energía creativa y conexión.
+                </p>
+              </div>
+              <div class="order-1 md:order-2">
+                <!-- IMAGEN SUGERIDA: El afiche del taller de Iquique de la pág. 6 -->
+                <img
+                  src="assets/images/taller-iquique.jpg"
+                  alt="Afiche del taller de bordado en Iquique"
+                  class="rounded-lg shadow-xl transform hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            </div>
+            <!-- Taller 2 -->
+            <div class="grid md:grid-cols-2 gap-10 items-center">
+              <div>
+                <!-- IMAGEN SUGERIDA: El afiche del taller de Alto Hospicio de la pág. 6 -->
+                <img
+                  src="assets/images/taller-alto-hospicio.jpg"
+                  alt="Afiche del taller de bordado en Alto Hospicio"
+                  class="rounded-lg shadow-xl transform hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <div>
+                <p class="text-sm text-custom-green font-bold">
+                  ALTO HOSPICIO - OCT 2024
+                </p>
+                <h3 class="text-3xl font-bold my-3">Creatividad y Sororidad</h3>
+                <p class="text-gray-600">
+                  En el Centro Cultural Semillarbol, vivimos una jornada de
+                  creatividad y apoyo mutuo, con materiales y colación
+                  incluidos, fortaleciendo nuestra comunidad de mujeres
+                  bordadoras.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección Galería -->
+      <section id="galeria" class="py-20 bg-gray-50 texture-bg">
+        <div class="container mx-auto px-6">
+          <h2 class="text-4xl font-bold text-center mb-12">
+            Galería: Palabras Bordadas
+          </h2>
+          <div class="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+            <!-- Aquí puedes agregar las imágenes de los bordados de las págs. 15 a 32 -->
+            <img
+              class="rounded-lg shadow-md"
+              src="assets/images/bordado-libertad.jpg"
+              alt="Bordado con la palabra Libertad"
+            />
+            <img
+              class="rounded-lg shadow-md"
+              src="assets/images/bordado-sanacion.jpg"
+              alt="Bordado con la palabra Sanación"
+            />
+            <img
+              class="rounded-lg shadow-md"
+              src="assets/images/bordado-mujer.jpg"
+              alt="Bordado con la palabra Mujer"
+            />
+            <img
+              class="rounded-lg shadow-md"
+              src="assets/images/bordado-alegria.jpg"
+              alt="Bordado con la palabra Alegría"
+            />
+            <img
+              class="rounded-lg shadow-md"
+              src="assets/images/bordado-amor.jpg"
+              alt="Bordado con la palabra Amor"
+            />
+            <img
+              class="rounded-lg shadow-md"
+              src="assets/images/bordado-resiliencia.jpg"
+              alt="Bordado con la palabra Resiliencia"
+            />
+            <img
+              class="rounded-lg shadow-md"
+              src="assets/images/bordado-disfruta.jpg"
+              alt="Bordado con la palabra Disfruta"
+            />
+            <img
+              class="rounded-lg shadow-md"
+              src="assets/images/bordado-autocuidado.jpg"
+              alt="Bordado con la palabra Autocuidado"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección Obra Colectiva -->
+      <section id="obra-colectiva" class="py-24">
+        <div class="container mx-auto px-6 text-center">
+          <h2 class="text-4xl font-bold">
+            La Obra Colectiva: "La Poderosa Palabra"
+          </h2>
+          <p class="mt-4 max-w-3xl mx-auto text-lg">
+            Un lienzo de 397x82 cm que une los bordados de más de 55 mujeres.
+            Una pieza textil que construye un relato colectivo y representativo
+            de nuestros encuentros.
+          </p>
+          <!-- IMAGEN SUGERIDA: La foto completa del lienzo de la pág. 35 -->
+          <img
+            src="assets/images/lienzo-colectivo.jpg"
+            alt="Lienzo colectivo La Poderosa Palabra con decenas de bordados unidos"
+            class="rounded-lg shadow-2xl w-full mt-12"
+          />
+        </div>
+      </section>
+
+      <!-- Sección Equipa -->
+      <section id="equipa" class="py-20 bg-custom-pink/10">
+        <div class="container mx-auto px-6">
+          <h2 class="text-4xl font-bold text-center mb-12">
+            La Equipa que lo Hace Posible
+          </h2>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+            <!-- Miembro 1 -->
+            <div
+              class="bg-white p-6 rounded-lg shadow-lg text-center transform hover:-translate-y-2 transition-transform duration-300"
+            >
+              <img
+                src="assets/images/equipa-sofia.jpg"
+                class="w-32 h-32 mx-auto rounded-full mb-4 -mt-12 border-4 border-white object-cover"
+                alt="Foto de Sofía Alvarado"
+              />
+              <h3 class="text-xl font-bold">Sofía Alvarado D.</h3>
+              <p class="text-custom-pink">Responsable de Proyecto</p>
+            </div>
+            <!-- Miembro 2 -->
+            <div
+              class="bg-white p-6 rounded-lg shadow-lg text-center transform hover:-translate-y-2 transition-transform duration-300"
+            >
+              <img
+                src="assets/images/equipa-valentina.jpg"
+                class="w-32 h-32 mx-auto rounded-full mb-4 -mt-12 border-4 border-white object-cover"
+                alt="Foto de Valentina Araya"
+              />
+              <h3 class="text-xl font-bold">Valentina Araya</h3>
+              <p class="text-custom-green">Producción y Difusión</p>
+            </div>
+            <!-- Miembro 3 -->
+            <div
+              class="bg-white p-6 rounded-lg shadow-lg text-center transform hover:-translate-y-2 transition-transform duration-300"
+            >
+              <img
+                src="assets/images/equipa-gabriela.jpg"
+                class="w-32 h-32 mx-auto rounded-full mb-4 -mt-12 border-4 border-white object-cover"
+                alt="Foto de Gabriela Arias"
+              />
+              <h3 class="text-xl font-bold">Gabriela Arias</h3>
+              <p class="text-custom-orange">Tallerista Bordadora</p>
+            </div>
+            <!-- Miembro 4 -->
+            <div
+              class="bg-white p-6 rounded-lg shadow-lg text-center transform hover:-translate-y-2 transition-transform duration-300"
+            >
+              <img
+                src="assets/images/equipa-camila.jpg"
+                class="w-32 h-32 mx-auto rounded-full mb-4 -mt-12 border-4 border-white object-cover"
+                alt="Foto de Camila Requena"
+              />
+              <h3 class="text-xl font-bold">Camila Requena S.</h3>
+              <p class="text-custom-pink">Sistematización</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="contacto" class="bg-[#422F29] text-[#FDFBF5] py-16">
+      <div class="container mx-auto px-6 text-center">
+        <h2 class="text-4xl font-bold">¡Conversemos!</h2>
+        <p class="mt-4 mb-8 max-w-lg mx-auto">
+          Nos encantaría saber de ti. Síguenos en nuestras redes o envíanos un
+          correo para colaborar o saber más de nuestros próximos encuentros.
+        </p>
+        <div class="flex justify-center space-x-6">
+          <a
+            href="mailto:bordatarapaca@gmail.com"
+            class="hover:opacity-80 p-3 bg-white/10 rounded-full transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+              ></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+          </a>
+          <a
+            href="#"
+            class="hover:opacity-80 p-3 bg-white/10 rounded-full transition-colors"
+          >
+            <!-- Reemplazar con Linktree -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+            </svg>
+          </a>
+        </div>
+        <p class="mt-10 text-sm text-gray-400">
+          &copy; 2024 Borda Tarapacá. Un proyecto con corazón y memoria.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Script para el menú móvil
+      const mobileMenuButton = document.getElementById("mobile-menu-button");
+      const mobileMenu = document.getElementById("mobile-menu");
+
+      mobileMenuButton.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+      });
+    </script>
+  </body>
+</html>
